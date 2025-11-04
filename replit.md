@@ -18,6 +18,7 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 - Created full student dashboard with all study tools
 - Built admin dashboard for student management and analytics
 - Integrated OpenAI for AI-powered features
+- **NEW**: FastBots Chatbot Integration - Admins can configure and embed a custom FastBots chatbot that appears for all students
 
 ## Project Structure
 ```
@@ -38,8 +39,10 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 │   │   │   │   └── achievements.tsx
 │   │   │   ├── admin/        # Admin dashboard components
 │   │   │   │   ├── student-management.tsx
-│   │   │   │   ├── content-management.tsx
+│   │   │   │   ├── content-management.tsx (FastBots config)
 │   │   │   │   └── admin-analytics.tsx
+│   │   │   ├── chatbot/      # Chatbot integration
+│   │   │   │   └── fastbots-widget.tsx
 │   │   │   └── ui/           # Shadcn UI components
 │   │   ├── pages/
 │   │   │   ├── login.tsx
@@ -75,7 +78,7 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 ### Admin Features
 1. **Student Management**: View, search, sort, and manage students
 2. **Analytics Dashboard**: Platform-wide usage and performance metrics
-3. **Content Management**: Create study materials (coming soon)
+3. **FastBots Chatbot Configuration**: Configure and embed a custom AI chatbot from FastBots.ai that appears for all students
 4. **Export Data**: CSV export of student data
 
 ### Gamification
