@@ -11,6 +11,7 @@ import {
   studyGroups,
   tutorConversations,
   mindMaps,
+  platformSettings,
   type User,
   type InsertUser,
   type Note,
@@ -29,6 +30,7 @@ import {
   type InsertStudyGroup,
   type TutorConversation,
   type InsertTutorConversation,
+  type PlatformSetting,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -87,6 +89,11 @@ export interface IStorage {
   createConversation(conversation: InsertTutorConversation): Promise<TutorConversation>;
   updateConversation(id: string, updates: Partial<TutorConversation>): Promise<TutorConversation | undefined>;
   deleteConversation(id: string): Promise<void>;
+
+  // Platform Settings
+  getSetting(key: string): Promise<PlatformSetting | undefined>;
+  setSetting(key: string, value: string): Promise<PlatformSetting>;
+  getAllSettings(): Promise<PlatformSetting[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -273,6 +280,34 @@ export class DatabaseStorage implements IStorage {
 
   async deleteConversation(id: string): Promise<void> {
     await db.delete(tutorConversations).where(eq(tutorConversations.id, id));
+  }
+
+  // Platform Settings
+  async getSetting(key: string): Promise<PlatformSetting | undefined> {
+    const [setting] = await db.select().from(platformSettings).where(eq(platformSettings.key, key));
+    return setting;
+  }
+
+  async setSetting(key: string, value: string): Promise<PlatformSetting> {
+    const existing = await this.getSetting(key);
+    if (existing) {
+      const [updated] = await db
+        .update(platformSettings)
+        .set({ value, updatedAt: new Date() })
+        .where(eq(platformSettings.key, key))
+        .returning();
+      return updated;
+    } else {
+      const [created] = await db
+        .insert(platformSettings)
+        .values({ key, value })
+        .returning();
+      return created;
+    }
+  }
+
+  async getAllSettings(): Promise<PlatformSetting[]> {
+    return await db.select().from(platformSettings);
   }
 }
 

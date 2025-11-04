@@ -16,6 +16,7 @@ import Analytics from "@/components/dashboard/analytics";
 import Achievements from "@/components/dashboard/achievements";
 import StudyGroups from "@/components/dashboard/study-groups";
 import MindMap from "@/components/dashboard/mind-map";
+import FastBotsWidget from "@/components/chatbot/fastbots-widget";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
@@ -162,6 +163,9 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* FastBots Chatbot Widget - floats on all pages */}
+      <FastBotsWidget />
     </div>
   );
 }

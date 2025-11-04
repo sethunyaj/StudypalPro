@@ -700,6 +700,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Platform settings endpoints
+  app.get("/api/admin/settings", async (req, res) => {
+    try {
+      const settings = await storage.getAllSettings();
+      res.json(settings);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/admin/settings/:key", async (req, res) => {
+    try {
+      const setting = await storage.getSetting(req.params.key);
+      res.json(setting || { key: req.params.key, value: null });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/admin/settings", async (req, res) => {
+    try {
+      const { key, value } = req.body;
+      const setting = await storage.setSetting(key, value);
+      res.json(setting);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Public endpoint for students to get FastBots config
+  app.get("/api/settings/fastbots", async (req, res) => {
+    try {
+      const enabled = await storage.getSetting("fastbots_enabled");
+      const botId = await storage.getSetting("fastbots_bot_id");
+      
+      res.json({
+        enabled: enabled?.value === "true",
+        botId: botId?.value || null,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   app.get("/api/admin/students", async (req, res) => {
     try {
       const students = await storage.getAllStudents();

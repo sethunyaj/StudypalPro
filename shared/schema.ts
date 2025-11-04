@@ -230,3 +230,15 @@ export type QuizAnswer = {
   isCorrect: boolean;
   timeSpent: number; // seconds
 };
+
+// Platform Settings table (for admin configurations like FastBots)
+export const platformSettings = pgTable("platform_settings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  key: text("key").notNull().unique(), // e.g., "fastbots_bot_id", "fastbots_enabled"
+  value: text("value"), // JSON stringified value
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertPlatformSettingSchema = createInsertSchema(platformSettings).omit({ id: true, updatedAt: true });
+export type InsertPlatformSetting = z.infer<typeof insertPlatformSettingSchema>;
+export type PlatformSetting = typeof platformSettings.$inferSelect;
