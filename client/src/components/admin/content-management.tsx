@@ -116,29 +116,29 @@ export default function ContentManagement() {
               />
             </div>
 
-            {/* Bot ID Input */}
+            {/* Bot Embed Code Input */}
             <div className="space-y-2">
-              <Label htmlFor="bot-id">FastBots Bot ID</Label>
+              <Label htmlFor="bot-id">FastBots Embed Code</Label>
               <Input
                 id="bot-id"
                 data-testid="input-fastbots-bot-id"
                 value={botId}
                 onChange={(e) => setBotId(e.target.value)}
-                placeholder="e.g., abc123def456"
+                placeholder='Paste full iframe code or just the bot ID'
                 disabled={!enabled}
               />
               <p className="text-xs text-muted-foreground">
-                Find your Bot ID in the FastBots dashboard under Deploy → Embed Code
+                Paste the full iframe embed code from FastBots, or just the bot ID
               </p>
             </div>
 
             {/* Preview */}
             {enabled && botId && (
               <div className="p-4 rounded-lg border bg-muted/30">
-                <p className="text-sm font-semibold mb-2">Embed Code Preview:</p>
-                <code className="text-xs bg-background p-2 rounded block overflow-x-auto">
-                  {`<script src="https://fastbots.ai/embed.js" data-bot-id="${botId}"></script>`}
-                </code>
+                <p className="text-sm font-semibold mb-2">Widget Preview:</p>
+                <p className="text-xs text-muted-foreground mb-2">
+                  The chatbot will appear as a floating widget in the bottom-right corner for all students.
+                </p>
               </div>
             )}
 
@@ -170,12 +170,12 @@ export default function ContentManagement() {
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
           <ol className="list-decimal list-inside space-y-2">
-            <li>Go to <a href="https://fastbots.ai" target="_blank" rel="noopener noreferrer" className="underline">fastbots.ai</a> and create an account</li>
+            <li>Go to <a href="https://app.fastbots.ai" target="_blank" rel="noopener noreferrer" className="underline">app.fastbots.ai</a> and create an account</li>
             <li>Create a new chatbot and train it with your content (study guides, FAQs, etc.)</li>
             <li>Customize the appearance (colors, welcome message, avatar)</li>
-            <li>Go to the "Deploy" section in your dashboard</li>
-            <li>Copy the Bot ID from the embed code (it looks like: <code className="bg-muted px-1 py-0.5 rounded">data-bot-id="YOUR_ID_HERE"</code>)</li>
-            <li>Paste the Bot ID above and enable the chatbot</li>
+            <li>Go to the "Deploy" section and find the iframe embed code</li>
+            <li>Copy the entire iframe code (it looks like: <code className="bg-muted px-1 py-0.5 rounded text-xs">&lt;iframe src="..."&gt;&lt;/iframe&gt;</code>)</li>
+            <li>Paste the iframe code above (or just the bot ID) and enable the chatbot</li>
             <li>The chatbot will automatically appear for all students!</li>
           </ol>
         </CardContent>
