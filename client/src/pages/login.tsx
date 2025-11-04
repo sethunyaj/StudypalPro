@@ -30,20 +30,20 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const response = await apiRequest("POST", "/api/auth/login", {
+      const user = await apiRequest("POST", "/api/auth/login", {
         username: loginUsername,
         password: loginPassword,
       });
       
-      localStorage.setItem("user", JSON.stringify(response.user));
-      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", "authenticated");
       
       toast({
         title: "Welcome back!",
-        description: `Logged in as ${response.user.name}`,
+        description: `Logged in as ${user.name}`,
       });
       
-      if (response.user.role === "admin") {
+      if (user.role === "admin") {
         setLocation("/admin");
       } else {
         setLocation("/dashboard");
@@ -64,16 +64,16 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const response = await apiRequest("POST", "/api/auth/register", {
+      const user = await apiRequest("POST", "/api/auth/register", {
         username: regUsername,
         password: regPassword,
         name: regName,
-        grade: regGrade,
+        grade: regGrade || null,
         role: "student",
       });
       
-      localStorage.setItem("user", JSON.stringify(response.user));
-      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", "authenticated");
       
       toast({
         title: "Account created!",
@@ -95,7 +95,7 @@ export default function Login() {
   const createDemoStudent = async () => {
     setIsLoading(true);
     try {
-      const response = await apiRequest("POST", "/api/auth/register", {
+      const user = await apiRequest("POST", "/api/auth/register", {
         username: "demo",
         password: "demo123",
         name: "Demo Student",
@@ -103,8 +103,8 @@ export default function Login() {
         role: "student",
       });
       
-      localStorage.setItem("user", JSON.stringify(response.user));
-      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", "authenticated");
       
       toast({
         title: "Demo account created!",

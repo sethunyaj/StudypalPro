@@ -1,15 +1,786 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { generateQuiz, getTutorResponse } from "./openai";
+import bcrypt from "bcrypt";
+import {
+  insertUserSchema,
+  insertNoteSchema,
+  insertFlashcardSchema,
+  insertQuizSchema,
+  insertQuizAttemptSchema,
+  insertStudySessionSchema,
+  insertStudyGroupSchema,
+  type QuizQuestion,
+  type QuizAnswer,
+} from "@shared/schema";
+
+// SM-2 Algorithm for spaced repetition
+function calculateNextReview(quality: number, flashcard: any) {
+  const easeFactor = flashcard.easeFactor / 1000; // Convert back from integer storage
+  const repetitions = flashcard.repetitions;
+  const interval = flashcard.interval;
+
+  let newEaseFactor = easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+  if (newEaseFactor < 1.3) newEaseFactor = 1.3;
+
+  let newRepetitions = repetitions;
+  let newInterval = interval;
+
+  if (quality < 3) {
+    newRepetitions = 0;
+    newInterval = 0;
+  } else {
+    newRepetitions = repetitions + 1;
+    if (repetitions === 0) {
+      newInterval = 1;
+    } else if (repetitions === 1) {
+      newInterval = 6;
+    } else {
+      newInterval = Math.round(interval * easeFactor);
+    }
+  }
+
+  const nextReviewDate = new Date();
+  nextReviewDate.setDate(nextReviewDate.getDate() + newInterval);
+
+  return {
+    easeFactor: Math.round(newEaseFactor * 1000), // Store as integer
+    repetitions: newRepetitions,
+    interval: newInterval,
+    nextReviewDate,
+  };
+}
+
+// Check and award achievements
+async function checkAchievements(userId: string) {
+  const user = await storage.getUser(userId);
+  const achievements = await storage.getUserAchievements(userId);
+  const existingTypes = new Set(achievements.map(a => a.type));
+
+  const newAchievements = [];
+
+  // First quiz achievement
+  const quizAttempts = await storage.getUserQuizAttempts(userId);
+  if (quizAttempts.length === 1 && !existingTypes.has("first_quiz")) {
+    newAchievements.push({
+      userId,
+      type: "first_quiz",
+      title: "Quiz Rookie",
+      description: "Completed your first quiz",
+      icon: "🎯",
+    });
+  }
+
+  // Points milestones
+  if (user && user.points >= 100 && !existingTypes.has("points_100")) {
+    newAchievements.push({
+      userId,
+      type: "points_100",
+      title: "Centurion",
+      description: "Earned 100 XP",
+      icon: "💯",
+    });
+  }
+
+  if (user && user.points >= 500 && !existingTypes.has("points_500")) {
+    newAchievements.push({
+      userId,
+      type: "points_500",
+      title: "XP Master",
+      description: "Earned 500 XP",
+      icon: "⭐",
+    });
+  }
+
+  // Streak achievements
+  if (user && user.streak >= 3 && !existingTypes.has("streak_3")) {
+    newAchievements.push({
+      userId,
+      type: "streak_3",
+      title: "On Fire",
+      description: "3-day study streak",
+      icon: "🔥",
+    });
+  }
+
+  if (user && user.streak >= 7 && !existingTypes.has("streak_7")) {
+    newAchievements.push({
+      userId,
+      type: "streak_7",
+      title: "Week Warrior",
+      description: "7-day study streak",
+      icon: "🏆",
+    });
+  }
+
+  // Create all new achievements
+  for (const achievement of newAchievements) {
+    await storage.createAchievement(achievement);
+  }
+
+  return newAchievements;
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
+  // ==================== AUTHENTICATION ====================
+  
+  // Register
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const data = insertUserSchema.parse(req.body);
+      
+      // Check if username exists
+      const existing = await storage.getUserByUsername(data.username);
+      if (existing) {
+        return res.status(400).json({ error: "Username already exists" });
+      }
 
-  // use storage to perform CRUD operations on the storage interface
-  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
+      // Hash password
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+      
+      // Create user
+      const user = await storage.createUser({
+        ...data,
+        password: hashedPassword,
+      });
+
+      // Create session
+      req.session.userId = user.id;
+      
+      // Remove password from response
+      const { password, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message || "Registration failed" });
+    }
+  });
+
+  // Login
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+
+      const user = await storage.getUserByUsername(username);
+      if (!user) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      // Update last login and check streak
+      const now = new Date();
+      const lastLogin = user.lastLoginDate;
+      let streak = user.streak;
+
+      if (lastLogin) {
+        const daysDiff = Math.floor((now.getTime() - lastLogin.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysDiff === 1) {
+          streak += 1;
+        } else if (daysDiff > 1) {
+          streak = 1;
+        }
+      } else {
+        streak = 1;
+      }
+
+      await storage.updateUser(user.id, {
+        lastLoginDate: now,
+        streak,
+      });
+
+      // Create session
+      req.session.userId = user.id;
+
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+      res.json({ ...userWithoutPassword, streak });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message || "Login failed" });
+    }
+  });
+
+  // Logout
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ error: "Logout failed" });
+      }
+      res.json({ message: "Logged out successfully" });
+    });
+  });
+
+  // ==================== NOTES ====================
+  
+  app.get("/api/notes/:userId", async (req, res) => {
+    try {
+      const notes = await storage.getUserNotes(req.params.userId);
+      res.json(notes);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/notes", async (req, res) => {
+    try {
+      const data = insertNoteSchema.parse(req.body);
+      const note = await storage.createNote(data);
+      res.json(note);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.put("/api/notes/:id", async (req, res) => {
+    try {
+      const note = await storage.updateNote(req.params.id, req.body);
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+      res.json(note);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/notes/:id", async (req, res) => {
+    try {
+      await storage.deleteNote(req.params.id);
+      res.json({ message: "Note deleted" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== FLASHCARDS ====================
+  
+  app.get("/api/flashcards/:userId", async (req, res) => {
+    try {
+      const flashcards = await storage.getUserFlashcards(req.params.userId);
+      res.json(flashcards);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/flashcards/due/:userId", async (req, res) => {
+    try {
+      const dueCards = await storage.getDueFlashcards(req.params.userId);
+      res.json(dueCards);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/flashcards", async (req, res) => {
+    try {
+      const data = insertFlashcardSchema.parse(req.body);
+      const flashcard = await storage.createFlashcard(data);
+      res.json(flashcard);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/flashcards/:id/review", async (req, res) => {
+    try {
+      const { quality } = req.body; // 0-5 (Again, Hard, Good, Easy)
+      const flashcard = await storage.getFlashcard(req.params.id);
+      
+      if (!flashcard) {
+        return res.status(404).json({ error: "Flashcard not found" });
+      }
+
+      const nextReview = calculateNextReview(quality, flashcard);
+      const updated = await storage.updateFlashcard(req.params.id, nextReview);
+      
+      res.json(updated);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // ==================== QUIZZES ====================
+  
+  app.get("/api/quizzes/:userId", async (req, res) => {
+    try {
+      const quizzes = await storage.getUserQuizzes(req.params.userId);
+      res.json(quizzes);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/quizzes/generate", async (req, res) => {
+    try {
+      const { userId, subject, difficulty, numQuestions, sourceNoteId } = req.body;
+
+      // Get source note content if provided
+      let sourceNoteContent;
+      if (sourceNoteId) {
+        const note = await storage.getNote(sourceNoteId);
+        if (note) {
+          sourceNoteContent = note.content;
+        }
+      }
+
+      // Generate quiz using OpenAI
+      const questions = await generateQuiz({
+        subject,
+        difficulty,
+        numQuestions: parseInt(numQuestions),
+        sourceNoteContent,
+      });
+
+      // Save quiz to database
+      const quiz = await storage.createQuiz({
+        userId,
+        title: `${subject} - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`,
+        subject,
+        difficulty,
+        questions: questions as any, // JSONB field
+        sourceNoteId,
+      });
+
+      res.json(quiz);
+    } catch (error: any) {
+      console.error("Quiz generation error:", error);
+      res.status(500).json({ error: error.message || "Failed to generate quiz" });
+    }
+  });
+
+  app.get("/api/quiz-attempts/:userId", async (req, res) => {
+    try {
+      const attempts = await storage.getUserQuizAttempts(req.params.userId);
+      
+      // Populate quiz data
+      const attemptsWithQuizzes = await Promise.all(
+        attempts.map(async (attempt) => {
+          const quiz = await storage.getQuiz(attempt.quizId);
+          return { ...attempt, quiz };
+        })
+      );
+      
+      res.json(attemptsWithQuizzes);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/quiz-attempts", async (req, res) => {
+    try {
+      const data = insertQuizAttemptSchema.parse(req.body);
+      const attempt = await storage.createQuizAttempt(data);
+
+      // Award XP based on performance
+      const percentage = (data.score / data.totalQuestions) * 100;
+      const xpEarned = Math.round(percentage / 2); // 0-50 XP per quiz
+      
+      const user = await storage.getUser(data.userId);
+      if (user) {
+        const newXp = user.xp + xpEarned;
+        const newPoints = user.points + xpEarned;
+        const newLevel = Math.floor(newXp / 100) + 1;
+
+        await storage.updateUser(data.userId, {
+          xp: newXp,
+          points: newPoints,
+          level: newLevel,
+        });
+
+        // Check for achievements
+        await checkAchievements(data.userId);
+      }
+
+      res.json(attempt);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // ==================== AI TUTOR ====================
+  
+  app.get("/api/tutor-conversations/:userId", async (req, res) => {
+    try {
+      const conversations = await storage.getUserConversations(req.params.userId);
+      res.json(conversations);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/tutor-conversations", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      const conversation = await storage.createConversation({
+        userId,
+        messages: [],
+        subject: null,
+      });
+      res.json(conversation);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/tutor/chat", async (req, res) => {
+    try {
+      const { conversationId, userId, message } = req.body;
+
+      let conversation;
+      
+      // Create conversation if it doesn't exist
+      if (!conversationId) {
+        conversation = await storage.createConversation({
+          userId,
+          messages: [],
+          subject: null,
+        });
+      } else {
+        conversation = await storage.getConversation(conversationId);
+        if (!conversation) {
+          return res.status(404).json({ error: "Conversation not found" });
+        }
+      }
+
+      // Add user message
+      const messages = conversation.messages as any[] || [];
+      messages.push({ role: "user", content: message });
+
+      // Get AI response
+      const aiResponse = await getTutorResponse({ messages });
+      
+      // Add assistant message
+      messages.push({ role: "assistant", content: aiResponse });
+
+      // Update conversation
+      const updated = await storage.updateConversation(conversation.id, {
+        messages: messages as any,
+      });
+
+      res.json({ conversation: updated });
+    } catch (error: any) {
+      console.error("AI tutor error:", error);
+      res.status(500).json({ error: error.message || "AI tutor failed" });
+    }
+  });
+
+  app.delete("/api/tutor-conversations/:id", async (req, res) => {
+    try {
+      await storage.deleteConversation(req.params.id);
+      res.json({ message: "Conversation deleted" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== STUDY SESSIONS ====================
+  
+  app.post("/api/study-sessions", async (req, res) => {
+    try {
+      const data = insertStudySessionSchema.parse(req.body);
+      const session = await storage.createStudySession(data);
+
+      // Award XP for study session
+      const xpEarned = data.duration; // 1 XP per minute
+      const user = await storage.getUser(data.userId);
+      
+      if (user) {
+        const newXp = user.xp + xpEarned;
+        const newPoints = user.points + xpEarned;
+        const newLevel = Math.floor(newXp / 100) + 1;
+
+        await storage.updateUser(data.userId, {
+          xp: newXp,
+          points: newPoints,
+          level: newLevel,
+        });
+
+        await checkAchievements(data.userId);
+      }
+
+      res.json(session);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // ==================== STATISTICS ====================
+  
+  app.get("/api/stats/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const sessions = await storage.getUserStudySessions(userId);
+      const quizAttempts = await storage.getUserQuizAttempts(userId);
+
+      // Calculate weekly activity
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      
+      const weeklyActivity = [0, 0, 0, 0, 0, 0, 0];
+      sessions.forEach(session => {
+        if (session.completedAt && session.completedAt >= oneWeekAgo) {
+          const dayIndex = session.completedAt.getDay();
+          weeklyActivity[dayIndex] += session.duration;
+        }
+      });
+
+      // Calculate subject scores
+      const subjectScores: Record<string, { total: number; count: number }> = {};
+      quizAttempts.forEach(attempt => {
+        const quiz = attempt as any;
+        const subject = quiz.subject || "Other";
+        const score = (attempt.score / attempt.totalQuestions) * 100;
+        
+        if (!subjectScores[subject]) {
+          subjectScores[subject] = { total: 0, count: 0 };
+        }
+        subjectScores[subject].total += score;
+        subjectScores[subject].count += 1;
+      });
+
+      const subjectNames = Object.keys(subjectScores);
+      const subjectScoresArray = subjectNames.map(
+        subject => Math.round(subjectScores[subject].total / subjectScores[subject].count)
+      );
+
+      const totalStudyTime = Math.round(
+        sessions.reduce((sum, s) => sum + s.duration, 0) / 60
+      );
+
+      const avgScore = quizAttempts.length > 0
+        ? Math.round(
+            quizAttempts.reduce((sum, a) => sum + (a.score / a.totalQuestions) * 100, 0) /
+              quizAttempts.length
+          )
+        : 0;
+
+      res.json({
+        weeklyActivity,
+        subjectNames,
+        subjectScores: subjectScoresArray,
+        totalQuizzes: quizAttempts.length,
+        totalStudyTime,
+        avgScore,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== STUDY GROUPS ====================
+  
+  app.get("/api/study-groups/:userId", async (req, res) => {
+    try {
+      const groups = await storage.getUserStudyGroups(req.params.userId);
+      res.json(groups);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/study-groups/all", async (req, res) => {
+    try {
+      const groups = await storage.getAllStudyGroups();
+      res.json(groups);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/study-groups", async (req, res) => {
+    try {
+      const data = insertStudyGroupSchema.parse(req.body);
+      const group = await storage.createStudyGroup(data);
+      res.json(group);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/study-groups/:id/join", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      const group = await storage.getStudyGroup(req.params.id);
+      
+      if (!group) {
+        return res.status(404).json({ error: "Group not found" });
+      }
+
+      const memberIds = group.memberIds || [];
+      if (memberIds.includes(userId)) {
+        return res.status(400).json({ error: "Already a member" });
+      }
+
+      memberIds.push(userId);
+      const updated = await storage.updateStudyGroup(req.params.id, { memberIds });
+      
+      res.json(updated);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/study-groups/:id/leave", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      const group = await storage.getStudyGroup(req.params.id);
+      
+      if (!group) {
+        return res.status(404).json({ error: "Group not found" });
+      }
+
+      const memberIds = (group.memberIds || []).filter(id => id !== userId);
+      const updated = await storage.updateStudyGroup(req.params.id, { memberIds });
+      
+      res.json(updated);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // ==================== ACHIEVEMENTS ====================
+  
+  app.get("/api/achievements/:userId", async (req, res) => {
+    try {
+      const achievements = await storage.getUserAchievements(req.params.userId);
+      res.json(achievements);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/achievements/progress/:userId", async (req, res) => {
+    try {
+      // Return achievement progress data
+      // This could be expanded to show progress toward locked achievements
+      res.json([]);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== ADMIN ====================
+  
+  app.get("/api/admin/stats", async (req, res) => {
+    try {
+      const students = await storage.getAllStudents();
+      
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      
+      const activeToday = students.filter(
+        s => s.lastLoginDate && s.lastLoginDate >= todayStart
+      ).length;
+
+      // Get all quiz attempts
+      const allAttempts = await Promise.all(
+        students.map(s => storage.getUserQuizAttempts(s.id))
+      );
+      const totalAttempts = allAttempts.flat().length;
+
+      const avgPerformance = allAttempts.flat().length > 0
+        ? Math.round(
+            allAttempts.flat().reduce((sum, a) => sum + (a.score / a.totalQuestions) * 100, 0) /
+              allAttempts.flat().length
+          )
+        : 0;
+
+      res.json({
+        totalStudents: students.length,
+        activeToday,
+        totalQuizAttempts: totalAttempts,
+        avgPerformance,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/admin/students", async (req, res) => {
+    try {
+      const students = await storage.getAllStudents();
+      // Remove passwords
+      const sanitized = students.map(({ password, ...rest }) => rest);
+      res.json(sanitized);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/admin/students/:id", async (req, res) => {
+    try {
+      await storage.deleteUser(req.params.id);
+      res.json({ message: "Student deleted" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/admin/students/:id/reset", async (req, res) => {
+    try {
+      await storage.updateUser(req.params.id, {
+        points: 0,
+        streak: 0,
+        level: 1,
+        xp: 0,
+      });
+      res.json({ message: "Progress reset" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/admin/analytics", async (req, res) => {
+    try {
+      // Weekly activity
+      const students = await storage.getAllStudents();
+      const allSessions = await Promise.all(
+        students.map(s => storage.getUserStudySessions(s.id))
+      );
+      
+      const weeklyActivity = [0, 0, 0, 0, 0, 0, 0];
+      allSessions.flat().forEach(session => {
+        if (session.completedAt) {
+          const dayIndex = session.completedAt.getDay();
+          weeklyActivity[dayIndex] += 1;
+        }
+      });
+
+      // Subject performance
+      const allAttempts = await Promise.all(
+        students.map(s => storage.getUserQuizAttempts(s.id))
+      );
+      
+      const subjectPerformance = [75, 82, 88, 79, 81]; // Placeholder
+
+      res.json({
+        weeklyActivity,
+        subjectPerformance,
+        totalQuizzes: allAttempts.flat().length,
+        totalStudyHours: Math.round(allSessions.flat().reduce((sum, s) => sum + s.duration, 0) / 60),
+        quizzesThisWeek: 0,
+        engagementRate: students.length > 0 ? Math.round((weeklyActivity.reduce((a, b) => a + b, 0) / students.length) * 100) : 0,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== ACTIVITY RECENT ====================
+  
+  app.get("/api/activity/recent/:userId", async (req, res) => {
+    try {
+      // Return recent activity - placeholder for now
+      res.json([]);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 
   const httpServer = createServer(app);
-
   return httpServer;
 }
