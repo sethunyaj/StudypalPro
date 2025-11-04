@@ -8,12 +8,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Trophy, Flame, BookOpen } from "lucide-react";
+import { Trophy, Flame, BookOpen, Shield, GraduationCap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [loginMode, setLoginMode] = useState<"student" | "admin">("student");
 
   // Login state
   const [loginUsername, setLoginUsername] = useState("");
@@ -134,68 +136,129 @@ export default function Login() {
           </div>
           <CardTitle className="text-3xl font-bold">Hibiscus StudyPal</CardTitle>
           <CardDescription className="text-base">Your Ultimate Learning Platform</CardDescription>
+          
+          {/* Login Mode Toggle */}
+          <div className="mt-4 flex items-center justify-center gap-2">
+            <Button
+              variant={loginMode === "student" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setLoginMode("student")}
+              className="flex items-center gap-2"
+              data-testid="button-student-mode"
+            >
+              <GraduationCap className="h-4 w-4" />
+              Student
+            </Button>
+            <Button
+              variant={loginMode === "admin" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setLoginMode("admin")}
+              className="flex items-center gap-2"
+              data-testid="button-admin-mode"
+            >
+              <Shield className="h-4 w-4" />
+              Admin
+            </Button>
+          </div>
         </CardHeader>
         
         <CardContent>
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login" data-testid="tab-login">Sign In</TabsTrigger>
-              <TabsTrigger value="register" data-testid="tab-register">Register</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <Alert className="bg-primary/10 border-primary/30">
-                  <Trophy className="h-4 w-4" />
-                  <AlertDescription>
-                    Welcome back! Continue your learning journey.
-                  </AlertDescription>
-                </Alert>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="login-username">Student ID / Username</Label>
-                  <Input
-                    id="login-username"
-                    data-testid="input-login-username"
-                    value={loginUsername}
-                    onChange={(e) => setLoginUsername(e.target.value)}
-                    placeholder="Enter your username"
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="login-password">Password</Label>
-                  <Input
-                    id="login-password"
-                    data-testid="input-login-password"
-                    type="password"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    placeholder="Enter password"
-                    required
-                  />
-                </div>
-                
-                <Button
-                  type="submit"
-                  data-testid="button-login"
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Signing in..." : "Sign In"}
-                </Button>
-                
-                <div className="pt-4 border-t">
-                  <p className="text-sm text-muted-foreground text-center mb-2">
-                    Admin Login
-                  </p>
-                  <p className="text-xs text-center text-muted-foreground">
-                    Default: admin / admin123
-                  </p>
-                </div>
-              </form>
-            </TabsContent>
+          {loginMode === "admin" ? (
+            // Admin Login Form (no registration)
+            <form onSubmit={handleLogin} className="space-y-4">
+              <Alert className="bg-primary/10 border-primary/30">
+                <Shield className="h-4 w-4" />
+                <AlertDescription>
+                  Admin Access - Authorized Personnel Only
+                </AlertDescription>
+              </Alert>
+              
+              <div className="space-y-2">
+                <Label htmlFor="admin-username">Admin Username</Label>
+                <Input
+                  id="admin-username"
+                  data-testid="input-admin-username"
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  placeholder="Enter admin username"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="admin-password">Admin Password</Label>
+                <Input
+                  id="admin-password"
+                  data-testid="input-admin-password"
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Enter admin password"
+                  required
+                />
+              </div>
+              
+              <Button
+                type="submit"
+                data-testid="button-admin-login"
+                className="w-full"
+                disabled={isLoading}
+              >
+                {isLoading ? "Signing in..." : "Admin Sign In"}
+              </Button>
+            </form>
+          ) : (
+            // Student Login/Register Tabs
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="login" data-testid="tab-login">Sign In</TabsTrigger>
+                <TabsTrigger value="register" data-testid="tab-register">Register</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="login">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <Alert className="bg-primary/10 border-primary/30">
+                    <Trophy className="h-4 w-4" />
+                    <AlertDescription>
+                      Welcome back! Continue your learning journey.
+                    </AlertDescription>
+                  </Alert>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="login-username">Student ID / Username</Label>
+                    <Input
+                      id="login-username"
+                      data-testid="input-login-username"
+                      value={loginUsername}
+                      onChange={(e) => setLoginUsername(e.target.value)}
+                      placeholder="Enter your username"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="login-password">Password</Label>
+                    <Input
+                      id="login-password"
+                      data-testid="input-login-password"
+                      type="password"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      placeholder="Enter password"
+                      required
+                    />
+                  </div>
+                  
+                  <Button
+                    type="submit"
+                    data-testid="button-login"
+                    className="w-full"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Signing in..." : "Sign In"}
+                  </Button>
+                </form>
+              </TabsContent>
             
             <TabsContent value="register">
               <form onSubmit={handleRegister} className="space-y-4">
@@ -284,8 +347,9 @@ export default function Login() {
                   {isLoading ? "Creating account..." : "Create Account"}
                 </Button>
               </form>
-            </TabsContent>
-          </Tabs>
+              </TabsContent>
+            </Tabs>
+          )}
         </CardContent>
         
         <CardFooter className="flex flex-col gap-2 text-center text-sm text-muted-foreground">
