@@ -30,10 +30,11 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const user = await apiRequest("POST", "/api/auth/login", {
+      const res = await apiRequest("POST", "/api/auth/login", {
         username: loginUsername,
         password: loginPassword,
       });
+      const user = await res.json();
       
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", "authenticated");
@@ -64,13 +65,14 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const user = await apiRequest("POST", "/api/auth/register", {
+      const res = await apiRequest("POST", "/api/auth/register", {
         username: regUsername,
         password: regPassword,
         name: regName,
         grade: regGrade || null,
         role: "student",
       });
+      const user = await res.json();
       
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", "authenticated");
@@ -95,13 +97,14 @@ export default function Login() {
   const createDemoStudent = async () => {
     setIsLoading(true);
     try {
-      const user = await apiRequest("POST", "/api/auth/register", {
+      const res = await apiRequest("POST", "/api/auth/register", {
         username: "demo",
         password: "demo123",
         name: "Demo Student",
         grade: "Grade 10",
         role: "student",
       });
+      const user = await res.json();
       
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", "authenticated");
