@@ -164,8 +164,6 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* FastBots Chatbot Widget - floats on all pages */}
-      <FastBotsWidget />
     </div>
   );
 }
