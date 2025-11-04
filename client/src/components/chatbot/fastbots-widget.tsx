@@ -50,7 +50,7 @@ export default function FastBotsWidget() {
 
       // Create and append the FastBots embed script
       const script = document.createElement('script');
-      script.src = 'https://fastbots.ai/embed.js';
+      script.src = 'https://app.fastbots.ai/embed.js';
       script.setAttribute('data-bot-id', botId);
       script.async = true;
 
