@@ -56,21 +56,32 @@ Return ONLY a valid JSON array with this exact structure:
 ]`;
 
   try {
+    console.log("Calling OpenAI for quiz generation...");
     const completion = await openai.chat.completions.create({
       model: "gpt-5",
       messages: [
         { role: "system", content: "You are an expert educator who creates challenging, context-aware quiz questions. Always respond with valid JSON only." },
         { role: "user", content: prompt }
       ],
-      temperature: 0.7,
       max_completion_tokens: 2000,
     });
 
-    const content = completion.choices[0]?.message?.content;
-    if (!content) throw new Error("No response from AI");
+    console.log("OpenAI response received:", {
+      hasChoices: !!completion.choices,
+      choicesLength: completion.choices?.length,
+      hasContent: !!completion.choices?.[0]?.message?.content
+    });
 
+    const content = completion.choices[0]?.message?.content;
+    if (!content) {
+      console.error("No content in OpenAI response:", JSON.stringify(completion, null, 2));
+      throw new Error("No response from AI");
+    }
+
+    console.log("Parsing OpenAI JSON response...");
     // Parse the JSON response
     const questions = JSON.parse(content) as QuizQuestion[];
+    console.log("Successfully generated", questions.length, "questions");
     
     // Add unique IDs to each question
     return questions.map((q, idx) => ({
@@ -79,6 +90,9 @@ Return ONLY a valid JSON array with this exact structure:
     }));
   } catch (error) {
     console.error("Quiz generation error:", error);
+    if (error instanceof Error) {
+      console.error("Error details:", { name: error.name, message: error.message, stack: error.stack });
+    }
     throw new Error("Failed to generate quiz. Please try again.");
   }
 }
@@ -106,7 +120,6 @@ Keep responses concise but thorough. Use examples when helpful.`
     const completion = await openai.chat.completions.create({
       model: "gpt-5",
       messages: [systemMessage, ...messages],
-      temperature: 0.8,
       max_completion_tokens: 1000,
     });
 

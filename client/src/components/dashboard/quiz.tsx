@@ -131,10 +131,10 @@ export default function Quiz({ userId }: QuizProps) {
     });
   };
 
-  const currentQuestion = currentQuiz?.questions[currentQuestionIndex];
-  const progress = currentQuiz ? ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100 : 0;
+  const currentQuestion = currentQuiz?.questions?.[currentQuestionIndex];
+  const progress = currentQuiz?.questions ? ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100 : 0;
 
-  if (quizMode === 'taking' && currentQuiz) {
+  if (quizMode === 'taking' && currentQuiz && currentQuiz.questions) {
     return (
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
