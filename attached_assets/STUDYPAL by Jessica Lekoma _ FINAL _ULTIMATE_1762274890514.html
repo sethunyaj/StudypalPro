@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hibiscus StudyPal - Multi-Student Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --color-red: #DC2626;
+            --color-green: #16A34A;
+            --color-yellow: #EAB308;
+            --color-red-50: #FEF2F2;
+            --color-yellow-50: #FFFBEB;
+            --color-green-50: #F0FDF4;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--color-red-50) 0%, var(--color-yellow-50) 50%, var(--color-green-50) 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .glass-card:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15); }
+        .glass-container { background: rgba(255, 255, 255, 0.2); border-radius: 24px; box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .tab-button.active { background-color: rgba(255, 255, 255, 0.5); border-bottom: 3px solid var(--color-green); color: var(--color-green); font-weight: 600; }
+        .btn-red { background-color: var(--color-red); color: white; }
+        .btn-green { background-color: var(--color-green); color: white; }
+        .btn-yellow { background-color: var(--color-yellow); color: white; }
+        .btn-red:hover { background-color: #B91C1C; }
+        .btn-green:hover { background-color: #15803D; }
+        .btn-yellow:hover { background-color: #D97706; }
+        .hs-logo { background: linear-gradient(45deg, var(--color-red), var(--color-yellow), var(--color-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: bold; animation: gradient-shift 3s ease infinite; }
+        @keyframes gradient-shift { 0%, 100% { filter: hue-rotate(0deg); } 50% { filter: hue-rotate(20deg); } }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="glass-card max-w-md w-full mx-4">
+            <div class="text-center mb-8">
+                <span class="text-6xl hs-logo">HS</span>
+                <h1 class="text-3xl font-bold text-gray-800 mt-2">Hibiscus StudyPal</h1>
+                <p class="text-gray-600">Your Ultimate Learning Platform</p>
+            </div>
+
+            <div id="loginForm">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">👋 Welcome Back</h2>
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-3 mb-4 text-sm">
+                    <p class="font-semibold text-blue-800 mb-1">🎓 New here?</p>
+                    <p class="text-blue-700">Click "New Student? Register" below to create your account!</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Student ID / Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80">
+                </div>
+                <button onclick="handleLogin()" class="w-full btn-green px-6 py-3 rounded-lg font-medium text-lg mb-3">🚀 Sign In</button>
+                <button onclick="showRegister()" class="w-full bg-gray-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-600">📝 New Student? Register</button>
+                <div class="mt-4 pt-4 border-t border-gray-300">
+                    <button onclick="showAdminLogin()" class="w-full bg-purple-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-600">👨‍🏫 Teacher/Admin Login</button>
+                    <p class="text-xs text-center text-gray-500 mt-2">Admin credentials: admin / admin123</p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-300">
+                    <button onclick="window.testStorage()" class="w-full bg-gray-400 text-white px-3 py-2 rounded text-xs hover:bg-gray-500">🔧 Test Storage (Debug)</button>
+                    <p class="text-xs text-center text-gray-500 mt-1">Click if you're having login issues</p>
+                </div>
+            </div>
+
+            <div id="registerForm" class="hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">📝 Create Account</h2>
+                <div class="bg-green-50 border-2 border-green-200 rounded-lg p-3 mb-4">
+                    <p class="font-semibold text-green-800 mb-2">⚡ Quick Demo Accounts:</p>
+                    <div class="flex gap-2">
+                        <button onclick="createDemoStudent()" class="flex-1 bg-green-500 text-white px-3 py-2 rounded text-sm hover:bg-green-600">Create Demo Student</button>
+                    </div>
+                    <p class="text-xs text-green-700 mt-2">This creates a test account: demo / demo123</p>
+                </div>
+                <div class="mb-3"><label class="block text-gray-700 font-medium mb-2">Full Name</label><input type="text" id="regName" placeholder="Your name" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80"></div>
+                <div class="mb-3"><label class="block text-gray-700 font-medium mb-2">Student ID / Username</label><input type="text" id="regUsername" placeholder="Choose a username" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80"></div>
+                <div class="mb-3"><label class="block text-gray-700 font-medium mb-2">Password</label><input type="password" id="regPassword" placeholder="Create password" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80"></div>
+                <div class="mb-4"><label class="block text-gray-700 font-medium mb-2">Grade/Class</label><input type="text" id="regGrade" placeholder="e.g., Grade 10" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80"></div>
+                <button onclick="handleRegister()" class="w-full btn-green px-6 py-3 rounded-lg font-medium text-lg mb-3">✅ Create Account</button>
+                <button onclick="showLogin()" class="w-full bg-gray-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-600">← Back to Login</button>
+            </div>
+
+            <div id="adminLoginForm" class="hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-800">👨‍🏫 Admin Login</h2>
+                <div class="mb-4"><label class="block text-gray-700 font-medium mb-2">Admin Username</label><input type="text" id="adminUsername" placeholder="Admin ID" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white bg-opacity-80"></div>
+                <div class="mb-4"><label class="block text-gray-700 font-medium mb-2">Admin Password</label><input type="password" id="adminPassword" placeholder="Admin password" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white bg-opacity-80"></div>
+                <button onclick="handleAdminLogin()" class="w-full bg-purple-500 text-white px-6 py-3 rounded-lg font-medium text-lg mb-3 hover:bg-purple-600">🔐 Admin Sign In</button>
+                <button onclick="showLogin()" class="w-full bg-gray-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-600">← Back</button>
+                <p class="text-xs text-gray-500 mt-3">Default: admin/admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (Student View) -->
+    <div id="studentApp" class="hidden min-h-screen p-4">
+        <div class="glass-container max-w-7xl mx-auto">
+            <header class="p-4 border-b border-white border-opacity-30 flex items-center justify-between bg-white bg-opacity-10 rounded-t-3xl flex-wrap gap-3">
+                <div class="flex items-center">
+                    <span class="text-4xl hs-logo mr-3">HS</span>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">StudyPal</h1>
+                        <p class="text-sm text-gray-600">Welcome, <span id="studentName"></span>!</p>
+                    </div>
+                </div>
+                <nav class="flex space-x-2 overflow-x-auto">
+                    <button class="student-tab-btn px-4 py-2 rounded-lg text-gray-700 hover:bg-white hover:bg-opacity-30 transition-all duration-200 active text-sm whitespace-nowrap" data-tab="student-dashboard">📊 Dashboard</button>
+                    <button class="student-tab-btn px-4 py-2 rounded-lg text-gray-700 hover:bg-white hover:bg-opacity-30 transition-all duration-200 text-sm whitespace-nowrap" data-tab="student-notes">📝 Notes</button>
+                    <button class="student-tab-btn px-4 py-2 rounded-lg text-gray-700 hover:bg-white hover:bg-opacity-30 transition-all duration-200 text-sm whitespace-nowrap" data-tab="student-flashcards">🎴 Cards</button>
+                    <button class="student-tab-btn px-4 py-2 rounded-lg text-gray-700 hover:bg-white hover:bg-opacity-30 transition-all duration-200 text-sm whitespace-nowrap" data-tab="student-quiz">🎯 Quiz</button>
+                    <button class="student-tab-btn px-4 py-2 rounded-lg text-gray-700 hover:bg-white hover:bg-opacity-30 transition-all duration-200 text-sm whitespace-nowrap" data-tab="student-pomodoro">⏱️ Focus</button>
+                    <button class="student-tab-btn px-4 py-2 rounded-lg text-gray-700 hover:bg-white hover:bg-opacity-30 transition-all duration-200 text-sm whitespace-nowrap" data-tab="student-chatbot">🤖 AI Tutor</button>
+                </nav>
+                <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 text-sm">🚪 Logout</button>
+            </header>
+
+            <main class="p-6 overflow-y-auto" style="max-height: calc(100vh - 150px);">
+                <!-- Dashboard -->
+                <div id="student-dashboard" class="student-tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="glass-card text-center"><div class="text-4xl mb-2">🏆</div><div class="text-3xl font-bold text-gray-800" id="studentScore">0</div><div class="text-gray-600">Total Points</div></div>
+                        <div class="glass-card text-center"><div class="text-4xl mb-2">🔥</div><div class="text-3xl font-bold text-gray-800" id="studentStreak">0</div><div class="text-gray-600">Day Streak</div></div>
+                        <div class="glass-card text-center"><div class="text-4xl mb-2">📝</div><div class="text-3xl font-bold text-gray-800" id="studentQuizzes">0</div><div class="text-gray-600">Quizzes Taken</div></div>
+                    </div>
+                    <div class="glass-card mb-6">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">📈 Your Progress (7 Days)</h3>
+                        <canvas id="studentChart" class="w-full" style="height: 200px;"></canvas>
+                    </div>
+                    <div class="glass-card">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">🚀 Quick Actions</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <button onclick="switchStudentTab('student-quiz')" class="btn-green px-4 py-3 rounded-lg">Take Quiz</button>
+                            <button onclick="switchStudentTab('student-flashcards')" class="btn-yellow px-4 py-3 rounded-lg">Flashcards</button>
+                            <button onclick="switchStudentTab('student-notes')" class="btn-red px-4 py-3 rounded-lg">Notes</button>
+                            <button onclick="switchStudentTab('student-chatbot')" class="bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-blue-600">AI Tutor</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes (Enhanced: topics + persistent list) -->
+                <div id="student-notes" class="student-tab-content hidden">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">📝 Study Notes</h2>
+                    <div class="glass-card">
+                        <div class="grid md:grid-cols-3 gap-3 mb-3">
+                            <input id="noteTopic" placeholder="Topic (e.g., Acids & Bases)" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80" />
+                            <button onclick="saveQuickNote()" class="btn-green px-6 py-2 rounded-lg">💾 Save Note</button>
+                            <button onclick="newNote()" class="btn-yellow px-6 py-2 rounded-lg">🆕 New Note</button>
+                        </div>
+                        <textarea id="quickNote" placeholder="Write your notes here..." class="w-full h-48 p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80 text-gray-800"></textarea>
+                        <div id="notesList" class="mt-4 space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Flashcards -->
+                <div id="student-flashcards" class="student-tab-content hidden">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">🎴 Flashcards</h2>
+                    <div class="glass-card">
+                        <p class="text-gray-600 mb-4">Create and review flashcards to boost your memory!</p>
+                        <div class="mb-4">
+                            <input type="text" id="cardFrontQuick" placeholder="Front (Question)" class="w-full p-3 mb-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80">
+                            <input type="text" id="cardBackQuick" placeholder="Back (Answer)" class="w-full p-3 mb-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80">
+                            <button onclick="addQuickCard()" class="btn-green px-6 py-2 rounded-lg">Add Card</button>
+                        </div>
+                        <div id="quickCardsList" class="space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Quiz (Enhanced: full level range + Exit) -->
+                <div id="student-quiz" class="student-tab-content hidden">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">🎯 Take a Quiz</h2>
+                    <div id="quizSetup" class="glass-card">
+                        <h3 class="text-xl font-semibold mb-4">Create Your Quiz</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Cambridge Subject</label>
+                                <select id="quizSubject" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80">
+                                    <option>Mathematics</option>
+                                    <option>English Language</option>
+                                    <option>English Literature</option>
+                                    <option>Physics</option>
+                                    <option>Chemistry</option>
+                                    <option>Biology</option>
+                                    <option>Combined Science</option>
+                                    <option>History</option>
+                                    <option>Geography</option>
+                                    <option>Economics</option>
+                                    <option>Business Studies</option>
+                                    <option>Computer Science</option>
+                                    <option>ICT</option>
+                                    <option>Accounting</option>
+                                    <option>French</option>
+                                    <option>Spanish</option>
+                                    <option>Art & Design</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Level</label>
+                                <select id="quizLevel" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80">
+                                    <option value="lower-primary">Lower Primary (Std 1–4)</option>
+                                    <option value="upper-primary">Upper Primary (Std 5–7)</option>
+                                    <option value="middle">Middle School</option>
+                                    <option value="junior-secondary">Junior Secondary</option>
+                                    <option value="igcse" selected>IGCSE</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Number of Questions (5-50)</label>
+                                <input type="number" id="quizQuestions" min="5" max="50" value="10" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white bg-opacity-80">
+                            </div>
+                        </div>
+                        <button onclick="generateQuiz()" class="btn-green px-8 py-3 rounded-lg text-lg font-medium">🚀 Generate AI Quiz</button>
+                    </div>
+
+                    <div id="quizActive" class="hidden">
+                        <div class="glass-card mb-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-semibold">Question <span id="currentQ">1</span> of <span id="totalQ">10</span></h3>
+                                <div class="text-lg font-bold text-gray-700">Score: <span id="quizScore">0</span></div>
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <h3 class="text-xl font-semibold mb-6 text-gray-800" id="questionText"></h3>
+                            <div id="answerOptions" class="space-y-3"></div>
+                            <div class="flex flex-col sm:flex-row gap-3 mt-6">
+                                <button id="nextBtn" class="hidden btn-green px-8 py-3 rounded-lg font-medium" onclick="nextQuestion()">Next Question →</button>
+                                <button id="exitBtn" class="btn-red px-8 py-3 rounded-lg font-medium" onclick="exitQuiz()">Exit Quiz ✖</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="quizResults" class="hidden glass-card text-center">
+                        <div class="text-6xl mb-4" id="resultEmoji">🎉</div>
+                        <h3 class="text-3xl font-bold mb-4 text-gray-800">Quiz Complete!</h3>
+                        <div class="text-5xl font-bold mb-2 text-green-600" id="finalScore">0%</div>
+                        <p class="text-xl text-gray-600 mb-6">You got <span id="correctCount">0</span> out of <span id="totalCount">0</span> correct</p>
+                        <p class="text-2xl font-bold text-yellow-600 mb-6">+<span id="pointsEarned">0</span> Points Earned! 🏆</p>
+                        <button onclick="retakeQuiz()" class="btn-green px-8 py-3 rounded-lg font-medium">🔄 Choose Another Quiz</button>
+                    </div>
+                </div>
+
+                <!-- Pomodoro -->
+                <div id="student-pomodoro" class="student-tab-content hidden">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">⏱️ Focus Timer</h2>
+                    <div class="glass-card max-w-2xl mx-auto text-center">
+                        <div class="text-6xl font-bold text-gray-800 mb-4" id="pomodoroDisplay">25:00</div>
+                        <div class="text-xl text-gray-600 mb-6">Work Session</div>
+                        <div class="flex justify-center gap-3">
+                            <button onclick="startPomodoro()" class="btn-green px-8 py-3 rounded-lg">▶️ Start</button>
+                            <button onclick="pausePomodoro()" class="btn-yellow px-8 py-3 rounded-lg">⏸️ Pause</button>
+                            <button onclick="resetPomodoro()" class="btn-red px-8 py-3 rounded-lg">🔄 Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Chatbot -->
+                <div id="student-chatbot" class="student-tab-content hidden">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-800">🤖 AI Study Tutor</h2>
+                    <div class="glass-card">
+                        <div id="studentChatbotContainer">
+                            <div id="studentChatbotActive" class="hidden" style="min-height: 600px;"></div>
+                            <div id="studentChatbotNone" class="text-center py-20 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg">
+                                <div class="text-8xl mb-4">🤖</div>
+                                <p class="text-2xl font-bold text-gray-700 mb-3">AI Tutor Not Set Up</p>
+                                <p class="text-gray-600 mb-4">Your teacher/admin needs to set up the AI tutor for your class.</p>
+                                <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 max-w-md mx-auto text-left">
+                                    <p class="font-semibold text-blue-800 mb-2">💡 What can the AI Tutor do?</p>
+                                    <ul class="text-sm text-blue-700 space-y-1 list-disc list-inside">
+                                        <li>Answer your study questions 24/7</li>
+                                        <li>Explain complex topics simply</li>
+                                        <li>Help with homework</li>
+                                        <li>Generate practice questions</li>
+                                        <li>Create study guides</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard (unchanged core features) -->
+    <div id="adminApp" class="hidden min-h-screen p-4">
+        <div class="glass-container max-w-7xl mx-auto">
+            <header class="p-4 border-b border-white border-opacity-30 flex items-center justify-between bg-white bg-opacity-10 rounded-t-3xl">
+                <div class="flex items-center">
+                    <span class="text-4xl hs-logo mr-3">HS</span>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+                        <p class="text-sm text-gray-600">Monitor & Manage Students</p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">🚪 Logout</button>
+            </header>
+
+            <main class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="glass-card text-center"><div class="text-4xl mb-2">👥</div><div class="text-3xl font-bold text-gray-800" id="totalStudents">0</div><div class="text-gray-600">Total Students</div></div>
+                    <div class="glass-card text-center"><div class="text-4xl mb-2">✅</div><div class="text-3xl font-bold text-gray-800" id="activeToday">0</div><div class="text-gray-600">Active Today</div></div>
+                    <div class="glass-card text-center"><div class="text-4xl mb-2">📊</div><div class="text-3xl font-bold text-gray-800" id="avgScore">0</div><div class="text-gray-600">Avg Score</div></div>
+                    <div class="glass-card text-center"><div class="text-4xl mb-2">📝</div><div class="text-3xl font-bold text-gray-800" id="totalQuizzes">0</div><div class="text-gray-600">Quizzes Taken</div></div>
+                </div>
+
+                <!-- AI Tutor Management -->
+                <div class="glass-card mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">🤖 AI Tutor Management</h3>
+                    <p class="text-gray-600 mb-4">Set up the AI chatbot for all students. Once configured, students will see it in their AI Tutor tab.</p>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Fastbots Embed Code:</label>
+                        <textarea id="adminChatbotCode" placeholder="Paste your Fastbots embed code here..." class="w-full h-32 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white bg-opacity-80 font-mono text-sm"></textarea>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="saveClassChatbot()" class="bg-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-600">✅ Save & Deploy to All Students</button>
+                        <button onclick="removeClassChatbot()" class="btn-red px-6 py-3 rounded-lg font-medium">❌ Remove Chatbot</button>
+                        <button onclick="testClassChatbot()" class="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600">🧪 Test</button>
+                    </div>
+                </div>
+
+                <div class="glass-card mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold text-gray-800">👨‍🎓 Student List</h3>
+                        <button onclick="refreshStudentList()" class="btn-green px-4 py-2 rounded-lg">🔄 Refresh</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-white bg-opacity-40">
+                                    <th class="p-3 text-left">Name</th>
+                                    <th class="p-3 text-left">Username</th>
+                                    <th class="p-3 text-left">Grade</th>
+                                    <th class="p-3 text-left">Points</th>
+                                    <th class="p-3 text-left">Streak</th>
+                                    <th class="p-3 text-left">Last Active</th>
+                                    <th class="p-3 text-left">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                                <tr><td colspan="7" class="p-4 text-center text-gray-600">Loading students...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">📈 Class Performance</h3>
+                    <div style="height: 300px;">
+                        <canvas id="adminChart"></canvas>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div id="studentDetailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+            <button onclick="closeStudentDetail()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-4xl font-bold leading-none z-10 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-gray-100 transition-all">×</button>
+            <div class="flex justify-between items-center mb-6 pr-12">
+                <h2 class="text-2xl font-bold text-gray-800">📊 Student Details</h2>
+            </div>
+            <div id="studentDetailContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let studentChartInstance, adminChartInstance;
+        const state = { currentUser: null, userType: null, students: {}, adminData: {} };
+
+        document.addEventListener('DOMContentLoaded', async () => { await loadInitialData(); });
+
+        async function saveToStorage(key, value, shared = false) {
+            try { const result = await window.storage.set(key, JSON.stringify(value), shared); return result !== null; }
+            catch (error) { localStorage.setItem(key, JSON.stringify(value)); return true; }
+        }
+        async function loadFromStorage(key, shared = false) {
+            try { const result = await window.storage.get(key, shared); return result ? JSON.parse(result.value) : null; }
+            catch (error) { const data = localStorage.getItem(key); return data ? JSON.parse(data) : null; }
+        }
+
+        async function loadInitialData() {
+            let adminUsers = await loadFromStorage('admin-users', true);
+            if (!adminUsers) { adminUsers = { admin: { username: 'admin', password: 'admin123', name: 'Administrator' } }; await saveToStorage('admin-users', adminUsers, true); }
+            let students = await loadFromStorage('all-students', true);
+            if (!students || Object.keys(students).length === 0) {
+                students = { demo: { name: 'Demo Student', username: 'demo', password: 'demo123', grade: 'Grade 10', score: 150, streak: 3, quizzesTaken: 5, studyTime: 120, lastActive: new Date().toISOString(), created: new Date().toISOString() } };
+                await saveToStorage('all-students', students, true);
+            }
+        }
+
+        function showLogin(){ document.getElementById('loginForm').classList.remove('hidden'); document.getElementById('registerForm').classList.add('hidden'); document.getElementById('adminLoginForm').classList.add('hidden'); }
+        function showRegister(){ document.getElementById('loginForm').classList.add('hidden'); document.getElementById('registerForm').classList.remove('hidden'); document.getElementById('adminLoginForm').classList.add('hidden'); }
+        function showAdminLogin(){ document.getElementById('loginForm').classList.add('hidden'); document.getElementById('registerForm').classList.add('hidden'); document.getElementById('adminLoginForm').classList.remove('hidden'); }
+
+        async function handleLogin(){
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if(!username || !password){ alert('⚠️ Please enter both username and password'); return; }
+            const students = await loadFromStorage('all-students', true) || {};
+            if(students[username]){
+                if(students[username].password === password){ state.currentUser = students[username]; state.userType = 'student'; showStudentApp(); }
+                else { alert('❌ Invalid password. Please try again.'); }
+            } else { alert('❌ Username not found.\n\n💡 Try:\n1. Click "New Student? Register"\n2. Click "Create Demo Student"'); }
+        }
+        async function handleAdminLogin(){
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            if(!username || !password){ alert('⚠️ Please enter both username and password'); return; }
+            const adminUsers = await loadFromStorage('admin-users', true) || {};
+            if(adminUsers[username] && adminUsers[username].password === password){ state.currentUser = adminUsers[username]; state.userType = 'admin'; showAdminApp(); }
+            else { alert('❌ Invalid admin credentials.\n\nDefault: admin/admin123'); }
+        }
+        async function handleRegister(){
+            const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const grade = document.getElementById('regGrade').value.trim();
+            if(!name || !username || !password || !grade){ alert('Please fill in all fields'); return; }
+            const students = await loadFromStorage('all-students', true) || {};
+            if(students[username]){ alert('Username already exists! Please choose a different username.'); return; }
+            students[username] = { name, username, password, grade, score: 0, streak: 0, quizzesTaken: 0, studyTime: 0, lastActive: new Date().toISOString(), created: new Date().toISOString() };
+            await saveToStorage('all-students', students, true);
+            alert('✅ Account created successfully!\n\n👉 Login with:\nUsername: ' + username + '\nPassword: ' + password);
+            showLogin();
+            document.getElementById('loginUsername').value = username;
+            document.getElementById('loginPassword').value = password;
+        }
+        async function createDemoStudent(){
+            const students = await loadFromStorage('all-students', true) || {};
+            if(students['demo']){ alert('✅ Demo account already exists!\n\nLogin with:\nUsername: demo\nPassword: demo123'); showLogin(); document.getElementById('loginUsername').value = 'demo'; document.getElementById('loginPassword').value = 'demo123'; return; }
+            students['demo'] = { name: 'Demo Student', username: 'demo', password: 'demo123', grade: 'Grade 10', score: 150, streak: 3, quizzesTaken: 5, studyTime: 120, lastActive: new Date().toISOString(), created: new Date().toISOString() };
+            await saveToStorage('all-students', students, true);
+            alert('✅ Demo account created!\n\nLogin with:\nUsername: demo\nPassword: demo123');
+            showLogin(); document.getElementById('loginUsername').value = 'demo'; document.getElementById('loginPassword').value = 'demo123';
+        }
+
+        window.testStorage = async function(){
+            if(!window.storage){ alert('⚠️ Storage API not available. Using localStorage fallback.'); return; }
+            try {
+                await window.storage.set('test-key', 'test-value', true);
+                const students = await loadFromStorage('all-students', true);
+                const admins = await loadFromStorage('admin-users', true);
+                alert('✅ Storage is working!\n\nStudents: ' + (students ? Object.keys(students).length : 0) + '\nAdmins: ' + (admins ? Object.keys(admins).length : 0));
+            } catch (error) { alert('❌ Storage test failed: ' + error.message); }
+        }
+
+        function logout(){ state.currentUser = null; state.userType = null; document.getElementById('loginScreen').classList.remove('hidden'); document.getElementById('studentApp').classList.add('hidden'); document.getElementById('adminApp').classList.add('hidden'); showLogin(); }
+
+        async function showStudentApp(){
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('studentApp').classList.remove('hidden');
+            document.getElementById('studentName').textContent = state.currentUser.name;
+            document.getElementById('studentScore').textContent = state.currentUser.score || 0;
+            document.getElementById('studentStreak').textContent = state.currentUser.streak || 0;
+            document.getElementById('studentQuizzes').textContent = state.currentUser.quizzesTaken || 0;
+            const students = await loadFromStorage('all-students', true) || {};
+            if(students[state.currentUser.username]){ students[state.currentUser.username].lastActive = new Date().toISOString(); await saveToStorage('all-students', students, true); }
+            document.querySelectorAll('.student-tab-btn').forEach(btn => { btn.addEventListener('click', () => switchStudentTab(btn.dataset.tab)); });
+            renderStudentChart();
+            await loadStudentChatbot();
+            switchStudentTab('student-dashboard');
+        }
+
+        function switchStudentTab(tabName){
+            document.querySelectorAll('.student-tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.student-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.remove('hidden');
+            document.querySelector(`[data-tab="${tabName}"]`)?.classList.add('active');
+            if(tabName === 'student-notes'){ renderNotesList(); }
+        }
+
+        function renderStudentChart(){
+            const canvas = document.getElementById('studentChart'); if(!canvas) return; const ctx = canvas.getContext('2d'); if(studentChartInstance){ try{ studentChartInstance.destroy(); }catch(e){} }
+            studentChartInstance = new Chart(ctx, { type: 'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Study Minutes', data: [30,45,60,40,80,55,70], borderColor: 'rgb(22, 163, 74)', backgroundColor: 'rgba(22, 163, 74, 0.1)', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
+        }
+
+        // ===== Notes: persistent, topic-grouped =====
+        function escapeHTML(str){ return str.replace(/[&<>"]+/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s])); }
+        function newNote(){ document.getElementById('quickNote').value = ''; document.getElementById('noteTopic').value = ''; document.getElementById('quickNote').focus(); }
+        async function saveQuickNote(){
+            const content = document.getElementById('quickNote').value.trim();
+            const topic = (document.getElementById('noteTopic').value.trim() || 'General');
+            if(!content){ alert('⚠️ Please write something first!'); return; }
+            const key = `notes-${state.currentUser?.username || 'guest'}`;
+            const all = await loadFromStorage(key) || {};
+            const list = all[topic] || [];
+            list.unshift({ content, topic, ts: Date.now() });
+            all[topic] = list;
+            await saveToStorage(key, all);
+            document.getElementById('quickNote').value = '';
+            renderNotesList(all);
+            alert('💾 Note saved!');
+        }
+        async function renderNotesList(all=null){
+            const key = `notes-${state.currentUser?.username || 'guest'}`;
+            const data = all || await loadFromStorage(key) || {};
+            const container = document.getElementById('notesList');
+            const topics = Object.keys(data);
+            if(topics.length === 0){ container.innerHTML = '<div class="text-gray-600">No notes yet. Start by writing something above.</div>'; return; }
+            container.innerHTML = topics.map(topic => {
+                const items = data[topic].map(n => `
+                    <div class=\"p-3 bg-white bg-opacity-50 rounded-lg\">
+                        <div class=\"text-xs text-gray-500\">${new Date(n.ts).toLocaleString()}</div>
+                        <div class=\"font-medium\">${escapeHTML(n.content)}</div>
+                    </div>`).join('');
+                return `<details class=\"bg-white bg-opacity-40 rounded-lg p-3\" open>
+                            <summary class=\"cursor-pointer font-semibold\">${escapeHTML(topic)} (${data[topic].length})</summary>
+                            <div class=\"mt-3 space-y-2\">${items}</div>
+                        </details>`;
+            }).join('');
+        }
+
+        // ============ AI TUTOR (unchanged) ============
+        async function loadStudentChatbot(){
+            const chatbotCode = await loadFromStorage('class-chatbot', true);
+            if(chatbotCode && chatbotCode.trim() !== ''){
+                const container = document.getElementById('studentChatbotActive');
+                container.innerHTML = '';
+                try {
+                    if(chatbotCode.toLowerCase().includes('<script')){
+                        const wrapper = document.createElement('div');
+                        wrapper.innerHTML = chatbotCode;
+                        Array.from(wrapper.childNodes).forEach(node => {
+                            if(node.tagName === 'SCRIPT'){
+                                const newScript = document.createElement('script');
+                                Array.from(node.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                                if(node.textContent){ newScript.textContent = node.textContent; }
+                                container.appendChild(newScript);
+                            } else if(node.nodeType === 1){ container.appendChild(node.cloneNode(true)); }
+                        });
+                    } else if(chatbotCode.toLowerCase().includes('<iframe')){
+                        container.innerHTML = chatbotCode; const iframe = container.querySelector('iframe');
+                        if(iframe){ iframe.style.width = '100%'; iframe.style.minHeight = '600px'; iframe.style.border = 'none'; iframe.style.borderRadius = '12px'; }
+                    } else { container.innerHTML = chatbotCode; }
+                    document.getElementById('studentChatbotNone').classList.add('hidden');
+                    container.classList.remove('hidden');
+                } catch (error) { console.error('Error loading chatbot:', error); }
+            } else {
+                document.getElementById('studentChatbotNone').classList.remove('hidden');
+                document.getElementById('studentChatbotActive').classList.add('hidden');
+            }
+        }
+        async function saveClassChatbot(){ const code = document.getElementById('adminChatbotCode').value.trim(); if(!code){ alert('⚠️ Please paste your chatbot embed code first!'); return; } await saveToStorage('class-chatbot', code, true); alert('✅ AI Tutor saved successfully!\n\n🎉 All students can now access the AI Tutor!'); }
+        async function removeClassChatbot(){ if(!confirm('Remove AI Tutor for all students?')) return; await saveToStorage('class-chatbot', '', true); document.getElementById('adminChatbotCode').value = ''; alert('✅ AI Tutor removed successfully!'); }
+        function testClassChatbot(){ const code = document.getElementById('adminChatbotCode').value.trim(); if(!code){ alert('⚠️ Please paste your embed code first!'); return; } const w = window.open('', '_blank', 'width=420,height=740'); if(!w){ alert('⚠️ Pop-up blocked. Save & view from Student > AI Tutor.'); return; } w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Chatbot Preview</title></head><body style="margin:0;padding:10px;">' + code + '</body></html>'); w.document.close(); }
+        // ============ END AI TUTOR ============
+
+        // ===== Quiz Engine (levels expanded + exit) =====
+        const quizState = { questions: [], currentIndex: 0, score: 0, answers: [] };
+
+        const cambridgeQuestions = {
+            'Mathematics': [
+                {q: 'What is the quadratic formula?', a: ['x = (-b ± √(b²-4ac))/2a', 'x = -b/2a', 'x = b²-4ac', 'x = a+b+c'], c: 0},
+                {q: 'What is 15% of 200?', a: ['30', '25', '35', '40'], c: 0},
+                {q: 'Solve: 2x + 5 = 15', a: ['x = 5', 'x = 10', 'x = 7.5', 'x = 2.5'], c: 0},
+            ],
+            'English Language': [
+                {q: 'Which is a subordinating conjunction?', a: ['because', 'and', 'but', 'or'], c: 0},
+                {q: 'Which sentence uses the passive voice?', a: ['The ball was kicked by Ali.', 'Ali kicked the ball.', 'Ali is kicking.', 'Kick the ball!'], c: 0},
+            ],
+            'Physics': [
+                {q: 'What is the speed of light?', a: ['3×10⁸ m/s', '3×10⁶ m/s', '3×10⁷ m/s', '3×10⁹ m/s'], c: 0},
+                {q: 'Unit of force?', a: ['Newton', 'Joule', 'Watt', 'Pascal'], c: 0},
+            ],
+            'Chemistry': [
+                {q: "What is water's chemical formula?", a: ['H₂O', 'HO₂', 'H₃O', 'H₂O₂'], c: 0},
+                {q: 'What is the pH of pure water at 25°C?', a: ['7', '0', '14', '10'], c: 0},
+            ],
+            'Biology': [
+                {q: 'Powerhouse of the cell?', a: ['Mitochondria', 'Nucleus', 'Ribosome', 'Chloroplast'], c: 0},
+                {q: 'Process of making food in plants?', a: ['Photosynthesis', 'Respiration', 'Digestion', 'Absorption'], c: 0},
+            ]
+        };
+        const primaryQuestions = {
+            'Mathematics': [
+                {q: 'What is 7 + 5?', a: ['12', '10', '11', '13'], c: 0},
+                {q: 'What is 5 × 2?', a: ['10', '7', '12', '8'], c: 0},
+                {q: 'What is 18 − 9?', a: ['9', '7', '10', '8'], c: 0},
+            ],
+            'English Language': [
+                {q: 'Which word is a noun?', a: ['dog', 'run', 'quickly', 'blue'], c: 0},
+                {q: 'Find the verb: "They play football"', a: ['play', 'they', 'football', 'the'], c: 0},
+            ],
+            'Science': [
+                {q: 'Which part of the plant makes food?', a: ['Leaf', 'Root', 'Stem', 'Flower'], c: 0},
+                {q: 'Water freezes at?', a: ['0°C', '10°C', '50°C', '100°C'], c: 0},
+            ]
+        };
+        // Moderate pool for Middle/Junior Secondary
+        const secondaryQuestions = {
+            'Mathematics': [
+                {q: 'Solve: 3x − 7 = 11', a: ['x = 6', 'x = 4', 'x = 3', 'x = 2'], c: 1},
+                {q: 'Area of a triangle with base 8 cm and height 5 cm?', a: ['20 cm²', '40 cm²', '13 cm²', '80 cm²'], c: 0},
+                {q: 'Mean of 4, 7, 9?', a: ['6.7', '7', '8', '6'], c: 1},
+            ],
+            'English Language': [
+                {q: 'Choose the correct punctuation: its a sunny day', a: ["It's a sunny day.", 'Its a sunny day.', "It’s a sunny day?", 'Its a sunny day!'], c: 0},
+                {q: 'A synonym for "rapid" is', a: ['fast', 'slow', 'late', 'early'], c: 0},
+            ],
+            'Combined Science': [
+                {q: 'Which gas relights a glowing splint?', a: ['Oxygen', 'Hydrogen', 'Carbon dioxide', 'Nitrogen'], c: 0},
+                {q: 'Which substance turns limewater milky?', a: ['CO₂', 'O₂', 'H₂', 'N₂'], c: 0},
+            ],
+            'Chemistry': [
+                {q: 'What colour does blue litmus turn in acid?', a: ['Red', 'Blue', 'Green', 'Purple'], c: 0},
+                {q: 'Formula of sodium chloride?', a: ['NaCl', 'Na₂O', 'NaOH', 'NaCO₃'], c: 0},
+            ]
+        };
+
+        function poolForLevel(level){
+            const map = {
+                'lower-primary': primaryQuestions,
+                'upper-primary': primaryQuestions,
+                'primary': primaryQuestions, // backward compat
+                'middle': secondaryQuestions,
+                'junior-secondary': secondaryQuestions,
+                'igcse': cambridgeQuestions
+            };
+            return map[level] || cambridgeQuestions;
+        }
+
+        function generateQuiz(){
+            const subject = document.getElementById('quizSubject').value;
+            const levelEl = document.getElementById('quizLevel');
+            const level = levelEl ? levelEl.value : 'igcse';
+            const numQuestions = Math.min(50, Math.max(5, parseInt(document.getElementById('quizQuestions').value) || 10));
+            const basePool = poolForLevel(level);
+            let questionPool = (basePool[subject] || basePool['Mathematics'] || []).slice();
+            while(questionPool.length < numQuestions){ questionPool = questionPool.concat(questionPool); }
+            questionPool = questionPool.sort(() => Math.random() - 0.5);
+            quizState.questions = questionPool.slice(0, numQuestions);
+            quizState.currentIndex = 0; quizState.score = 0; quizState.answers = [];
+            document.getElementById('quizSetup').classList.add('hidden');
+            document.getElementById('quizActive').classList.remove('hidden');
+            document.getElementById('quizResults').classList.add('hidden');
+            document.getElementById('totalQ').textContent = numQuestions;
+            showQuestion();
+        }
+        function showQuestion(){
+            if(quizState.currentIndex >= quizState.questions.length){ showQuizResults(); return; }
+            const q = quizState.questions[quizState.currentIndex];
+            document.getElementById('currentQ').textContent = quizState.currentIndex + 1;
+            document.getElementById('quizScore').textContent = quizState.score;
+            document.getElementById('questionText').textContent = q.q;
+            document.getElementById('nextBtn').classList.add('hidden');
+            const optionsHTML = q.a.map((answer, idx) => `
+                <button class="quiz-option w-full p-4 text-left bg-white bg-opacity-60 rounded-lg hover:bg-opacity-80 transition-all border-2 border-gray-300 hover:border-green-500" onclick="selectAnswer(${idx})">
+                    <span class="font-semibold mr-2">${String.fromCharCode(65 + idx)}.</span> ${answer}
+                </button>`).join('');
+            document.getElementById('answerOptions').innerHTML = optionsHTML;
+        }
+        function selectAnswer(index){
+            const q = quizState.questions[quizState.currentIndex];
+            const isCorrect = index === q.c;
+            if(isCorrect){ quizState.score += 10; document.getElementById('quizScore').textContent = quizState.score; }
+            quizState.answers.push(isCorrect);
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((opt, idx) => {
+                opt.disabled = true; opt.classList.remove('hover:border-green-500', 'hover:bg-opacity-80');
+                if(idx === q.c){ opt.classList.add('bg-green-200', 'border-green-500'); }
+                else if(idx === index && !isCorrect){ opt.classList.add('bg-red-200', 'border-red-500'); }
+            });
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+        function nextQuestion(){ quizState.currentIndex++; showQuestion(); }
+        function exitQuiz(){
+            if(!confirm('Exit the current quiz? Your progress will not be saved.')) return;
+            quizState.questions = []; quizState.currentIndex = 0; quizState.score = 0; quizState.answers = [];
+            document.getElementById('quizActive').classList.add('hidden');
+            document.getElementById('quizResults').classList.add('hidden');
+            document.getElementById('quizSetup').classList.remove('hidden');
+        }
+        async function showQuizResults(){
+            document.getElementById('quizActive').classList.add('hidden');
+            document.getElementById('quizResults').classList.remove('hidden');
+            const correct = quizState.answers.filter(a => a).length; const total = quizState.questions.length; const percentage = Math.round((correct / total) * 100); const pointsEarned = quizState.score;
+            document.getElementById('correctCount').textContent = correct; document.getElementById('totalCount').textContent = total; document.getElementById('finalScore').textContent = percentage + '%'; document.getElementById('pointsEarned').textContent = pointsEarned;
+            const emoji = percentage >= 90 ? '🎉' : percentage >= 70 ? '😊' : percentage >= 50 ? '🙂' : '😔';
+            document.getElementById('resultEmoji').textContent = emoji;
+            const students = await loadFromStorage('all-students', true) || {};
+            if(students[state.currentUser.username]){ students[state.currentUser.username].score += pointsEarned; students[state.currentUser.username].quizzesTaken++; await saveToStorage('all-students', students, true); state.currentUser = students[state.currentUser.username]; document.getElementById('studentScore').textContent = state.currentUser.score; document.getElementById('studentQuizzes').textContent = state.currentUser.quizzesTaken; }
+        }
+        function retakeQuiz(){ document.getElementById('quizResults').classList.add('hidden'); document.getElementById('quizSetup').classList.remove('hidden'); }
+
+        // ===== Admin view helpers =====
+        async function showAdminApp(){ document.getElementById('loginScreen').classList.add('hidden'); document.getElementById('adminApp').classList.remove('hidden'); await refreshStudentList(); renderAdminChart(); }
+        async function refreshStudentList(){
+            const students = await loadFromStorage('all-students', true) || {}; const arr = Object.values(students);
+            document.getElementById('totalStudents').textContent = arr.length;
+            const today = new Date().toDateString(); const activeToday = arr.filter(s => new Date(s.lastActive).toDateString() === today).length; document.getElementById('activeToday').textContent = activeToday;
+            const avgScore = arr.length > 0 ? Math.round(arr.reduce((sum, s) => sum + (s.score || 0), 0) / arr.length) : 0; document.getElementById('avgScore').textContent = avgScore;
+            const totalQuizzes = arr.reduce((sum, s) => sum + (s.quizzesTaken || 0), 0); document.getElementById('totalQuizzes').textContent = totalQuizzes;
+            const tbody = document.getElementById('studentTableBody');
+            if(arr.length === 0){ tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-600">No students registered yet</td></tr>'; return; }
+            tbody.innerHTML = arr.map(student => `
+                <tr class="border-t border-gray-200 hover:bg-white hover:bg-opacity-30">
+                    <td class="p-3">${student.name}</td>
+                    <td class="p-3">${student.username}</td>
+                    <td class="p-3">${student.grade}</td>
+                    <td class="p-3 font-bold text-green-600">${student.score || 0}</td>
+                    <td class="p-3">${student.streak || 0} days</td>
+                    <td class="p-3 text-sm">${new Date(student.lastActive).toLocaleDateString()}</td>
+                    <td class="p-3"><button onclick="viewStudentDetail('${student.username}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">View</button></td>
+                </tr>`).join('');
+        }
+        async function viewStudentDetail(username){
+            const students = await loadFromStorage('all-students', true) || {}; const student = students[username]; if(!student) return;
+            const modal = document.getElementById('studentDetailModal'); const content = document.getElementById('studentDetailContent');
+            content.innerHTML = `
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white bg-opacity-40 p-4 rounded-lg"><div class="text-sm text-gray-600">Full Name</div><div class="text-lg font-bold">${student.name}</div></div>
+                    <div class="bg-white bg-opacity-40 p-4 rounded-lg"><div class="text-sm text-gray-600">Username</div><div class="text-lg font-bold">${student.username}</div></div>
+                    <div class="bg-white bg-opacity-40 p-4 rounded-lg"><div class="text-sm text-gray-600">Grade/Class</div><div class="text-lg font-bold">${student.grade}</div></div>
+                    <div class="bg-white bg-opacity-40 p-4 rounded-lg"><div class="text-sm text-gray-600">Total Points</div><div class="text-lg font-bold text-green-600">${student.score || 0}</div></div>
+                    <div class="bg-white bg-opacity-40 p-4 rounded-lg"><div class="text-sm text-gray-600">Current Streak</div><div class="text-lg font-bold text-orange-600">${student.streak || 0} days</div></div>
+                    <div class="bg-white bg-opacity-40 p-4 rounded-lg"><div class="text-sm text-gray-600">Quizzes Taken</div><div class="text-lg font-bold">${student.quizzesTaken || 0}</div></div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="exportStudentReport('${username}')" class="btn-green px-4 py-2 rounded-lg">📄 Export Report</button>
+                    <button onclick="resetStudentProgress('${username}')" class="btn-yellow px-4 py-2 rounded-lg">🔄 Reset Progress</button>
+                    <button onclick="deleteStudent('${username}')" class="btn-red px-4 py-2 rounded-lg">🗑️ Delete Student</button>
+                </div>`;
+            modal.classList.remove('hidden');
+        }
+        function closeStudentDetail(){ document.getElementById('studentDetailModal').classList.add('hidden'); }
+        async function exportStudentReport(username){
+            const students = await loadFromStorage('all-students', true) || {}; const student = students[username]; if(!student) return;
+            const report = `HIBISCUS STUDYPAL - STUDENT REPORT\n====================================\nStudent Information:\n- Name: ${student.name}\n- Username: ${student.username}\n- Grade: ${student.grade}\n\nPerformance Metrics:\n- Total Points: ${student.score || 0}\n- Current Streak: ${student.streak || 0} days\n- Quizzes Taken: ${student.quizzesTaken || 0}\n- Last Active: ${new Date(student.lastActive).toLocaleString()}\n\nGenerated: ${new Date().toLocaleString()}`;
+            const blob = new Blob([report], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${username}_report_${Date.now()}.txt`; a.click(); alert('✅ Report exported successfully!');
+        }
+        async function resetStudentProgress(username){ if(!confirm(`Reset all progress for ${username}?`)) return; const students = await loadFromStorage('all-students', true) || {}; if(students[username]){ students[username].score = 0; students[username].streak = 0; students[username].quizzesTaken = 0; await saveToStorage('all-students', students, true); alert('✅ Student progress reset!'); closeStudentDetail(); refreshStudentList(); } }
+        async function deleteStudent(username){ if(!confirm(`Delete student ${username}? This cannot be undone.`)) return; const students = await loadFromStorage('all-students', true) || {}; delete students[username]; await saveToStorage('all-students', students, true); alert('🗑️ Student deleted!'); closeStudentDetail(); refreshStudentList(); }
+        function renderAdminChart(){
+            const canvas = document.getElementById('adminChart'); if(!canvas) return; const ctx = canvas.getContext('2d'); if(adminChartInstance){ try{ adminChartInstance.destroy(); }catch(e){} }
+            adminChartInstance = new Chart(ctx, { type: 'bar', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label: 'Active Students', data: [12,19,15,17,22,18,20], backgroundColor: 'rgba(22, 163, 74, 0.6)', borderColor: 'rgb(22, 163, 74)', borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: true } }, scales: { y: { beginAtZero: true } } } });
+        }
+
+        document.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter'){
+                const loginForm = document.getElementById('loginForm');
+                const registerForm = document.getElementById('registerForm');
+                const adminForm = document.getElementById('adminLoginForm');
+                if(!loginForm.classList.contains('hidden')){ handleLogin(); }
+                else if(!registerForm.classList.contains('hidden')){ handleRegister(); }
+                else if(!adminForm.classList.contains('hidden')){ handleAdminLogin(); }
+            }
+        });
+    </script>
+
+<!-- Code Copilot Patch: Flashcards + Pomodoro fixes -->
+<script>
+(function () {
+  // ===== Utilities & Safe Fallbacks =====
+  function escapeHTML(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  if (typeof window.state !== 'object') window.state = {};
+  if (typeof window.loadFromStorage !== 'function') {
+    window.loadFromStorage = async function (key, useObject = false) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : (useObject ? {} : null);
+      } catch {
+        return useObject ? {} : null;
+      }
+    };
+  }
+  if (typeof window.saveToStorage !== 'function') {
+    window.saveToStorage = async function (key, value, _objectMode=false) {
+      localStorage.setItem(key, JSON.stringify(value));
+    };
+  }
+
+  // ===== Flashcards (save/render + toolbar + study + import/export) =====
+  const CARD_KEY = () => `cards-${state?.currentUser?.username || 'guest'}`;
+
+  async function getCards() { return (await loadFromStorage(CARD_KEY())) || []; }
+  async function setCards(arr) { await saveToStorage(CARD_KEY(), arr || []); }
+
+  function ensureFlashToolbar(listEl) {
+    if (!listEl) return;
+    if (document.getElementById('flashTools')) return;
+    const bar = document.createElement('div');
+    bar.id = 'flashTools';
+    bar.style.display = 'flex';
+    bar.style.gap = '0.5rem';
+    bar.style.margin = '0 0 0.75rem 0';
+    bar.innerHTML = `
+      <button id="btnExportCards">Export</button>
+      <label style="display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;">
+        <span>Import</span>
+        <input id="fileImportCards" type="file" accept="application/json" style="display:none">
+      </label>
+      <button id="btnStudyMode">Start Study</button>
+    `;
+    listEl.parentElement?.insertBefore(bar, listEl);
+
+    document.getElementById('btnExportCards')?.addEventListener('click', exportCards);
+    document.getElementById('fileImportCards')?.addEventListener('change', e => {
+      if (e.target.files && e.target.files[0]) importCards(e.target.files[0]);
+      e.target.value = '';
+    });
+    document.getElementById('btnStudyMode')?.addEventListener('click', startStudyMode);
+  }
+
+  // Implementations
+  async function _addQuickCard_impl() {
+    const frontEl = document.getElementById('cardFrontQuick');
+    const backEl  = document.getElementById('cardBackQuick');
+    const front = (frontEl?.value || '').trim();
+    const back  = (backEl?.value  || '').trim();
+    if (!front || !back) { alert('⚠️ Please fill both Front and Back'); return; }
+
+    const cards = await getCards();
+    const id = (crypto.randomUUID?.() || `id_${Date.now()}_${Math.random().toString(36).slice(2)}`);
+    cards.unshift({ id, front, back, ts: Date.now() });
+    await setCards(cards);
+
+    if (frontEl) frontEl.value = '';
+    if (backEl)  backEl.value  = '';
+    frontEl?.focus();
+    renderCardList(cards);
+  }
+
+  async function _renderCardList_impl(cards = null) {
+    const listEl = document.getElementById('quickCardsList');
+    if (!listEl) return;
+    ensureFlashToolbar(listEl);
+
+    const data = cards || (await getCards());
+    if (!data.length) {
+      listEl.innerHTML = '<div style="opacity:.7">No cards yet. Add some above.</div>';
+      return;
+    }
+
+    listEl.innerHTML = data.map(c => `
+      <details style="padding:.75rem;border-radius:.5rem;background:rgba(255,255,255,.6);margin-bottom:.5rem">
+        <summary style="cursor:pointer;font-weight:600">Q: ${escapeHTML(c.front)}</summary>
+        <div style="margin-top:.5rem">A: ${escapeHTML(c.back)}</div>
+        <div style="margin-top:.5rem;display:flex;gap:.5rem">
+          <button onclick="editCard('${c.id}')">Edit</button>
+          <button onclick="deleteCard('${c.id}')" style="color:#b00020">Delete</button>
+        </div>
+      </details>
+    `).join('');
+  }
+
+  async function _deleteCard_impl(id) {
+    const cards = await getCards();
+    const i = cards.findIndex(c => c.id === id);
+    if (i === -1) return;
+    cards.splice(i, 1);
+    await setCards(cards);
+    renderCardList(cards);
+  }
+
+  async function _editCard_impl(id) {
+    const cards = await getCards();
+    const c = cards.find(x => x.id === id);
+    if (!c) return;
+    const nf = prompt('Edit FRONT (question):', c.front);
+    if (nf === null) return;
+    const nb = prompt('Edit BACK (answer):', c.back);
+    if (nb === null) return;
+    c.front = String(nf).trim();
+    c.back  = String(nb).trim();
+    await setCards(cards);
+    renderCardList(cards);
+  }
+
+  async function exportCards() {
+    const data = await getCards();
+    const username = state?.currentUser?.username || 'guest';
+    const stamp = new Date().toISOString().replace(/[:.]/g,'').slice(0,15);
+    const blob = new Blob([JSON.stringify({ username, exportedAt: new Date().toISOString(), cards: data }, null, 2)],
+                          { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `cards-${username}-${stamp}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  async function importCards(file) {
+    try {
+      const text = await file.text();
+      const obj = JSON.parse(text);
+      const incoming = Array.isArray(obj) ? obj : Array.isArray(obj.cards) ? obj.cards : [];
+      if (!incoming.length) { alert('No cards found in file.'); return; }
+      const current = await getCards();
+      const exists = new Set(current.map(c => c.id).filter(Boolean));
+      const dedupKey = (c) => (c.id || '') + '|' + (c.front || '') + '|' + (c.back || '');
+      const byKey = new Set(current.map(dedupKey));
+
+      let added = 0;
+      for (const raw of incoming) {
+        const c = { id: raw.id || (crypto.randomUUID?.() || `id_${Date.now()}_${Math.random()}`),
+                    front: String(raw.front || '').trim(),
+                    back:  String(raw.back  || '').trim(),
+                    ts: Number(raw.ts) || Date.now() };
+        if (!c.front || !c.back) continue;
+        const key = dedupKey(c);
+        if (exists.has(c.id) || byKey.has(key)) continue;
+        current.push(c);
+        exists.add(c.id); byKey.add(key);
+        added++;
+      }
+      await setCards(current);
+      renderCardList(current);
+      alert(`Imported ${added} new card(s).`);
+    } catch (e) {
+      console.error(e); alert('Import failed. Invalid file.');
+    }
+  }
+
+  // Study Mode
+  const Study = { deck: [], idx: 0, showBack: false, on: false };
+  function buildStudyUI(container) {
+    let wrap = document.getElementById('studyPlayer');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.id = 'studyPlayer';
+      wrap.style.border = '1px solid rgba(0,0,0,.1)';
+      wrap.style.borderRadius = '.75rem';
+      wrap.style.padding = '1rem';
+      wrap.style.marginBottom = '.75rem';
+      wrap.innerHTML = `
+        <div id="studyPrompt" style="opacity:.8;margin-bottom:.5rem">Study Mode</div>
+        <div id="studyCard" style="min-height:3rem;font-weight:600"></div>
+        <div id="studyAnswer" style="min-height:3rem;margin-top:.5rem;display:none"></div>
+        <div id="studyProgress" style="margin-top:.5rem;opacity:.8"></div>
+        <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap">
+          <button id="studyPrev">Prev</button>
+          <button id="studyFlip">Flip</button>
+          <button id="studyNext">Next</button>
+          <button id="studyShuffle">Shuffle</button>
+          <button id="studyExit" style="color:#b00020">Exit</button>
+        </div>
+      `;
+      container.parentElement?.insertBefore(wrap, container);
+      document.getElementById('studyPrev')?.addEventListener('click', studyPrev);
+      document.getElementById('studyFlip')?.addEventListener('click', studyFlip);
+      document.getElementById('studyNext')?.addEventListener('click', studyNext);
+      document.getElementById('studyShuffle')?.addEventListener('click', studyShuffle);
+      document.getElementById('studyExit')?.addEventListener('click', exitStudyMode);
+      wrap.tabIndex = 0; wrap.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') { e.preventDefault(); studyFlip(); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); studyPrev(); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); studyNext(); }
+      });
+      wrap.focus();
+    }
+    return wrap;
+  }
+  function shuffleInPlace(a){ for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
+  function updateStudyUI() {
+    const qEl = document.getElementById('studyCard');
+    const aEl = document.getElementById('studyAnswer');
+    const pEl = document.getElementById('studyProgress');
+    if (!Study.on || !qEl || !aEl || !pEl) return;
+    const c = Study.deck[Study.idx];
+    qEl.textContent = 'Q: ' + (c ? c.front : '—');
+    aEl.textContent = 'A: ' + (c ? c.back : '—');
+    aEl.style.display = Study.showBack ? 'block' : 'none';
+    pEl.textContent = `${Study.deck.length ? (Study.idx+1) : 0}/${Study.deck.length}`;
+  }
+  async function startStudyMode() {
+    const listEl = document.getElementById('quickCardsList');
+    if (!listEl) return;
+    const deck = await getCards();
+    if (!deck.length) { alert('No cards to study.'); return; }
+    Study.deck = deck.slice(); Study.idx = 0; Study.showBack = false; Study.on = true;
+    buildStudyUI(listEl);
+    updateStudyUI();
+  }
+  function exitStudyMode() {
+    Study.on = false;
+    document.getElementById('studyPlayer')?.remove();
+  }
+  function studyFlip(){ if (!Study.on) return; Study.showBack = !Study.showBack; updateStudyUI(); }
+  function studyNext(){ if (!Study.on) return; if (Study.deck.length) { Study.idx = (Study.idx + 1) % Study.deck.length; Study.showBack = false; updateStudyUI(); } }
+  function studyPrev(){ if (!Study.on) return; if (Study.deck.length) { Study.idx = (Study.idx - 1 + Study.deck.length) % Study.deck.length; Study.showBack = false; updateStudyUI(); } }
+  function studyShuffle(){ if (!Study.on) return; shuffleInPlace(Study.deck); Study.idx = 0; Study.showBack = false; updateStudyUI(); }
+
+  // Expose / back up any originals, then override with fixed versions
+  if (!window.__orig_addQuickCard) window.__orig_addQuickCard = window.addQuickCard;
+  window.addQuickCard = _addQuickCard_impl;
+
+  if (!window.__orig_renderCardList) window.__orig_renderCardList = window.renderCardList;
+  window.renderCardList = _renderCardList_impl;
+
+  if (!window.__orig_deleteCard) window.__orig_deleteCard = window.deleteCard;
+  window.deleteCard = _deleteCard_impl;
+
+  if (!window.__orig_editCard) window.__orig_editCard = window.editCard;
+  window.editCard = _editCard_impl;
+
+  // Quick submit on Enter
+  document.addEventListener('DOMContentLoaded', () => {
+    const frontEl = document.getElementById('cardFrontQuick');
+    const backEl = document.getElementById('cardBackQuick');
+    function maybeSubmit(e){ if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addQuickCard(); } }
+    frontEl?.addEventListener('keydown', maybeSubmit);
+    backEl?.addEventListener('keydown', maybeSubmit);
+  });
+
+  // Hook tab switching to re-render on Cards tab
+  const _origSwitch = typeof window.switchStudentTab === 'function' ? window.switchStudentTab : null;
+  window.switchStudentTab = function (tabName) {
+    if (_origSwitch) _origSwitch(tabName);
+    if (tabName === 'student-flashcards') renderCardList();
+    if (tabName === 'student-notes' && typeof window.renderNotesList === 'function') renderNotesList();
+  };
+
+  // ===== Pomodoro with auto breaks (25/5, long every 4th) =====
+  const Pom = {
+    phase: 'work', // 'work'|'short'|'long'
+    durations: { work: 25*60, short: 5*60, long: 15*60 },
+    cyclesBeforeLong: 4,
+    cycleCount: 0, // completed work sessions in current long cycle
+    sessionCount: 0, // total completed work sessions
+    remaining: 25*60,
+    running: false,
+    timer: null,
+    lastTick: null,
+    autoStartNext: true
+  };
+
+  function fmt(sec){ const m=Math.floor(sec/60), s=Math.floor(sec%60); return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+  function setPhase(next) {
+    Pom.phase = next;
+    Pom.remaining = Pom.durations[next];
+    Pom.lastTick = Date.now();
+    updatePomodoroUI();
+  }
+  function updatePomodoroUI() {
+    const disp = document.getElementById('pomodoroDisplay');
+    const phaseEl = document.getElementById('pomodoroPhase');
+    const sessEl = document.getElementById('pomodoroSessionCount');
+    if (disp) disp.textContent = fmt(Pom.remaining);
+    if (phaseEl) phaseEl.textContent = Pom.phase === 'work' ? 'Focus' : Pom.phase === 'short' ? 'Short Break' : 'Long Break';
+    if (sessEl) sessEl.textContent = String(Pom.sessionCount);
+  }
+  async function awardStudyMinutes(elapsedSec) {
+    const minutes = Math.floor(elapsedSec / 60);
+    if (minutes <= 0) return;
+    const students = (await loadFromStorage('all-students', true)) || {};
+    const uname = state?.currentUser?.username;
+    if (!uname || !students[uname]) return;
+    students[uname].studyTime = (students[uname].studyTime || 0) + minutes;
+    students[uname].lastActive = new Date().toISOString();
+    await saveToStorage('all-students', students, true);
+  }
+  function completePhase() {
+    if (Pom.phase === 'work') {
+      Pom.sessionCount += 1;
+      Pom.cycleCount = (Pom.cycleCount + 1);
+      const longDue = Pom.cycleCount % Pom.cyclesBeforeLong === 0;
+      setPhase(longDue ? 'long' : 'short');
+    } else {
+      setPhase('work');
+    }
+    if (Pom.autoStartNext) startPomodoro(); else updatePomodoroUI();
+  }
+  function tick() {
+    const now = Date.now();
+    const d = Math.floor((now - Pom.lastTick) / 1000);
+    if (d > 0) {
+      Pom.remaining = Math.max(0, Pom.remaining - d);
+      Pom.lastTick = now;
+      updatePomodoroUI();
+      if (Pom.remaining === 0) {
+        stopTimer(false);
+        if (Pom.phase === 'work') awardStudyMinutes(Pom.durations.work);
+        alert(Pom.phase === 'work' ? '✅ Focus complete!' : '☕ Break over!');
+        completePhase();
+      }
+    }
+  }
+  function startTimerLoop(){ Pom.lastTick = Date.now(); if (Pom.timer) clearInterval(Pom.timer); Pom.timer = setInterval(tick, 250); }
+  function stopTimer(updateUI=true){ if (Pom.timer) { clearInterval(Pom.timer); Pom.timer = null; } if (updateUI) updatePomodoroUI(); }
+
+  // Public: controls (backup originals then override)
+  if (!window.__orig_startPomodoro) window.__orig_startPomodoro = window.startPomodoro;
+  window.startPomodoro = function startPomodoro(){ if (Pom.running) return; Pom.running = true; startTimerLoop(); };
+
+  if (!window.__orig_pausePomodoro) window.__orig_pausePomodoro = window.pausePomodoro;
+  window.pausePomodoro = async function pausePomodoro(){
+    if (!Pom.running) return;
+    Pom.running = false;
+    stopTimer();
+    if (Pom.phase === 'work') {
+      const elapsed = Pom.durations.work - Pom.remaining;
+      await awardStudyMinutes(elapsed);
+    }
+  };
+
+  if (!window.__orig_resetPomodoro) window.__orig_resetPomodoro = window.resetPomodoro;
+  window.resetPomodoro = function resetPomodoro(){
+    Pom.running = false; stopTimer();
+    Pom.phase = 'work'; Pom.remaining = Pom.durations.work;
+    updatePomodoroUI();
+  };
+
+  // Optional: hook buttons by ID if present
+  document.addEventListener('DOMContentLoaded', () => {
+    updatePomodoroUI();
+    document.getElementById('btnPomStart')?.addEventListener('click', startPomodoro);
+    document.getElementById('btnPomPause')?.addEventListener('click', pausePomodoro);
+    document.getElementById('btnPomReset')?.addEventListener('click', resetPomodoro);
+  });
+
+})();
+</script>
+
+</body>
+</html>
