@@ -30,7 +30,7 @@ export default function Quiz({ userId }: QuizProps) {
   const [subject, setSubject] = useState("");
   const [difficulty, setDifficulty] = useState("medium");
   const [numQuestions, setNumQuestions] = useState("5");
-  const [sourceNoteId, setSourceNoteId] = useState("");
+  const [sourceNoteId, setSourceNoteId] = useState("none");
 
   const { data: quizzes } = useQuery({
     queryKey: ['/api/quizzes', userId],
@@ -373,7 +373,7 @@ export default function Quiz({ userId }: QuizProps) {
                     <SelectValue placeholder="Generate from your notes" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No specific note</SelectItem>
+                    <SelectItem value="none">No specific note</SelectItem>
                     {notes.map((note: any) => (
                       <SelectItem key={note.id} value={note.id}>
                         {note.title}

@@ -320,7 +320,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Get source note content if provided
       let sourceNoteContent;
-      if (sourceNoteId) {
+      if (sourceNoteId && sourceNoteId !== 'none') {
         const note = await storage.getNote(sourceNoteId);
         if (note) {
           sourceNoteContent = note.content;

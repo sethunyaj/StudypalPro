@@ -63,7 +63,7 @@ Return ONLY a valid JSON array with this exact structure:
         { role: "user", content: prompt }
       ],
       temperature: 0.7,
-      max_tokens: 2000,
+      max_completion_tokens: 2000,
     });
 
     const content = completion.choices[0]?.message?.content;
@@ -107,7 +107,7 @@ Keep responses concise but thorough. Use examples when helpful.`
       model: "gpt-5",
       messages: [systemMessage, ...messages],
       temperature: 0.8,
-      max_tokens: 1000,
+      max_completion_tokens: 1000,
     });
 
     const response = completion.choices[0]?.message?.content;
