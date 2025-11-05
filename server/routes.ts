@@ -123,6 +123,29 @@ async function checkAchievements(userId: string) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Initialize default admin account if it doesn't exist
+  async function initializeDefaultAdmin() {
+    try {
+      const adminUser = await storage.getUserByUsername("admin");
+      if (!adminUser) {
+        const hashedPassword = await bcrypt.hash("admin123", 10);
+        await storage.createUser({
+          username: "admin",
+          password: hashedPassword,
+          name: "Administrator",
+          role: "admin",
+          grade: null,
+        });
+        console.log("✅ Default admin account created (admin/admin123)");
+      }
+    } catch (error) {
+      console.error("Failed to create default admin:", error);
+    }
+  }
+  
+  // Initialize on startup
+  await initializeDefaultAdmin();
+  
   // ==================== AUTHENTICATION ====================
   
   // Register
