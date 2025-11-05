@@ -1,21 +1,38 @@
 import { db } from "./db";
-import { eq, and, lte, sql, desc, or } from "drizzle-orm";
+import { eq, and, lte, sql } from "drizzle-orm";
 import {
   users,
-  driverProfiles,
-  rides,
-  paymentTransactions,
-  notifications,
+  notes,
+  flashcards,
+  quizzes,
+  quizAttempts,
+  studySessions,
+  achievements,
+  studyGroups,
+  tutorConversations,
+  mindMaps,
+  platformSettings,
   type User,
   type InsertUser,
-  type DriverProfile,
-  type InsertDriverProfile,
-  type Ride,
-  type InsertRide,
-  type PaymentTransaction,
-  type InsertPaymentTransaction,
-  type Notification,
-  type InsertNotification,
+  type Note,
+  type InsertNote,
+  type Flashcard,
+  type InsertFlashcard,
+  type Quiz,
+  type InsertQuiz,
+  type QuizAttempt,
+  type InsertQuizAttempt,
+  type StudySession,
+  type InsertStudySession,
+  type Achievement,
+  type InsertAchievement,
+  type StudyGroup,
+  type InsertStudyGroup,
+  type TutorConversation,
+  type InsertTutorConversation,
+  type MindMap,
+  type InsertMindMap,
+  type PlatformSetting,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -24,45 +41,72 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
-  getAllUsers(): Promise<User[]>;
-  getAllRiders(): Promise<User[]>;
-  getAllDrivers(): Promise<User[]>;
+  getAllStudents(): Promise<User[]>;
   deleteUser(id: string): Promise<void>;
 
-  // Driver Profiles
-  getDriverProfile(userId: string): Promise<DriverProfile | undefined>;
-  getDriverProfileById(id: string): Promise<DriverProfile | undefined>;
-  createDriverProfile(profile: InsertDriverProfile): Promise<DriverProfile>;
-  updateDriverProfile(id: string, updates: Partial<DriverProfile>): Promise<DriverProfile | undefined>;
-  getAvailableDrivers(): Promise<DriverProfile[]>;
-  deleteDriverProfile(id: string): Promise<void>;
+  // Notes
+  getUserNotes(userId: string): Promise<Note[]>;
+  getNote(id: string): Promise<Note | undefined>;
+  createNote(note: InsertNote): Promise<Note>;
+  updateNote(id: string, updates: Partial<Note>): Promise<Note | undefined>;
+  deleteNote(id: string): Promise<void>;
 
-  // Rides
-  getRide(id: string): Promise<Ride | undefined>;
-  createRide(ride: InsertRide): Promise<Ride>;
-  updateRide(id: string, updates: Partial<Ride>): Promise<Ride | undefined>;
-  getRiderRides(riderId: string): Promise<Ride[]>;
-  getDriverRides(driverId: string): Promise<Ride[]>;
-  getPendingRides(): Promise<Ride[]>;
-  getActiveRideForRider(riderId: string): Promise<Ride | undefined>;
-  getActiveRideForDriver(driverId: string): Promise<Ride | undefined>;
-  deleteRide(id: string): Promise<void>;
+  // Flashcards
+  getUserFlashcards(userId: string): Promise<Flashcard[]>;
+  getDueFlashcards(userId: string): Promise<Flashcard[]>;
+  getFlashcard(id: string): Promise<Flashcard | undefined>;
+  createFlashcard(flashcard: InsertFlashcard): Promise<Flashcard>;
+  updateFlashcard(id: string, updates: Partial<Flashcard>): Promise<Flashcard | undefined>;
+  deleteFlashcard(id: string): Promise<void>;
 
-  // Payment Transactions
-  getPaymentTransaction(id: string): Promise<PaymentTransaction | undefined>;
-  createPaymentTransaction(transaction: InsertPaymentTransaction): Promise<PaymentTransaction>;
-  updatePaymentTransaction(id: string, updates: Partial<PaymentTransaction>): Promise<PaymentTransaction | undefined>;
-  getRidePayments(rideId: string): Promise<PaymentTransaction[]>;
+  // Quizzes
+  getUserQuizzes(userId: string): Promise<Quiz[]>;
+  getQuiz(id: string): Promise<Quiz | undefined>;
+  createQuiz(quiz: InsertQuiz): Promise<Quiz>;
+  deleteQuiz(id: string): Promise<void>;
 
-  // Notifications
-  getUserNotifications(userId: string): Promise<Notification[]>;
-  createNotification(notification: InsertNotification): Promise<Notification>;
-  markNotificationRead(id: string): Promise<Notification | undefined>;
-  deleteNotification(id: string): Promise<void>;
+  // Quiz Attempts
+  getUserQuizAttempts(userId: string): Promise<QuizAttempt[]>;
+  createQuizAttempt(attempt: InsertQuizAttempt): Promise<QuizAttempt>;
+
+  // Study Sessions
+  getUserStudySessions(userId: string): Promise<StudySession[]>;
+  createStudySession(session: InsertStudySession): Promise<StudySession>;
+
+  // Achievements
+  getUserAchievements(userId: string): Promise<Achievement[]>;
+  createAchievement(achievement: InsertAchievement): Promise<Achievement>;
+
+  // Study Groups
+  getUserStudyGroups(userId: string): Promise<StudyGroup[]>;
+  getAllStudyGroups(): Promise<StudyGroup[]>;
+  getStudyGroup(id: string): Promise<StudyGroup | undefined>;
+  createStudyGroup(group: InsertStudyGroup): Promise<StudyGroup>;
+  updateStudyGroup(id: string, updates: Partial<StudyGroup>): Promise<StudyGroup | undefined>;
+  deleteStudyGroup(id: string): Promise<void>;
+
+  // Tutor Conversations
+  getUserConversations(userId: string): Promise<TutorConversation[]>;
+  getConversation(id: string): Promise<TutorConversation | undefined>;
+  createConversation(conversation: InsertTutorConversation): Promise<TutorConversation>;
+  updateConversation(id: string, updates: Partial<TutorConversation>): Promise<TutorConversation | undefined>;
+  deleteConversation(id: string): Promise<void>;
+
+  // Mind Maps
+  getUserMindMaps(userId: string): Promise<MindMap[]>;
+  getMindMap(id: string): Promise<MindMap | undefined>;
+  createMindMap(mindMap: InsertMindMap): Promise<MindMap>;
+  updateMindMap(id: string, updates: Partial<MindMap>): Promise<MindMap | undefined>;
+  deleteMindMap(id: string): Promise<void>;
+
+  // Platform Settings
+  getSetting(key: string): Promise<PlatformSetting | undefined>;
+  setSetting(key: string, value: string): Promise<PlatformSetting>;
+  getAllSettings(): Promise<PlatformSetting[]>;
 }
 
 export class DatabaseStorage implements IStorage {
-  // ==================== USERS ====================
+  // Users
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
@@ -83,181 +127,225 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async getAllUsers(): Promise<User[]> {
-    return await db.select().from(users);
-  }
-
-  async getAllRiders(): Promise<User[]> {
-    return await db.select().from(users).where(eq(users.role, "rider"));
-  }
-
-  async getAllDrivers(): Promise<User[]> {
-    return await db.select().from(users).where(eq(users.role, "driver"));
+  async getAllStudents(): Promise<User[]> {
+    return await db.select().from(users).where(eq(users.role, "student"));
   }
 
   async deleteUser(id: string): Promise<void> {
     await db.delete(users).where(eq(users.id, id));
   }
 
-  // ==================== DRIVER PROFILES ====================
-  async getDriverProfile(userId: string): Promise<DriverProfile | undefined> {
-    const [profile] = await db.select().from(driverProfiles).where(eq(driverProfiles.userId, userId));
-    return profile;
+  // Notes
+  async getUserNotes(userId: string): Promise<Note[]> {
+    return await db.select().from(notes).where(eq(notes.userId, userId));
   }
 
-  async getDriverProfileById(id: string): Promise<DriverProfile | undefined> {
-    const [profile] = await db.select().from(driverProfiles).where(eq(driverProfiles.id, id));
-    return profile;
+  async getNote(id: string): Promise<Note | undefined> {
+    const [note] = await db.select().from(notes).where(eq(notes.id, id));
+    return note;
   }
 
-  async createDriverProfile(insertProfile: InsertDriverProfile): Promise<DriverProfile> {
-    const [profile] = await db.insert(driverProfiles).values(insertProfile).returning();
-    return profile;
+  async createNote(insertNote: InsertNote): Promise<Note> {
+    const [note] = await db.insert(notes).values(insertNote).returning();
+    return note;
   }
 
-  async updateDriverProfile(id: string, updates: Partial<DriverProfile>): Promise<DriverProfile | undefined> {
-    const [profile] = await db.update(driverProfiles).set(updates).where(eq(driverProfiles.id, id)).returning();
-    return profile;
+  async updateNote(id: string, updates: Partial<Note>): Promise<Note | undefined> {
+    const [note] = await db.update(notes).set({ ...updates, updatedAt: new Date() }).where(eq(notes.id, id)).returning();
+    return note;
   }
 
-  async getAvailableDrivers(): Promise<DriverProfile[]> {
+  async deleteNote(id: string): Promise<void> {
+    await db.delete(notes).where(eq(notes.id, id));
+  }
+
+  // Flashcards
+  async getUserFlashcards(userId: string): Promise<Flashcard[]> {
+    return await db.select().from(flashcards).where(eq(flashcards.userId, userId));
+  }
+
+  async getDueFlashcards(userId: string): Promise<Flashcard[]> {
     return await db
       .select()
-      .from(driverProfiles)
-      .where(and(
-        eq(driverProfiles.isAvailable, true),
-        eq(driverProfiles.verificationStatus, "approved")
-      ));
+      .from(flashcards)
+      .where(and(eq(flashcards.userId, userId), lte(flashcards.nextReviewDate, new Date())));
   }
 
-  async deleteDriverProfile(id: string): Promise<void> {
-    await db.delete(driverProfiles).where(eq(driverProfiles.id, id));
+  async getFlashcard(id: string): Promise<Flashcard | undefined> {
+    const [flashcard] = await db.select().from(flashcards).where(eq(flashcards.id, id));
+    return flashcard;
   }
 
-  // ==================== RIDES ====================
-  async getRide(id: string): Promise<Ride | undefined> {
-    const [ride] = await db.select().from(rides).where(eq(rides.id, id));
-    return ride;
+  async createFlashcard(insertFlashcard: InsertFlashcard): Promise<Flashcard> {
+    const [flashcard] = await db.insert(flashcards).values(insertFlashcard).returning();
+    return flashcard;
   }
 
-  async createRide(insertRide: InsertRide): Promise<Ride> {
-    const [ride] = await db.insert(rides).values(insertRide).returning();
-    return ride;
+  async updateFlashcard(id: string, updates: Partial<Flashcard>): Promise<Flashcard | undefined> {
+    const [flashcard] = await db.update(flashcards).set(updates).where(eq(flashcards.id, id)).returning();
+    return flashcard;
   }
 
-  async updateRide(id: string, updates: Partial<Ride>): Promise<Ride | undefined> {
-    const [ride] = await db.update(rides).set(updates).where(eq(rides.id, id)).returning();
-    return ride;
+  async deleteFlashcard(id: string): Promise<void> {
+    await db.delete(flashcards).where(eq(flashcards.id, id));
   }
 
-  async getRiderRides(riderId: string): Promise<Ride[]> {
+  // Quizzes
+  async getUserQuizzes(userId: string): Promise<Quiz[]> {
+    return await db.select().from(quizzes).where(eq(quizzes.userId, userId));
+  }
+
+  async getQuiz(id: string): Promise<Quiz | undefined> {
+    const [quiz] = await db.select().from(quizzes).where(eq(quizzes.id, id));
+    return quiz;
+  }
+
+  async createQuiz(insertQuiz: InsertQuiz): Promise<Quiz> {
+    const [quiz] = await db.insert(quizzes).values(insertQuiz).returning();
+    return quiz;
+  }
+
+  async deleteQuiz(id: string): Promise<void> {
+    await db.delete(quizzes).where(eq(quizzes.id, id));
+  }
+
+  // Quiz Attempts
+  async getUserQuizAttempts(userId: string): Promise<QuizAttempt[]> {
+    return await db.select().from(quizAttempts).where(eq(quizAttempts.userId, userId));
+  }
+
+  async createQuizAttempt(insertQuizAttempt: InsertQuizAttempt): Promise<QuizAttempt> {
+    const [attempt] = await db.insert(quizAttempts).values(insertQuizAttempt).returning();
+    return attempt;
+  }
+
+  // Study Sessions
+  async getUserStudySessions(userId: string): Promise<StudySession[]> {
+    return await db.select().from(studySessions).where(eq(studySessions.userId, userId));
+  }
+
+  async createStudySession(insertStudySession: InsertStudySession): Promise<StudySession> {
+    const [session] = await db.insert(studySessions).values(insertStudySession).returning();
+    return session;
+  }
+
+  // Achievements
+  async getUserAchievements(userId: string): Promise<Achievement[]> {
+    return await db.select().from(achievements).where(eq(achievements.userId, userId));
+  }
+
+  async createAchievement(insertAchievement: InsertAchievement): Promise<Achievement> {
+    const [achievement] = await db.insert(achievements).values(insertAchievement).returning();
+    return achievement;
+  }
+
+  // Study Groups
+  async getUserStudyGroups(userId: string): Promise<StudyGroup[]> {
     return await db
       .select()
-      .from(rides)
-      .where(eq(rides.riderId, riderId))
-      .orderBy(desc(rides.requestedAt));
+      .from(studyGroups)
+      .where(sql`${userId} = ANY(${studyGroups.memberIds}) OR ${studyGroups.creatorId} = ${userId}`);
   }
 
-  async getDriverRides(driverId: string): Promise<Ride[]> {
-    return await db
-      .select()
-      .from(rides)
-      .where(eq(rides.driverId, driverId))
-      .orderBy(desc(rides.requestedAt));
+  async getAllStudyGroups(): Promise<StudyGroup[]> {
+    return await db.select().from(studyGroups);
   }
 
-  async getPendingRides(): Promise<Ride[]> {
-    return await db
-      .select()
-      .from(rides)
-      .where(eq(rides.status, "requested"))
-      .orderBy(rides.requestedAt);
+  async getStudyGroup(id: string): Promise<StudyGroup | undefined> {
+    const [group] = await db.select().from(studyGroups).where(eq(studyGroups.id, id));
+    return group;
   }
 
-  async getActiveRideForRider(riderId: string): Promise<Ride | undefined> {
-    const [ride] = await db
-      .select()
-      .from(rides)
-      .where(and(
-        eq(rides.riderId, riderId),
-        or(
-          eq(rides.status, "requested"),
-          eq(rides.status, "accepted"),
-          eq(rides.status, "arrived"),
-          eq(rides.status, "in_progress")
-        )
-      ))
-      .orderBy(desc(rides.requestedAt))
-      .limit(1);
-    return ride;
+  async createStudyGroup(insertStudyGroup: InsertStudyGroup): Promise<StudyGroup> {
+    const [group] = await db.insert(studyGroups).values(insertStudyGroup).returning();
+    return group;
   }
 
-  async getActiveRideForDriver(driverId: string): Promise<Ride | undefined> {
-    const [ride] = await db
-      .select()
-      .from(rides)
-      .where(and(
-        eq(rides.driverId, driverId),
-        or(
-          eq(rides.status, "accepted"),
-          eq(rides.status, "arrived"),
-          eq(rides.status, "in_progress")
-        )
-      ))
-      .orderBy(desc(rides.acceptedAt))
-      .limit(1);
-    return ride;
+  async updateStudyGroup(id: string, updates: Partial<StudyGroup>): Promise<StudyGroup | undefined> {
+    const [group] = await db.update(studyGroups).set(updates).where(eq(studyGroups.id, id)).returning();
+    return group;
   }
 
-  async deleteRide(id: string): Promise<void> {
-    await db.delete(rides).where(eq(rides.id, id));
+  async deleteStudyGroup(id: string): Promise<void> {
+    await db.delete(studyGroups).where(eq(studyGroups.id, id));
   }
 
-  // ==================== PAYMENT TRANSACTIONS ====================
-  async getPaymentTransaction(id: string): Promise<PaymentTransaction | undefined> {
-    const [transaction] = await db.select().from(paymentTransactions).where(eq(paymentTransactions.id, id));
-    return transaction;
+  // Tutor Conversations
+  async getUserConversations(userId: string): Promise<TutorConversation[]> {
+    return await db.select().from(tutorConversations).where(eq(tutorConversations.userId, userId));
   }
 
-  async createPaymentTransaction(insertTransaction: InsertPaymentTransaction): Promise<PaymentTransaction> {
-    const [transaction] = await db.insert(paymentTransactions).values(insertTransaction).returning();
-    return transaction;
+  async getConversation(id: string): Promise<TutorConversation | undefined> {
+    const [conversation] = await db.select().from(tutorConversations).where(eq(tutorConversations.id, id));
+    return conversation;
   }
 
-  async updatePaymentTransaction(id: string, updates: Partial<PaymentTransaction>): Promise<PaymentTransaction | undefined> {
-    const [transaction] = await db.update(paymentTransactions).set(updates).where(eq(paymentTransactions.id, id)).returning();
-    return transaction;
+  async createConversation(insertConversation: InsertTutorConversation): Promise<TutorConversation> {
+    const [conversation] = await db.insert(tutorConversations).values(insertConversation).returning();
+    return conversation;
   }
 
-  async getRidePayments(rideId: string): Promise<PaymentTransaction[]> {
-    return await db.select().from(paymentTransactions).where(eq(paymentTransactions.rideId, rideId));
-  }
-
-  // ==================== NOTIFICATIONS ====================
-  async getUserNotifications(userId: string): Promise<Notification[]> {
-    return await db
-      .select()
-      .from(notifications)
-      .where(eq(notifications.userId, userId))
-      .orderBy(desc(notifications.createdAt));
-  }
-
-  async createNotification(insertNotification: InsertNotification): Promise<Notification> {
-    const [notification] = await db.insert(notifications).values(insertNotification).returning();
-    return notification;
-  }
-
-  async markNotificationRead(id: string): Promise<Notification | undefined> {
-    const [notification] = await db
-      .update(notifications)
-      .set({ isRead: true })
-      .where(eq(notifications.id, id))
+  async updateConversation(id: string, updates: Partial<TutorConversation>): Promise<TutorConversation | undefined> {
+    const [conversation] = await db
+      .update(tutorConversations)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(tutorConversations.id, id))
       .returning();
-    return notification;
+    return conversation;
   }
 
-  async deleteNotification(id: string): Promise<void> {
-    await db.delete(notifications).where(eq(notifications.id, id));
+  async deleteConversation(id: string): Promise<void> {
+    await db.delete(tutorConversations).where(eq(tutorConversations.id, id));
+  }
+
+  // Mind Maps
+  async getUserMindMaps(userId: string): Promise<MindMap[]> {
+    return await db.select().from(mindMaps).where(eq(mindMaps.userId, userId));
+  }
+
+  async getMindMap(id: string): Promise<MindMap | undefined> {
+    const [mindMap] = await db.select().from(mindMaps).where(eq(mindMaps.id, id));
+    return mindMap;
+  }
+
+  async createMindMap(insertMindMap: InsertMindMap): Promise<MindMap> {
+    const [mindMap] = await db.insert(mindMaps).values(insertMindMap).returning();
+    return mindMap;
+  }
+
+  async updateMindMap(id: string, updates: Partial<MindMap>): Promise<MindMap | undefined> {
+    const [mindMap] = await db
+      .update(mindMaps)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(mindMaps.id, id))
+      .returning();
+    return mindMap;
+  }
+
+  async deleteMindMap(id: string): Promise<void> {
+    await db.delete(mindMaps).where(eq(mindMaps.id, id));
+  }
+
+  // Platform Settings
+  async getSetting(key: string): Promise<PlatformSetting | undefined> {
+    const [setting] = await db.select().from(platformSettings).where(eq(platformSettings.key, key));
+    return setting;
+  }
+
+  async setSetting(key: string, value: string): Promise<PlatformSetting> {
+    const [setting] = await db
+      .insert(platformSettings)
+      .values({ key, value })
+      .onConflictDoUpdate({
+        target: platformSettings.key,
+        set: { value, updatedAt: new Date() },
+      })
+      .returning();
+    return setting;
+  }
+
+  async getAllSettings(): Promise<PlatformSetting[]> {
+    return await db.select().from(platformSettings);
   }
 }
 

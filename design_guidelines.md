@@ -1,216 +1,241 @@
-# ShareHop Ride-Sharing Platform - Design Guidelines
+# Hibiscus StudyPal - Design Guidelines
 
 ## Design Approach
 
-**Selected Approach**: Reference-Based, drawing from Uber, Lyft, and Grab
+**Selected Approach**: Reference-Based, drawing from Duolingo (gamification), Notion (clean productivity), Quizlet (learning tools), and modern EdTech platforms
 
-**Rationale**: Ride-sharing apps require immediate trust, safety perception, and seamless utility-first experiences. Users need effortless ride booking and tracking, while drivers need clear ride management.
+**Rationale**: Educational platforms require motivating aesthetics to combat study fatigue while maintaining focus and clarity. Gamification elements need visual reward, but learning content demands readability.
 
 **Core Principles**:
-- Trust through clarity: Zero ambiguity in ride status and pricing
-- Map-first design: Location/tracking as the primary interface element
-- Instant recognition: Standard ride-sharing patterns for zero learning curve
-- Safety visibility: Driver verification, trip sharing, emergency access always present
+- Motivation through visual delight: Glassmorphic elements, gradients, and celebratory micro-interactions
+- Progress visibility: XP bars, streaks, achievements always accessible
+- Clean learning zones: Distraction-free reading/study areas with content hierarchy
+- Reward immediacy: Instant visual feedback for completed tasks
 
 ---
 
 ## Typography System
 
-**Font Stack**: Inter via Google Fonts CDN (clean, professional, excellent mobile legibility)
+**Font Stack**: 
+- Primary: Poppins (600, 700 for headings, gamification)
+- Body: Inter (400, 500 for content, UI elements)
+Both via Google Fonts CDN
 
 **Hierarchy**:
-- **App Title/Branding**: 1.5rem (24px), weight 700
-- **Location Headers**: 1.25rem (20px), weight 600
-- **Ride Details/Driver Names**: 1.125rem (18px), weight 600
-- **Body/Addresses**: 1rem (16px), weight 400, line-height 1.5
-- **Pricing/ETAs**: 1.75rem (28px), weight 700, tabular-nums
-- **Labels/Metadata**: 0.875rem (14px), weight 500
-- **Micro-text/Status**: 0.75rem (12px), weight 500, uppercase letter-spacing
+- **Hero Headlines**: 3rem (48px), weight 700, tight leading
+- **Dashboard Headers**: 2rem (32px), weight 600
+- **Card Titles/Lesson Names**: 1.5rem (24px), weight 600
+- **Body Content/Questions**: 1.125rem (18px), weight 400, line-height 1.7
+- **Labels/Stats**: 0.875rem (14px), weight 500
+- **XP/Points Display**: 1.75rem (28px), weight 700, tabular-nums
+- **Micro-text/Badges**: 0.75rem (12px), weight 600, uppercase
 
 ---
 
 ## Layout System
 
-**Spacing Primitives**: 2, 4, 6, 8, 12, 16 units (Tailwind)
-- Component padding: p-4, p-6
-- Card gaps: gap-3, gap-4
-- Section spacing: mb-6, mb-8
-- Map overlays: absolute positioning with safe area padding (p-4)
+**Spacing Primitives**: 2, 4, 6, 8, 12, 16, 20 units (Tailwind)
+- Card padding: p-6, p-8
+- Section spacing: space-y-8, space-y-12
+- Grid gaps: gap-4, gap-6
+
+**Container Structure**:
+- Marketing pages: Full-width sections with inner max-w-7xl
+- Dashboard: max-w-screen-2xl, sidebar + main content
+- Learning content: max-w-4xl for optimal reading
+- Modals/overlays: max-w-2xl, centered
 
 **Primary Layouts**:
 
-**Rider Interface**:
-- Full-screen map (h-screen)
-- Bottom sheet overlays (rounded-t-3xl) with drag handles
-- Floating action buttons: top-right (profile/menu), bottom-center (ride type selector)
-- Location inputs: sticky top bar over map with backdrop blur
+**Landing Page** (5-7 sections):
+- Hero: Full viewport (h-screen) with gradient background, central CTA, floating glassmorphic cards showcasing features
+- Features Grid: 3-column (lg), 2-column (md), stacked mobile, icon + title + description
+- Gamification Showcase: Visual demonstration of XP system, leaderboards, achievements with animated mockups
+- Social Proof: 2-column testimonial cards with student photos
+- Interactive Demo: Embedded quiz preview or flashcard flip animation
+- Pricing/CTA: Centered with plan comparison cards
+- Footer: Newsletter signup, quick links, social media (3-column desktop)
 
-**Driver Interface**:
-- Split view: top 40% map, bottom 60% ride list/details
-- Horizontal status bar (online/offline toggle)
-- Persistent earnings widget: top-right corner
-
-**Container Patterns**:
-- Bottom sheets: slide up in 3 states (collapsed: h-24, partial: h-1/2, full: h-5/6)
-- Modal overlays: max-w-lg, centered, p-6
-- Map info cards: floating, max-w-sm, absolute positioning
+**Dashboard Layout**:
+- Left sidebar (w-64): Navigation, streak counter, XP progress
+- Top bar: Search, notifications, profile with level badge
+- Main area: 2-column grid (70/30 split) - learning content + activity sidebar
 
 ---
 
 ## Component Library
 
-### Map Interface
+### Landing Page Components
 
-**Map View**:
-- Full viewport height minus bottom sheet/nav bars
-- User location marker: pulsing circle (w-4 h-4) with outer ring animation
-- Driver markers: car icons with directional rotation
-- Pickup/dropoff pins: custom markers with labels
-- Route polyline: dashed during request, solid during trip
+**Hero Section**:
+- Gradient background with glassmorphic overlay panels
+- Central headline + subheading + dual CTAs (primary + ghost)
+- Floating cards (absolute positioned): achievement badges, flashcard preview, XP notification - all with backdrop-blur-lg
+- Background image: Abstract study scene or diverse students collaborating, slightly desaturated with gradient overlay
 
-**Location Search Bar**:
-- Sticky header over map: backdrop-blur, p-3
-- Rounded-full input fields (h-14)
-- Icons: left (search/location), right (favorite/recent)
-- Autocomplete dropdown: full-width, max-h-80, overflow-scroll
-- Current location button: circular (w-12 h-12), positioned bottom-right of search
+**Feature Cards**:
+- Glassmorphic containers: rounded-2xl, backdrop-blur-md, border with semi-transparency
+- Icon: Gradient-filled, w-14 h-14, rounded-xl with subtle shadow
+- Hover: Lift effect (translateY), enhanced glow
 
-### Ride Booking Flow
+**Social Proof**:
+- Student testimonial cards with photo (rounded-full, w-16), quote, name, university
+- Star ratings with gradient fill
+- Staggered layout for visual interest
 
-**Ride Type Selector** (Bottom Sheet):
-- Horizontal scroll cards: flex gap-3, snap-x
-- Each card: min-w-72, rounded-2xl, p-4
-- Content: Vehicle icon (top), service name, capacity, ETA, price estimate
-- Selected state: border-2 with elevated shadow
+### Dashboard Components
 
-**Confirm Ride Card**:
-- Route summary: pickup/dropoff addresses with dotted line between
-- Estimated arrival: large display (2rem), centered
-- Price breakdown: expandable accordion
-- Payment method: single-line selector with right chevron
-- Primary CTA: full-width button (h-14), rounded-xl, weight 600
+**Study Card** (Main Learning Item):
+- Glassmorphic card: rounded-3xl, p-6, backdrop-blur
+- Top: Subject tag (chip style), difficulty indicator (color-coded dots)
+- Middle: Title (1.5rem), progress bar (rounded-full, gradient fill), completion percentage
+- Bottom: Due date, estimated time, "Continue" button
 
-### Active Ride Interface
+**XP & Progress System**:
+- XP Bar: Full-width sticky top element, gradient fill, level milestones marked
+- Streak Counter: Fire icon + number, glassmorphic badge (top-right)
+- Achievement Popup: Modal overlay with confetti animation, badge illustration, XP gained
+- Leaderboard: Ranked list with position badges (1st: gold, 2nd: silver, 3rd: bronze)
 
-**Driver Info Card** (Rider View):
-- Driver photo: rounded-full (w-16 h-16), left-aligned
-- Name + rating (stars inline): weight 600, 1.125rem
-- Vehicle details: make, model, plate (0.875rem)
-- Call/message buttons: icon-only (w-10 h-10), rounded-full, right-aligned
+### Learning Interface Components
 
-**Live Tracking Panel**:
-- Progress bar: multi-step (Arriving → Pickup → Dropoff)
-- Current step highlighted with animation
-- ETA countdown: tabular-nums, weight 700, 1.5rem
-- Share trip button: ghost button style, top-right
+**Quiz Interface**:
+- Question card: Centered (max-w-3xl), clean white/glassmorphic background
+- Multiple choice: Large tap targets (h-14), rounded-xl, hover states with gradient borders
+- Progress indicator: Top bar showing question number + total
+- Timer: Circular progress (top-right) if timed mode
+- Feedback overlay: Full-screen celebration for correct (green gradient pulse), gentle shake for incorrect
 
-**Trip Summary** (Post-Ride):
-- Map snapshot: static image (h-48)
-- Route details: distance, duration, pickup/dropoff times
-- Price breakdown: itemized list with total emphasized
-- Driver rating: 5-star selector (w-12 h-12 per star)
-- Tip options: chip buttons (rounded-full, px-4, py-2)
+**Flashcard Component**:
+- 3D flip card: perspective transform, rounded-2xl
+- Front/Back: Large centered text, "Tap to flip" hint
+- Navigation: Arrow buttons (left/right), progress dots
+- Actions: Know it/Review later buttons (bottom)
+- Deck info: Card count, mastery percentage (top bar)
 
-### Driver-Specific Components
+**AI Tutor Chat**:
+- Chat interface: Left-aligned AI messages (glassmorphic bubbles), right-aligned user messages
+- Input: Bottom-fixed, rounded-full with send button
+- Suggested questions: Chip buttons above input
+- Code/formula rendering: Syntax highlighting, copy button
 
-**Ride Request Card**:
-- Time-sensitive design: countdown timer (top-right, circular progress)
-- Rider photo + name + rating
-- Pickup address (truncated, weight 600)
-- Distance to pickup + estimated fare
-- Accept/Decline: full-width split buttons (h-12)
+**Mind Map Builder**:
+- Canvas area: Infinite scroll, zoom controls (bottom-right)
+- Node types: Central (large, gradient), branch (medium), leaf (small)
+- Connectors: Curved bezier lines with arrow heads
+- Toolbar: Top floating panel with node creation, color picker, export
+- Templates: Sidebar with pre-built structures
 
-**Earnings Dashboard**:
-- Today's earnings: hero metric (3rem, weight 700)
-- Trip count + online hours: 2-column grid
-- Weekly chart: line graph (h-40)
-- Cash out button: sticky bottom CTA
-
-**Trip History List**:
-- Card-based: rounded-xl, p-4, mb-3
-- Left: pickup/dropoff (vertical layout with connector line)
-- Right: fare amount (weight 600), timestamp (0.75rem)
-- Expandable for trip details
+**Study Group Cards**:
+- Member avatars: Overlapping circles (w-10), max 4 visible + count
+- Active status: Green dot indicator
+- Group name + subject tags
+- Join/Message buttons
+- Recent activity feed within expanded view
 
 ### Navigation & Headers
 
-**Rider App Header**:
-- Transparent over map (backdrop-blur)
-- Left: menu icon (hamburger)
-- Center: destination search trigger
-- Right: profile avatar (w-10 h-10, rounded-full)
+**Landing Navigation**:
+- Transparent header with backdrop-blur on scroll
+- Logo (left), nav links (center), Sign In + CTA button (right)
+- Mobile: Hamburger with full-screen overlay menu
 
-**Driver App Nav**:
-- Bottom tab bar (h-16): Home, Earnings, Account
-- Active tab: icon fill + label weight change
-- Badge notifications on tab icons
+**Dashboard Sidebar**:
+- Logo + user profile card (avatar with level badge, name, total XP)
+- Nav items: Icon + label, active state with gradient accent
+- Daily goal widget: Circular progress with tasks completed
+- Quick stats: Streak, total study time, achievements count
 
-### Overlays & Modals
+### Modals & Overlays
 
-**Safety Features Panel**:
-- Emergency button: always visible (floating bottom-left, w-12 h-12)
-- Safety modal: contact list, trip sharing, emergency call
-- Trust badges: driver verification, insurance info
-- Share trip: contacts list with quick-send buttons
+**Achievement Modal**:
+- Centered overlay (max-w-md)
+- Animated badge illustration (enters with scale + rotate)
+- Title, description, XP reward display
+- Confetti animation background
+- Share button + Close
 
-**Payment Methods**:
-- Card list: stacked cards (rounded-lg, p-4)
-- Default indicator: checkmark icon (right-aligned)
-- Add payment: dashed border card
-- Delete swipe action: reveal red background with icon
+**Level Up Celebration**:
+- Full-screen takeover with gradient background
+- Large level number (8rem), celebration copy
+- Unlocked features list
+- Continue button
+
+**Settings Panel**:
+- Slide-in from right (w-96)
+- Sections: Account, Notifications, Study Preferences, Appearance
+- Toggle switches for gamification features
+- Theme selector (cards with preview)
+
+---
+
+## Glassmorphic Implementation
+
+**Standard Glass Card**:
+- backdrop-blur-lg or backdrop-blur-xl
+- Semi-transparent background (bg-white/10 or bg-black/10)
+- Border: 1px solid with white/20 opacity
+- Shadow: Multi-layer for depth
+- Applied to: Feature cards, modals, floating elements, dashboard widgets
+
+**Gradient Backgrounds**:
+- Landing sections: Diagonal gradients using Hibiscus palette
+- Buttons: Gradient fills for primary CTAs
+- Progress bars: Animated gradient shifts
+- Card accents: Gradient borders on hover
 
 ---
 
 ## Responsive Behavior
 
-**Mobile-First** (320px - 768px):
-- Single-column layouts throughout
-- Bottom sheets as primary interaction pattern
-- Full-width buttons (h-12 minimum)
-- Map: 60-100vh depending on sheet state
+**Mobile** (320px-768px):
+- Single column layouts
+- Bottom navigation (fixed, h-16) for dashboard
+- Collapsible sidebar becomes slide-in drawer
+- Stacked flashcards, full-width quiz cards
 
-**Tablet/Desktop** (768px+):
-- Rider: 2-column split (map: 60%, booking panel: 40%)
-- Driver: Side navigation + main content area
-- Larger touch targets: h-14 buttons
-- Enhanced map controls: zoom buttons, layer toggles
-
----
-
-## Accessibility & Interaction
-
-- All touchable elements: minimum 44x44px
-- Color-independent status (icons + text labels)
-- Screen reader announcements for ride status changes
-- High-contrast mode support for map markers
-- Haptic feedback on ride request acceptance/decline
-- Voice-over compatibility for all interactive elements
-- Emergency button: always reachable, high contrast
+**Desktop** (1024px+):
+- Multi-column grids (2-3 columns)
+- Persistent sidebar navigation
+- Side-by-side quiz review (question history + current)
+- Floating action buttons for quick actions
 
 ---
 
-## Animation
+## Images & Illustrations
 
-**Critical Animations**:
-- Driver marker movement: smooth position updates (300ms ease)
-- Bottom sheet drag: spring physics with resistance
-- Ride request acceptance: confetti + haptic
-- Price update: number counter animation
-- Map zoom on pickup/dropoff selection
-
-**Performance**: Transform/opacity only, respect prefers-reduced-motion, 60fps guarantee
-
----
-
-## Images
-
-**Hero Image**: No traditional hero section; app is map-first, full-screen interface
+**Hero Image**: Yes - Abstract gradient mesh background with study-themed overlay or diverse students in modern learning environment (full-screen, slight blur with gradient overlay)
 
 **Required Images**:
-- Driver/Rider profile photos: Circular avatars (32px-80px)
-- Vehicle type icons: Illustrated cars for ride selection (w-20 h-20)
-- Safety feature illustrations: Emergency modal graphics
-- Empty state illustrations: "No trips yet" for history (max-w-xs, centered)
-- Payment method logos: Credit card brand icons (h-6)
+- Achievement badges: Custom illustrated icons for each milestone (w-24 h-24)
+- Subject icons: Illustrated category markers (Math, Science, Languages) - gradient style
+- Empty states: Friendly illustrations for "No flashcards yet", "Join a study group" (max-w-sm)
+- Student testimonial photos: Authentic portraits (w-16 rounded-full)
+- Feature mockups: Animated screen captures of quiz/flashcard interfaces
 
-**Icon Library**: Heroicons (outline for most UI, solid for active states, maps icons for location markers)
+**Icon Library**: Heroicons (primary UI), with gradient overlays for gamification elements
+
+---
+
+## Animation & Interaction
+
+**Key Animations**:
+- XP gain: Number counter + progress bar fill (800ms)
+- Achievement unlock: Badge scale-in + confetti burst
+- Flashcard flip: 3D perspective transform (400ms)
+- Streak fire: Subtle pulse animation (infinite)
+- Correct answer: Green pulse overlay + haptic
+- Level up: Full-screen gradient animation with particles
+
+**Performance**: Respect prefers-reduced-motion, use transform/opacity, 60fps minimum
+
+---
+
+## Accessibility
+
+- WCAG AA contrast on all text despite gradients (overlay adjustment)
+- Keyboard navigation for all quiz/flashcard interactions
+- Screen reader announcements for XP gains, streak updates
+- Focus indicators visible on glassmorphic backgrounds
+- High-contrast mode: Disable transparency, use solid backgrounds
+- Timer: Visual + text indication, pause option
