@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Trophy, Flame, BookOpen, Shield, GraduationCap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -132,9 +133,8 @@ export default function Login() {
       <Card className="w-full max-w-md glass-effect shadow-xl">
         <CardHeader className="text-center pb-4">
           <div className="mx-auto mb-4">
-            <div className="text-6xl font-bold hibiscus-text-gradient">HS</div>
+            <img src={logoPath} alt="Hibiscus StudyPal" className="h-32 w-auto mx-auto" />
           </div>
-          <CardTitle className="text-3xl font-bold">Hibiscus StudyPal</CardTitle>
           <CardDescription className="text-base">Your Ultimate Learning Platform</CardDescription>
           
           {/* Login Mode Toggle */}

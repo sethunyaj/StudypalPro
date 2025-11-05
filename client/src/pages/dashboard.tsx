@@ -17,6 +17,7 @@ import Achievements from "@/components/dashboard/achievements";
 import StudyGroups from "@/components/dashboard/study-groups";
 import MindMap from "@/components/dashboard/mind-map";
 import FastBotsWidget from "@/components/chatbot/fastbots-widget";
+import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
@@ -50,9 +51,8 @@ export default function Dashboard() {
           <CardHeader className="bg-gradient-to-r from-primary/10 via-chart-2/10 to-chart-3/10 border-b pb-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="text-4xl font-bold hibiscus-text-gradient">HS</div>
+                <img src={logoPath} alt="Hibiscus StudyPal" className="h-12 w-auto" />
                 <div>
-                  <CardTitle className="text-2xl">StudyPal</CardTitle>
                   <CardDescription className="text-sm">
                     Welcome back, <span className="font-semibold text-foreground">{user.name}</span>!
                   </CardDescription>
