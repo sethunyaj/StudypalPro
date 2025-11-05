@@ -63,7 +63,7 @@ Return ONLY a valid JSON array with this exact structure:
         { role: "system", content: "You are an expert educator who creates challenging, context-aware quiz questions. Always respond with valid JSON only." },
         { role: "user", content: prompt }
       ],
-      max_completion_tokens: 2000,
+      max_completion_tokens: 4096,
     });
 
     console.log("OpenAI response received:", {
