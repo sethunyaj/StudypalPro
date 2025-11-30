@@ -6,9 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Trophy, Flame, BookOpen, Shield, GraduationCap } from "lucide-react";
+import { Trophy, Flame, BookOpen, Shield, GraduationCap, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
 
@@ -16,28 +17,27 @@ export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [loginMode, setLoginMode] = useState<"student" | "admin">("student");
+  const [loginMode, setLoginMode] = useState<"student" | "teacher" | "admin">("student");
 
-  // Login state
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  // Register state
   const [regName, setRegName] = useState("");
   const [regUsername, setRegUsername] = useState("");
   const [regPassword, setRegPassword] = useState("");
   const [regGrade, setRegGrade] = useState("");
+  const [regRole, setRegRole] = useState<"student" | "teacher">("student");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      const res = await apiRequest("POST", "/api/auth/login", {
+      const response = await apiRequest("POST", "/api/auth/login", {
         username: loginUsername,
         password: loginPassword,
       });
-      const user = await res.json();
+      const user = await response.json();
       
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", "authenticated");
@@ -49,6 +49,8 @@ export default function Login() {
       
       if (user.role === "admin") {
         setLocation("/admin");
+      } else if (user.role === "teacher") {
+        setLocation("/classes");
       } else {
         setLocation("/dashboard");
       }
@@ -68,24 +70,28 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const res = await apiRequest("POST", "/api/auth/register", {
+      const response = await apiRequest("POST", "/api/auth/register", {
         username: regUsername,
         password: regPassword,
         name: regName,
-        grade: regGrade || null,
-        role: "student",
+        grade: regRole === "student" ? regGrade || null : null,
+        role: regRole,
       });
-      const user = await res.json();
+      const user = await response.json();
       
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", "authenticated");
       
       toast({
         title: "Account created!",
-        description: "Welcome to Hibiscus StudyPal",
+        description: `Welcome to Hibiscus StudyPal, ${user.name}!`,
       });
       
-      setLocation("/dashboard");
+      if (regRole === "teacher") {
+        setLocation("/classes");
+      } else {
+        setLocation("/dashboard");
+      }
     } catch (error: any) {
       toast({
         title: "Registration failed",
@@ -100,14 +106,14 @@ export default function Login() {
   const createDemoStudent = async () => {
     setIsLoading(true);
     try {
-      const res = await apiRequest("POST", "/api/auth/register", {
+      const response = await apiRequest("POST", "/api/auth/register", {
         username: "demo",
         password: "demo123",
         name: "Demo Student",
         grade: "Grade 10",
         role: "student",
       });
-      const user = await res.json();
+      const user = await response.json();
       
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", "authenticated");
@@ -128,6 +134,37 @@ export default function Login() {
     }
   };
 
+  const createDemoTeacher = async () => {
+    setIsLoading(true);
+    try {
+      const response = await apiRequest("POST", "/api/auth/register", {
+        username: "teacher",
+        password: "teacher123",
+        name: "Demo Teacher",
+        grade: null,
+        role: "teacher",
+      });
+      const user = await response.json();
+      
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", "authenticated");
+      
+      toast({
+        title: "Teacher account created!",
+        description: "You can now create classes",
+      });
+      
+      setLocation("/classes");
+    } catch (error: any) {
+      toast({
+        title: "Note",
+        description: "Teacher account might already exist. Try logging in with teacher/teacher123",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen hibiscus-gradient flex items-center justify-center p-4">
       <Card className="w-full max-w-md glass-effect shadow-xl">
@@ -137,8 +174,7 @@ export default function Login() {
           </div>
           <CardDescription className="text-base">Your Ultimate Learning Platform</CardDescription>
           
-          {/* Login Mode Toggle */}
-          <div className="mt-4 flex items-center justify-center gap-2">
+          <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
             <Button
               variant={loginMode === "student" ? "default" : "outline"}
               size="sm"
@@ -148,6 +184,16 @@ export default function Login() {
             >
               <GraduationCap className="h-4 w-4" />
               Student
+            </Button>
+            <Button
+              variant={loginMode === "teacher" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setLoginMode("teacher")}
+              className="flex items-center gap-2"
+              data-testid="button-teacher-mode"
+            >
+              <Users className="h-4 w-4" />
+              Teacher
             </Button>
             <Button
               variant={loginMode === "admin" ? "default" : "outline"}
@@ -164,7 +210,6 @@ export default function Login() {
         
         <CardContent>
           {loginMode === "admin" ? (
-            // Admin Login Form (no registration)
             <form onSubmit={handleLogin} className="space-y-4">
               <Alert className="bg-primary/10 border-primary/30">
                 <Shield className="h-4 w-4" />
@@ -207,8 +252,137 @@ export default function Login() {
                 {isLoading ? "Signing in..." : "Admin Sign In"}
               </Button>
             </form>
+          ) : loginMode === "teacher" ? (
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="login" data-testid="tab-teacher-login">Sign In</TabsTrigger>
+                <TabsTrigger value="register" data-testid="tab-teacher-register">Register</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="login">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <Alert className="bg-chart-2/10 border-chart-2/30">
+                    <Users className="h-4 w-4" />
+                    <AlertDescription>
+                      Welcome back! Manage your classes and students.
+                    </AlertDescription>
+                  </Alert>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher-login-username">Username</Label>
+                    <Input
+                      id="teacher-login-username"
+                      data-testid="input-teacher-login-username"
+                      value={loginUsername}
+                      onChange={(e) => setLoginUsername(e.target.value)}
+                      placeholder="Enter your username"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher-login-password">Password</Label>
+                    <Input
+                      id="teacher-login-password"
+                      data-testid="input-teacher-login-password"
+                      type="password"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      placeholder="Enter password"
+                      required
+                    />
+                  </div>
+                  
+                  <Button
+                    type="submit"
+                    data-testid="button-teacher-login"
+                    className="w-full"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Signing in..." : "Sign In"}
+                  </Button>
+
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-card px-2 text-muted-foreground">Or try demo</span>
+                    </div>
+                  </div>
+                  
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={createDemoTeacher}
+                    disabled={isLoading}
+                    data-testid="button-demo-teacher"
+                  >
+                    <Users className="h-4 w-4 mr-2" />
+                    Create Demo Teacher Account
+                  </Button>
+                </form>
+              </TabsContent>
+              
+              <TabsContent value="register">
+                <form onSubmit={(e) => { setRegRole("teacher"); handleRegister(e); }} className="space-y-4">
+                  <Alert className="bg-chart-2/10 border-chart-2/30">
+                    <BookOpen className="h-4 w-4" />
+                    <AlertDescription>
+                      Create classes, post assignments, and help students learn!
+                    </AlertDescription>
+                  </Alert>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher-reg-name">Full Name</Label>
+                    <Input
+                      id="teacher-reg-name"
+                      data-testid="input-teacher-reg-name"
+                      value={regName}
+                      onChange={(e) => setRegName(e.target.value)}
+                      placeholder="Enter your full name"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher-reg-username">Username</Label>
+                    <Input
+                      id="teacher-reg-username"
+                      data-testid="input-teacher-reg-username"
+                      value={regUsername}
+                      onChange={(e) => setRegUsername(e.target.value)}
+                      placeholder="Choose a username"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher-reg-password">Password</Label>
+                    <Input
+                      id="teacher-reg-password"
+                      data-testid="input-teacher-reg-password"
+                      type="password"
+                      value={regPassword}
+                      onChange={(e) => setRegPassword(e.target.value)}
+                      placeholder="Create a password"
+                      required
+                    />
+                  </div>
+                  
+                  <Button
+                    type="submit"
+                    data-testid="button-teacher-register"
+                    className="w-full"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Creating Account..." : "Create Teacher Account"}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
           ) : (
-            // Student Login/Register Tabs
             <Tabs defaultValue="login" className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="login" data-testid="tab-login">Sign In</TabsTrigger>
@@ -257,116 +431,119 @@ export default function Login() {
                   >
                     {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
+
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-card px-2 text-muted-foreground">Or try demo</span>
+                    </div>
+                  </div>
+                  
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={createDemoStudent}
+                    disabled={isLoading}
+                    data-testid="button-demo-student"
+                  >
+                    <GraduationCap className="h-4 w-4 mr-2" />
+                    Create Demo Student Account
+                  </Button>
                 </form>
               </TabsContent>
-            
-            <TabsContent value="register">
-              <form onSubmit={handleRegister} className="space-y-4">
-                <Alert className="bg-primary/10 border-primary/30">
-                  <BookOpen className="h-4 w-4" />
-                  <AlertDescription>
-                    Join thousands of students learning smarter!
-                  </AlertDescription>
-                </Alert>
-                
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={createDemoStudent}
-                  data-testid="button-create-demo"
-                  disabled={isLoading}
-                >
-                  Create Demo Account
-                </Button>
-                
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
+              
+              <TabsContent value="register">
+                <form onSubmit={(e) => { setRegRole("student"); handleRegister(e); }} className="space-y-4">
+                  <Alert className="bg-primary/10 border-primary/30">
+                    <BookOpen className="h-4 w-4" />
+                    <AlertDescription>
+                      Join thousands of students learning smarter!
+                    </AlertDescription>
+                  </Alert>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-name">Full Name</Label>
+                    <Input
+                      id="reg-name"
+                      data-testid="input-reg-name"
+                      value={regName}
+                      onChange={(e) => setRegName(e.target.value)}
+                      placeholder="Enter your full name"
+                      required
+                    />
                   </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">Or register</span>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-username">Username</Label>
+                    <Input
+                      id="reg-username"
+                      data-testid="input-reg-username"
+                      value={regUsername}
+                      onChange={(e) => setRegUsername(e.target.value)}
+                      placeholder="Choose a username"
+                      required
+                    />
                   </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="reg-name">Full Name</Label>
-                  <Input
-                    id="reg-name"
-                    data-testid="input-register-name"
-                    value={regName}
-                    onChange={(e) => setRegName(e.target.value)}
-                    placeholder="Your name"
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="reg-username">Student ID / Username</Label>
-                  <Input
-                    id="reg-username"
-                    data-testid="input-register-username"
-                    value={regUsername}
-                    onChange={(e) => setRegUsername(e.target.value)}
-                    placeholder="Choose a username"
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="reg-password">Password</Label>
-                  <Input
-                    id="reg-password"
-                    data-testid="input-register-password"
-                    type="password"
-                    value={regPassword}
-                    onChange={(e) => setRegPassword(e.target.value)}
-                    placeholder="Create password"
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="reg-grade">Grade/Class</Label>
-                  <Input
-                    id="reg-grade"
-                    data-testid="input-register-grade"
-                    value={regGrade}
-                    onChange={(e) => setRegGrade(e.target.value)}
-                    placeholder="e.g., Grade 10"
-                    required
-                  />
-                </div>
-                
-                <Button
-                  type="submit"
-                  data-testid="button-register"
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Creating account..." : "Create Account"}
-                </Button>
-              </form>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-password">Password</Label>
+                    <Input
+                      id="reg-password"
+                      data-testid="input-reg-password"
+                      type="password"
+                      value={regPassword}
+                      onChange={(e) => setRegPassword(e.target.value)}
+                      placeholder="Create a password"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-grade">Grade Level (Optional)</Label>
+                    <Input
+                      id="reg-grade"
+                      data-testid="input-reg-grade"
+                      value={regGrade}
+                      onChange={(e) => setRegGrade(e.target.value)}
+                      placeholder="e.g., Grade 10"
+                    />
+                  </div>
+                  
+                  <Button
+                    type="submit"
+                    data-testid="button-register"
+                    className="w-full"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Creating Account..." : "Create Student Account"}
+                  </Button>
+                </form>
               </TabsContent>
             </Tabs>
           )}
         </CardContent>
-        
-        <CardFooter className="flex flex-col gap-2 text-center text-sm text-muted-foreground">
-          <div className="flex items-center justify-center gap-4">
+
+        <CardFooter className="flex flex-col gap-3 pt-4 border-t">
+          <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
-              <Trophy className="h-4 w-4" />
-              <span>Achievements</span>
+              <Trophy className="h-4 w-4 text-chart-2" />
+              <span>Earn XP</span>
             </div>
             <div className="flex items-center gap-1">
-              <Flame className="h-4 w-4" />
-              <span>Streaks</span>
+              <Flame className="h-4 w-4 text-chart-3" />
+              <span>Build Streaks</span>
             </div>
             <div className="flex items-center gap-1">
-              <BookOpen className="h-4 w-4" />
-              <span>AI Tutor</span>
+              <BookOpen className="h-4 w-4 text-primary" />
+              <span>AI-Powered</span>
             </div>
           </div>
+          <p className="text-xs text-center text-muted-foreground">
+            By signing up, you agree to our Terms of Service and Privacy Policy
+          </p>
         </CardFooter>
       </Card>
     </div>

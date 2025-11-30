@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy, Flame, FileText, LogOut, Brain, Timer, Users, Target, BookOpen, Lightbulb } from "lucide-react";
+import { Trophy, Flame, FileText, LogOut, Brain, Timer, Users, Target, BookOpen, Lightbulb, GraduationCap } from "lucide-react";
 import DashboardOverview from "@/components/dashboard/overview";
 import Notes from "@/components/dashboard/notes";
 import Flashcards from "@/components/dashboard/flashcards";
@@ -120,6 +120,10 @@ export default function Dashboard() {
                 <TabsTrigger value="groups" className="gap-2 data-[state=active]:bg-card" data-testid="tab-groups">
                   <Users className="h-4 w-4" />
                   <span className="hidden sm:inline">Groups</span>
+                </TabsTrigger>
+                <TabsTrigger value="classes" className="gap-2 data-[state=active]:bg-card" data-testid="tab-classes" onClick={() => setLocation("/classes")}>
+                  <GraduationCap className="h-4 w-4" />
+                  <span className="hidden sm:inline">My Classes</span>
                 </TabsTrigger>
               </TabsList>
             </Tabs>
