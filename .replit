@@ -61,10 +61,10 @@ waitForPort = 5000
 [agent]
 integrations = ["javascript_openai_ai_integrations:1.0.0", "javascript_mem_db:1.0.0", "javascript_database:1.0.0"]
 
-[objectStorage]
-defaultBucketID = "replit-objstore-b854d1e0-89e3-4df3-b8c0-6fba7390fccf"
-
 [userenv]
 
 [userenv.shared]
 PRIVATE_OBJECT_DIR = "/studypal-uploads"
+
+[objectStorage]
+defaultBucketID = "replit-objstore-98442437-4735-4743-892e-26cf6e0ea574"

@@ -3,7 +3,9 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateQuiz, getTutorResponse } from "./openai";
 import bcrypt from "bcrypt";
-import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import multer from "multer";
+import { Client } from "@replit/object-storage";
+import { randomUUID } from "crypto";
 import {
   insertUserSchema,
   insertNoteSchema,
@@ -242,30 +244,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ==================== FILE UPLOAD ====================
+  
+  // Initialize multer for file uploads
+  const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
+  });
+  
+  // Initialize Replit Object Storage client
+  const objectStorageClient = new Client();
 
-  // Get upload URL for file
-  app.post("/api/objects/upload", async (req, res) => {
+  // Upload file to object storage (server-side proxy upload)
+  app.post("/api/objects/upload", upload.single("file"), async (req, res) => {
     try {
-      const { fileName } = req.body;
-      const objectStorageService = new ObjectStorageService();
-      const { uploadURL, objectPath } = await objectStorageService.getObjectEntityUploadURL(fileName);
-      res.json({ uploadURL, objectPath });
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+      
+      const fileId = randomUUID();
+      const extension = req.file.originalname.split('.').pop() || '';
+      const fileName = `uploads/${fileId}${extension ? '.' + extension : ''}`;
+      
+      const { ok, error } = await objectStorageClient.uploadFromBytes(
+        fileName,
+        req.file.buffer
+      );
+      
+      if (!ok) {
+        console.error("Upload error:", error);
+        return res.status(500).json({ error: "Failed to upload file" });
+      }
+      
+      res.json({ 
+        success: true,
+        objectPath: `/api/files/${fileName}`,
+        fileName: req.file.originalname,
+        fileSize: req.file.size
+      });
     } catch (error: any) {
-      console.error("Error getting upload URL:", error);
-      res.status(500).json({ error: error.message || "Failed to get upload URL" });
+      console.error("Error uploading file:", error);
+      res.status(500).json({ error: error.message || "Failed to upload file" });
     }
   });
 
-  // Serve files from object storage
-  app.get("/objects/*", async (req, res) => {
+  // Serve files from object storage (proxy download)
+  app.get("/api/files/*", async (req, res) => {
     try {
-      const objectStorageService = new ObjectStorageService();
-      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
-      await objectStorageService.downloadObject(objectFile, res);
-    } catch (error) {
-      if (error instanceof ObjectNotFoundError) {
+      const filePath = req.path.replace("/api/files/", "");
+      const { ok, value, error } = await objectStorageClient.downloadAsBytes(filePath);
+      
+      if (!ok || !value) {
+        console.error("Download error:", error);
         return res.status(404).json({ error: "File not found" });
       }
+      
+      // Determine content type from extension
+      const ext = filePath.split('.').pop()?.toLowerCase();
+      const contentTypes: Record<string, string> = {
+        pdf: 'application/pdf',
+        doc: 'application/msword',
+        docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ppt: 'application/vnd.ms-powerpoint',
+        pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        xls: 'application/vnd.ms-excel',
+        xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        png: 'image/png',
+        jpg: 'image/jpeg',
+        jpeg: 'image/jpeg',
+        gif: 'image/gif',
+      };
+      
+      res.setHeader('Content-Type', contentTypes[ext || ''] || 'application/octet-stream');
+      res.setHeader('Content-Disposition', `inline; filename="${filePath.split('/').pop()}"`);
+      res.send(Buffer.from(value));
+    } catch (error: any) {
       console.error("Error serving file:", error);
       res.status(500).json({ error: "Error serving file" });
     }

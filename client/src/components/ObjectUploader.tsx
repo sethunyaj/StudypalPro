@@ -68,43 +68,46 @@ export function ObjectUploader({
     setError(null);
 
     try {
-      const getUrlRes = await fetch('/api/objects/upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fileName: selectedFile.name }),
-        credentials: 'include',
-      });
+      // Create FormData for server-side upload
+      const formData = new FormData();
+      formData.append('file', selectedFile);
 
-      if (!getUrlRes.ok) {
-        const errData = await getUrlRes.json();
-        throw new Error(errData.error || 'Failed to get upload URL');
-      }
-
-      const { uploadURL, objectPath } = await getUrlRes.json();
-
-      setUploadProgress(20);
-
+      // Use XMLHttpRequest for progress tracking
       const xhr = new XMLHttpRequest();
       
       xhr.upload.addEventListener('progress', (e) => {
         if (e.lengthComputable) {
-          const progress = 20 + (e.loaded / e.total) * 70;
+          const progress = (e.loaded / e.total) * 90;
           setUploadProgress(Math.round(progress));
         }
       });
 
-      await new Promise<void>((resolve, reject) => {
+      const result = await new Promise<{ objectPath: string; fileName: string; fileSize: number }>((resolve, reject) => {
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) {
-            resolve();
+            try {
+              const response = JSON.parse(xhr.responseText);
+              if (response.success) {
+                resolve(response);
+              } else {
+                reject(new Error(response.error || 'Upload failed'));
+              }
+            } catch {
+              reject(new Error('Invalid server response'));
+            }
           } else {
-            reject(new Error(`Upload failed: ${xhr.statusText}`));
+            try {
+              const errResponse = JSON.parse(xhr.responseText);
+              reject(new Error(errResponse.error || `Upload failed: ${xhr.statusText}`));
+            } catch {
+              reject(new Error(`Upload failed: ${xhr.statusText}`));
+            }
           }
         };
-        xhr.onerror = () => reject(new Error('Upload failed'));
-        xhr.open('PUT', uploadURL);
-        xhr.setRequestHeader('Content-Type', selectedFile.type || 'application/octet-stream');
-        xhr.send(selectedFile);
+        xhr.onerror = () => reject(new Error('Upload failed - network error'));
+        xhr.open('POST', '/api/objects/upload');
+        xhr.withCredentials = true;
+        xhr.send(formData);
       });
 
       setUploadProgress(100);
@@ -113,7 +116,7 @@ export function ObjectUploader({
       onUploadComplete({
         name: selectedFile.name,
         size: selectedFile.size,
-        path: objectPath,
+        path: result.objectPath,
       });
 
       setTimeout(() => {
