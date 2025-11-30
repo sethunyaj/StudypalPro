@@ -104,6 +104,7 @@ export const exams = pgTable("exams", {
   description: text("description"),
   date: timestamp("date").notNull(),
   topics: text("topics").array(),
+  attachments: text("attachments").array(),
   createdBy: text("created_by").notNull(), // Teacher ID
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -123,10 +124,13 @@ export const classResources = pgTable("class_resources", {
   classId: text("class_id").notNull(),
   title: text("title").notNull(),
   description: text("description"),
-  type: text("type").notNull(), // pdf, image, link, text
+  type: text("type").notNull(), // pdf, image, link, text, file
   url: text("url"),
   content: text("content"),
   topic: text("topic"),
+  fileName: text("file_name"),
+  filePath: text("file_path"),
+  fileSize: integer("file_size"),
   uploadedBy: text("uploaded_by").notNull(), // Teacher ID
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

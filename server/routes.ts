@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateQuiz, getTutorResponse } from "./openai";
 import bcrypt from "bcrypt";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import {
   insertUserSchema,
   insertNoteSchema,
@@ -238,6 +239,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json({ message: "Logged out successfully" });
     });
+  });
+
+  // ==================== FILE UPLOAD ====================
+
+  // Get upload URL for file
+  app.post("/api/objects/upload", async (req, res) => {
+    try {
+      const { fileName } = req.body;
+      const objectStorageService = new ObjectStorageService();
+      const { uploadURL, objectPath } = await objectStorageService.getObjectEntityUploadURL(fileName);
+      res.json({ uploadURL, objectPath });
+    } catch (error: any) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: error.message || "Failed to get upload URL" });
+    }
+  });
+
+  // Serve files from object storage
+  app.get("/objects/*", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      await objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      if (error instanceof ObjectNotFoundError) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      console.error("Error serving file:", error);
+      res.status(500).json({ error: "Error serving file" });
+    }
   });
 
   // ==================== NOTES ====================
