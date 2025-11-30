@@ -19,10 +19,12 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 - Built admin dashboard for student management and analytics
 - Integrated OpenAI for AI-powered features
 - FastBots Chatbot Integration - Admins can configure and embed a custom FastBots chatbot
-- **NEW**: File Upload Support for Resources and Exams
-  - Resources tab now supports "File Upload" type alongside links and text notes
+- **COMPLETED**: File Upload Support for Resources and Exams
+  - Resources tab supports "File Upload" type alongside links and text notes
   - Exams tab allows attaching files (exam papers, revision guides, timetables)
-  - Uses Replit App Storage (Google Cloud Storage) via ObjectUploader component
+  - Uses @replit/object-storage with server-side proxy upload/download
+  - ObjectUploader component with progress bar and file validation
+  - Secure file serving with filename sanitization
   - Supported file types: PDF, Word, PowerPoint, Excel, Images (max 50MB)
 
 ## Project Structure

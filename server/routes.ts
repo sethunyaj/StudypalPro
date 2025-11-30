@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import multer from "multer";
 import { Client } from "@replit/object-storage";
 import { randomUUID } from "crypto";
+import path from "path";
 import {
   insertUserSchema,
   insertNoteSchema,
@@ -288,9 +289,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Serve files from object storage (proxy download)
-  app.get("/api/files/*", async (req, res) => {
+  app.get("/api/files/uploads/:filename", async (req, res) => {
     try {
-      const filePath = req.path.replace("/api/files/", "");
+      const filename = req.params.filename;
+      
+      // Security: Validate filename contains only safe characters (no path traversal)
+      const safeFilenamePattern = /^[a-zA-Z0-9\-_.]+$/;
+      if (!safeFilenamePattern.test(filename)) {
+        return res.status(403).json({ error: "Invalid filename" });
+      }
+      
+      // Construct the safe path - always in uploads/ directory
+      const filePath = `uploads/${filename}`;
+      
       const { ok, value, error } = await objectStorageClient.downloadAsBytes(filePath);
       
       if (!ok || !value) {
@@ -299,7 +310,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Determine content type from extension
-      const ext = filePath.split('.').pop()?.toLowerCase();
+      const ext = filename.split('.').pop()?.toLowerCase();
       const contentTypes: Record<string, string> = {
         pdf: 'application/pdf',
         doc: 'application/msword',
@@ -315,7 +326,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       res.setHeader('Content-Type', contentTypes[ext || ''] || 'application/octet-stream');
-      res.setHeader('Content-Disposition', `inline; filename="${filePath.split('/').pop()}"`);
+      res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
       res.send(Buffer.from(value));
     } catch (error: any) {
       console.error("Error serving file:", error);
