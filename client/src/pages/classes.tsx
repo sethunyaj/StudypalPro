@@ -61,7 +61,7 @@ export default function ClassesPage() {
 
   const joinClassMutation = useMutation({
     mutationFn: async (code: string) => {
-      return await apiRequest("/api/classes/join", "POST", { code, studentId: user.id });
+      return await apiRequest("POST", "/api/classes/join", { code, studentId: user.id });
     },
     onSuccess: () => {
       toast({ title: "Success", description: "You have joined the class!" });
@@ -484,7 +484,7 @@ function CreateClassForm({ teacherId, onSuccess }: { teacherId: string; onSucces
 
   const createMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest("/api/classes", "POST", {
+      const response = await apiRequest("POST", "/api/classes", {
         name,
         subject,
         description,
@@ -492,6 +492,7 @@ function CreateClassForm({ teacherId, onSuccess }: { teacherId: string; onSucces
         color,
         code: "", 
       });
+      return await response.json();
     },
     onSuccess: (data: any) => {
       toast({ 
@@ -588,7 +589,7 @@ function TodosTab({ classId, todos, isTeacher, userId, onRefresh }: {
 
   const addMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest(`/api/classes/${classId}/todos`, "POST", {
+      return await apiRequest("POST", `/api/classes/${classId}/todos`, {
         title,
         description,
         dueDate: dueDate ? new Date(dueDate).toISOString() : null,
@@ -612,7 +613,7 @@ function TodosTab({ classId, todos, isTeacher, userId, onRefresh }: {
 
   const deleteMutation = useMutation({
     mutationFn: async (todoId: string) => {
-      return await apiRequest(`/api/todos/${todoId}`, "DELETE");
+      return await apiRequest("DELETE", `/api/todos/${todoId}`);
     },
     onSuccess: () => {
       toast({ title: "To-do deleted" });
@@ -788,7 +789,7 @@ function ExamsTab({ classId, exams, isTeacher, userId, onRefresh }: {
 
   const addMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest(`/api/classes/${classId}/exams`, "POST", {
+      return await apiRequest("POST", `/api/classes/${classId}/exams`, {
         title,
         description,
         date: new Date(date).toISOString(),
@@ -812,7 +813,7 @@ function ExamsTab({ classId, exams, isTeacher, userId, onRefresh }: {
 
   const deleteMutation = useMutation({
     mutationFn: async (examId: string) => {
-      return await apiRequest(`/api/exams/${examId}`, "DELETE");
+      return await apiRequest("DELETE", `/api/exams/${examId}`);
     },
     onSuccess: () => {
       toast({ title: "Exam deleted" });
@@ -972,7 +973,7 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
 
   const addMutation = useMutation({
     mutationFn: async () => {
-      return await apiRequest(`/api/classes/${classId}/resources`, "POST", {
+      return await apiRequest("POST", `/api/classes/${classId}/resources`, {
         title,
         description,
         type,
@@ -1000,7 +1001,7 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
 
   const deleteMutation = useMutation({
     mutationFn: async (resourceId: string) => {
-      return await apiRequest(`/api/resources/${resourceId}`, "DELETE");
+      return await apiRequest("DELETE", `/api/resources/${resourceId}`);
     },
     onSuccess: () => {
       toast({ title: "Resource deleted" });

@@ -65,7 +65,7 @@ export default function Login() {
     }
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent, role: "student" | "teacher" = "student") => {
     e.preventDefault();
     setIsLoading(true);
     
@@ -74,8 +74,8 @@ export default function Login() {
         username: regUsername,
         password: regPassword,
         name: regName,
-        grade: regRole === "student" ? regGrade || null : null,
-        role: regRole,
+        grade: role === "student" ? regGrade || null : null,
+        role: role,
       });
       const user = await response.json();
       
@@ -87,7 +87,7 @@ export default function Login() {
         description: `Welcome to Hibiscus StudyPal, ${user.name}!`,
       });
       
-      if (regRole === "teacher") {
+      if (role === "teacher") {
         setLocation("/classes");
       } else {
         setLocation("/dashboard");
@@ -326,7 +326,7 @@ export default function Login() {
               </TabsContent>
               
               <TabsContent value="register">
-                <form onSubmit={(e) => { setRegRole("teacher"); handleRegister(e); }} className="space-y-4">
+                <form onSubmit={(e) => handleRegister(e, "teacher")} className="space-y-4">
                   <Alert className="bg-chart-2/10 border-chart-2/30">
                     <BookOpen className="h-4 w-4" />
                     <AlertDescription>
@@ -456,7 +456,7 @@ export default function Login() {
               </TabsContent>
               
               <TabsContent value="register">
-                <form onSubmit={(e) => { setRegRole("student"); handleRegister(e); }} className="space-y-4">
+                <form onSubmit={(e) => handleRegister(e, "student")} className="space-y-4">
                   <Alert className="bg-primary/10 border-primary/30">
                     <BookOpen className="h-4 w-4" />
                     <AlertDescription>

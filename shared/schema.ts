@@ -90,6 +90,8 @@ export const todos = pgTable("todos", {
 export const insertTodoSchema = createInsertSchema(todos).omit({
   id: true,
   createdAt: true,
+}).extend({
+  dueDate: z.coerce.date().nullable().optional(),
 });
 export type InsertTodo = z.infer<typeof insertTodoSchema>;
 export type Todo = typeof todos.$inferSelect;
@@ -109,6 +111,8 @@ export const exams = pgTable("exams", {
 export const insertExamSchema = createInsertSchema(exams).omit({
   id: true,
   createdAt: true,
+}).extend({
+  date: z.coerce.date(),
 });
 export type InsertExam = z.infer<typeof insertExamSchema>;
 export type Exam = typeof exams.$inferSelect;
