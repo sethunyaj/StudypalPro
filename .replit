@@ -34,10 +34,6 @@ externalPort = 3003
 localPort = 41561
 externalPort = 3001
 
-[[ports]]
-localPort = 44763
-externalPort = 5000
-
 [env]
 PORT = "5000"
 
@@ -64,3 +60,8 @@ waitForPort = 5000
 
 [agent]
 integrations = ["javascript_openai_ai_integrations:1.0.0", "javascript_mem_db:1.0.0", "javascript_database:1.0.0"]
+
+[userenv]
+
+[userenv.shared]
+PRIVATE_OBJECT_DIR = "/studypal-uploads"
