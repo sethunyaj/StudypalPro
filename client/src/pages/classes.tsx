@@ -15,8 +15,10 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { 
   LogOut, Plus, Users, BookOpen, Calendar, FileText, Link2, 
   CheckSquare, Clock, ArrowLeft, GraduationCap, ClipboardList,
-  Trophy, Flame, Target, BookMarked, Trash2, ExternalLink
+  Trophy, Flame, Target, BookMarked, Trash2, ExternalLink, Upload,
+  Download, File, Paperclip
 } from "lucide-react";
+import { ObjectUploader } from "@/components/ObjectUploader";
 import { format, formatDistanceToNow, isPast, isToday, isTomorrow } from "date-fns";
 import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
 import type { Class, Todo, Exam, ClassResource } from "@shared/schema";
@@ -785,7 +787,14 @@ function ExamsTab({ classId, exams, isTeacher, userId, onRefresh }: {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [topics, setTopics] = useState("");
+  const [attachments, setAttachments] = useState<Array<{ name: string; size: number; path: string }>>([]);
   const { toast } = useToast();
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  };
 
   const addMutation = useMutation({
     mutationFn: async () => {
@@ -794,6 +803,7 @@ function ExamsTab({ classId, exams, isTeacher, userId, onRefresh }: {
         description,
         date: new Date(date).toISOString(),
         topics: topics.split(",").map(t => t.trim()).filter(Boolean),
+        attachments: attachments.map(a => JSON.stringify(a)),
         createdBy: userId,
       });
     },
@@ -804,6 +814,7 @@ function ExamsTab({ classId, exams, isTeacher, userId, onRefresh }: {
       setDescription("");
       setDate("");
       setTopics("");
+      setAttachments([]);
       onRefresh();
     },
     onError: (error: any) => {
@@ -875,6 +886,43 @@ function ExamsTab({ classId, exams, isTeacher, userId, onRefresh }: {
                     data-testid="input-exam-topics"
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Attachments (Optional)</Label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Upload exam papers, revision guides, or timetables
+                  </p>
+                  {attachments.length > 0 && (
+                    <div className="space-y-2 mb-2">
+                      {attachments.map((file, index) => (
+                        <div key={index} className="flex items-center gap-2 p-2 border rounded-lg bg-muted/50">
+                          <File className="h-4 w-4 text-primary" />
+                          <span className="text-sm flex-1 truncate">{file.name}</span>
+                          <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => setAttachments(prev => prev.filter((_, i) => i !== index))}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <ObjectUploader
+                    onUploadComplete={(file) => {
+                      setAttachments(prev => [...prev, file]);
+                      toast({ title: "File uploaded!" });
+                    }}
+                    allowedFileTypes={[".pdf", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".png", ".jpg", ".jpeg"]}
+                    buttonVariant="outline"
+                    buttonSize="sm"
+                  >
+                    <Paperclip className="h-4 w-4 mr-2" />
+                    Attach File
+                  </ObjectUploader>
+                </div>
               </div>
               <DialogFooter>
                 <Button 
@@ -925,12 +973,48 @@ function ExamsTab({ classId, exams, isTeacher, userId, onRefresh }: {
                         <span className="font-medium">{format(examDate, "EEEE, MMMM d, yyyy 'at' h:mm a")}</span>
                       </div>
                       {exam.topics && exam.topics.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1 mb-2">
                           {exam.topics.map((topic, i) => (
                             <Badge key={i} variant="outline" className="text-xs">
                               {topic}
                             </Badge>
                           ))}
+                        </div>
+                      )}
+                      {exam.attachments && exam.attachments.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Paperclip className="h-3 w-3" />
+                            Attachments:
+                          </span>
+                          {exam.attachments.map((attachment, i) => {
+                            try {
+                              const file = typeof attachment === 'string' ? JSON.parse(attachment) : attachment;
+                              const downloadUrl = file.path?.startsWith('/objects/') 
+                                ? `/api/objects/download?path=${encodeURIComponent(file.path)}`
+                                : file.path;
+                              return (
+                                <a 
+                                  key={i}
+                                  href={downloadUrl} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors"
+                                  data-testid={`exam-attachment-download-${exam.id}-${i}`}
+                                >
+                                  <Download className="h-3 w-3" />
+                                  {file.name}
+                                  {file.size && (
+                                    <span className="text-muted-foreground">
+                                      ({formatFileSize(file.size)})
+                                    </span>
+                                  )}
+                                </a>
+                              );
+                            } catch {
+                              return null;
+                            }
+                          })}
                         </div>
                       )}
                     </div>
@@ -969,6 +1053,7 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
   const [url, setUrl] = useState("");
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
+  const [uploadedFile, setUploadedFile] = useState<{ name: string; size: number; path: string } | null>(null);
   const { toast } = useToast();
 
   const addMutation = useMutation({
@@ -980,6 +1065,9 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
         url: type === "link" ? url : null,
         content: type === "text" ? content : null,
         topic: topic || null,
+        fileName: type === "file" && uploadedFile ? uploadedFile.name : null,
+        filePath: type === "file" && uploadedFile ? uploadedFile.path : null,
+        fileSize: type === "file" && uploadedFile ? uploadedFile.size : null,
         uploadedBy: userId,
       });
     },
@@ -992,6 +1080,7 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
       setUrl("");
       setContent("");
       setTopic("");
+      setUploadedFile(null);
       onRefresh();
     },
     onError: (error: any) => {
@@ -1013,8 +1102,16 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
     switch (type) {
       case "link": return <Link2 className="h-4 w-4" />;
       case "text": return <FileText className="h-4 w-4" />;
+      case "file": return <File className="h-4 w-4" />;
       default: return <FileText className="h-4 w-4" />;
     }
+  };
+
+  const formatFileSize = (bytes: number | null | undefined) => {
+    if (!bytes) return "";
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
   };
 
   return (
@@ -1046,13 +1143,14 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
                 </div>
                 <div className="space-y-2">
                   <Label>Type</Label>
-                  <Select value={type} onValueChange={setType}>
+                  <Select value={type} onValueChange={(v) => { setType(v); setUploadedFile(null); }}>
                     <SelectTrigger data-testid="select-resource-type">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="link">Link</SelectItem>
                       <SelectItem value="text">Text/Notes</SelectItem>
+                      <SelectItem value="file">File Upload</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1079,6 +1177,44 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
                     />
                   </div>
                 )}
+                {type === "file" && (
+                  <div className="space-y-2">
+                    <Label>Upload File</Label>
+                    {uploadedFile ? (
+                      <div className="flex items-center gap-2 p-3 border rounded-lg bg-muted/50">
+                        <File className="h-5 w-5 text-primary" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{uploadedFile.name}</p>
+                          <p className="text-xs text-muted-foreground">{formatFileSize(uploadedFile.size)}</p>
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setUploadedFile(null)}
+                        >
+                          Change
+                        </Button>
+                      </div>
+                    ) : (
+                      <ObjectUploader
+                        onUploadComplete={(file) => {
+                          setUploadedFile(file);
+                          if (!title) setTitle(file.name.replace(/\.[^/.]+$/, ""));
+                          toast({ title: "File uploaded successfully!" });
+                        }}
+                        allowedFileTypes={[".pdf", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".png", ".jpg", ".jpeg", ".gif"]}
+                        buttonVariant="outline"
+                        buttonClassName="w-full"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Select File to Upload
+                      </ObjectUploader>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Supported: PDF, Word, PowerPoint, Excel, Images (max 50MB)
+                    </p>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label>Description (Optional)</Label>
                   <Input 
@@ -1101,7 +1237,7 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
               <DialogFooter>
                 <Button 
                   onClick={() => addMutation.mutate()}
-                  disabled={!title.trim() || (type === "link" && !url.trim()) || (type === "text" && !content.trim()) || addMutation.isPending}
+                  disabled={!title.trim() || (type === "link" && !url.trim()) || (type === "text" && !content.trim()) || (type === "file" && !uploadedFile) || addMutation.isPending}
                   data-testid="button-submit-resource"
                 >
                   {addMutation.isPending ? "Adding..." : "Add Resource"}
@@ -1153,6 +1289,28 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
                       <p className="text-sm bg-muted/50 p-2 rounded mt-2 line-clamp-3">
                         {resource.content}
                       </p>
+                    )}
+                    {resource.type === "file" && resource.filePath && (
+                      <div className="mt-2">
+                        <a 
+                          href={resource.filePath.startsWith('/objects/') 
+                            ? `/api/objects/download?path=${encodeURIComponent(resource.filePath)}`
+                            : resource.filePath
+                          } 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors"
+                          data-testid={`resource-download-${resource.id}`}
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          {resource.fileName || "Download File"}
+                          {resource.fileSize && (
+                            <span className="text-xs text-muted-foreground">
+                              ({formatFileSize(resource.fileSize)})
+                            </span>
+                          )}
+                        </a>
+                      </div>
                     )}
                   </div>
                   {isTeacher && (
