@@ -9,7 +9,7 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   name: text("name").notNull(),
-  role: text("role").notNull().default("student"), // student or admin
+  role: text("role").notNull().default("student"), // student, teacher, or admin
   grade: text("grade"),
   points: integer("points").notNull().default(0),
   streak: integer("streak").notNull().default(0),
@@ -25,6 +25,99 @@ export const insertUserSchema = createInsertSchema(users).omit({
 });
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+// Classes/Subjects table
+export const classes = pgTable("classes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  description: text("description"),
+  subject: text("subject").notNull(),
+  teacherId: text("teacher_id").notNull(),
+  code: text("code").notNull().unique(), // Class code for students to join
+  color: text("color").notNull().default("bg-primary"), // For UI styling
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertClassSchema = createInsertSchema(classes).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertClass = z.infer<typeof insertClassSchema>;
+export type Class = typeof classes.$inferSelect;
+
+// Class enrollments (many-to-many between students and classes)
+export const classEnrollments = pgTable("class_enrollments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  classId: text("class_id").notNull(),
+  studentId: text("student_id").notNull(),
+  enrolledAt: timestamp("enrolled_at").notNull().defaultNow(),
+});
+
+export const insertClassEnrollmentSchema = createInsertSchema(classEnrollments).omit({
+  id: true,
+  enrolledAt: true,
+});
+export type InsertClassEnrollment = z.infer<typeof insertClassEnrollmentSchema>;
+export type ClassEnrollment = typeof classEnrollments.$inferSelect;
+
+// To-do items per class
+export const todos = pgTable("todos", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  classId: text("class_id").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  dueDate: timestamp("due_date"),
+  resourceLink: text("resource_link"),
+  createdBy: text("created_by").notNull(), // Teacher ID
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertTodoSchema = createInsertSchema(todos).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertTodo = z.infer<typeof insertTodoSchema>;
+export type Todo = typeof todos.$inferSelect;
+
+// Exams per class
+export const exams = pgTable("exams", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  classId: text("class_id").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  date: timestamp("date").notNull(),
+  topics: text("topics").array(),
+  createdBy: text("created_by").notNull(), // Teacher ID
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertExamSchema = createInsertSchema(exams).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertExam = z.infer<typeof insertExamSchema>;
+export type Exam = typeof exams.$inferSelect;
+
+// Class resources (notes, PDFs, links)
+export const classResources = pgTable("class_resources", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  classId: text("class_id").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  type: text("type").notNull(), // pdf, image, link, text
+  url: text("url"),
+  content: text("content"),
+  topic: text("topic"),
+  uploadedBy: text("uploaded_by").notNull(), // Teacher ID
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertClassResourceSchema = createInsertSchema(classResources).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertClassResource = z.infer<typeof insertClassResourceSchema>;
+export type ClassResource = typeof classResources.$inferSelect;
 
 // Notes table
 export const notes = pgTable("notes", {
@@ -54,8 +147,8 @@ export const flashcards = pgTable("flashcards", {
   back: text("back").notNull(),
   subject: text("subject"),
   tags: text("tags").array(),
-  easeFactor: integer("ease_factor").notNull().default(2500), // SM-2 algorithm (2.5 * 1000)
-  interval: integer("interval").notNull().default(0), // days
+  easeFactor: integer("ease_factor").notNull().default(2500),
+  interval: integer("interval").notNull().default(0),
   repetitions: integer("repetitions").notNull().default(0),
   nextReviewDate: timestamp("next_review_date").notNull().defaultNow(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -68,14 +161,15 @@ export const insertFlashcardSchema = createInsertSchema(flashcards).omit({
 export type InsertFlashcard = z.infer<typeof insertFlashcardSchema>;
 export type Flashcard = typeof flashcards.$inferSelect;
 
-// Quizzes table
+// Quizzes table (now linked to classes)
 export const quizzes = pgTable("quizzes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: text("user_id").notNull(),
   title: text("title").notNull(),
   subject: text("subject").notNull(),
-  difficulty: text("difficulty").notNull(), // easy, medium, hard, expert
-  questions: jsonb("questions").notNull(), // Array of question objects
+  classId: text("class_id"), // Optional: link to class
+  difficulty: text("difficulty").notNull(),
+  questions: jsonb("questions").notNull(),
   sourceNoteId: text("source_note_id"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -94,8 +188,8 @@ export const quizAttempts = pgTable("quiz_attempts", {
   quizId: text("quiz_id").notNull(),
   score: integer("score").notNull(),
   totalQuestions: integer("total_questions").notNull(),
-  answers: jsonb("answers").notNull(), // User's answers with correctness
-  timeSpent: integer("time_spent").notNull(), // seconds
+  answers: jsonb("answers").notNull(),
+  timeSpent: integer("time_spent").notNull(),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
 });
 
@@ -111,8 +205,8 @@ export const studySessions = pgTable("study_sessions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: text("user_id").notNull(),
   subject: text("subject"),
-  duration: integer("duration").notNull(), // minutes
-  type: text("type").notNull(), // focus, short_break, long_break
+  duration: integer("duration").notNull(),
+  type: text("type").notNull(),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
 });
 
@@ -127,7 +221,7 @@ export type StudySession = typeof studySessions.$inferSelect;
 export const achievements = pgTable("achievements", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: text("user_id").notNull(),
-  type: text("type").notNull(), // first_quiz, streak_7, points_100, etc.
+  type: text("type").notNull(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   icon: text("icon").notNull(),
@@ -163,7 +257,7 @@ export type StudyGroup = typeof studyGroups.$inferSelect;
 export const tutorConversations = pgTable("tutor_conversations", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: text("user_id").notNull(),
-  messages: jsonb("messages").notNull(), // Array of {role, content} objects
+  messages: jsonb("messages").notNull(),
   subject: text("subject"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -183,7 +277,7 @@ export const mindMaps = pgTable("mind_maps", {
   userId: text("user_id").notNull(),
   title: text("title").notNull(),
   subject: text("subject"),
-  nodes: jsonb("nodes").notNull(), // Mind map node data
+  nodes: jsonb("nodes").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -196,7 +290,7 @@ export const insertMindMapSchema = createInsertSchema(mindMaps).omit({
 export type InsertMindMap = z.infer<typeof insertMindMapSchema>;
 export type MindMap = typeof mindMaps.$inferSelect;
 
-// Platform settings (for FastBots chatbot integration, etc.)
+// Platform settings
 export const platformSettings = pgTable("platform_settings", {
   key: text("key").primaryKey(),
   value: text("value").notNull(),

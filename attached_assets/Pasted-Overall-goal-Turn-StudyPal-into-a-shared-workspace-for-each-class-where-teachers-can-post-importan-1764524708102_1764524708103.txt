@@ -1,0 +1,127 @@
+Overall goal
+
+Turn StudyPal into a shared workspace for each class, where teachers can post important information and students can access everything they need for that class from one place.
+
+New / Improved Features to Implement
+
+Class-based workspace
+
+Each class/subject should have its own “space”.
+
+Teachers see a list of the classes they teach; students see a list of the classes they are enrolled in.
+
+Clicking a class opens its dashboard with all tools below (to-do, exams, calendar, quizzes, notes, resources).
+
+To-Do Lists (per class)
+
+Teachers can create, edit, and delete to-do items for each class.
+
+Each to-do item should have:
+
+Title
+
+Short description
+
+Due date
+
+Optional link or resource
+
+Students see these to-dos in the class dashboard, sorted by closest due date, plus a “Today / This Week” view on their main homepage.
+
+Upcoming Exams (per class)
+
+Teachers can add upcoming exams for each class with:
+
+Exam title
+
+Date and time
+
+Topics/chapters covered
+
+Students see upcoming exams in the class dashboard and also in a combined “Upcoming Exams” list across all their classes.
+
+Calendar / Schedule
+
+Add a simple calendar view (weekly/monthly) for each class.
+
+The calendar should show:
+
+Exam dates
+
+Important class events
+
+To-do deadlines (if possible)
+
+Allow filtering by class and a global view “All classes.”
+
+Extra Quizzes (per class)
+
+Teachers must be able to create extra quizzes for their classes (even if a quiz system already exists, extend or reuse it).
+
+For each quiz:
+
+Title and description
+
+Link to the class
+
+Question types: at least multiple-choice; reuse existing question models if available.
+
+Students can see available quizzes per class, take them, and see their scores/feedback.
+
+Class Notes & Uploaded Resources
+
+Teachers should be able to upload class notes and additional resources per class, for example:
+
+PDF notes
+
+Images
+
+External links (e.g. YouTube, websites)
+
+Students should see a clean list of resources grouped by topic or date in each class dashboard.
+
+Role-based Permissions & UI
+
+Teachers:
+
+Can create/update/delete to-do items, exams, quizzes, notes, and resources for their own classes.
+
+Students:
+
+Can only view these items and take quizzes.
+
+Make sure the navigation and dashboards are different for teachers and students, but share a consistent, simple design.
+
+Usability & Design
+
+The platform should feel like a daily planner:
+
+Student home page shows:
+
+Today’s to-dos
+
+Upcoming exams
+
+Quick links to each class space
+
+Keep the UI simple, mobile-friendly and clean. Reuse existing styles where possible.
+
+What I want you (Replit AI) to do
+
+Inspect the existing codebase in this Repl and summarise the current structure (framework, main files, existing models/pages).
+
+Propose a high-level implementation plan for the features above, including:
+
+Any new database models or fields needed
+
+New routes/endpoints/components
+
+How to integrate with existing auth / user roles
+
+Then implement the changes step by step:
+
+Update the backend (models, routes/API, validation, etc.)
+
+Update the frontend (pages, components, navigation, class dashboards)
+
+Show me each major change with file names and code snippets.

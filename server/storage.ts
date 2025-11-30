@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { eq, and, lte, sql } from "drizzle-orm";
+import { eq, and, lte, sql, desc } from "drizzle-orm";
 import {
   users,
   notes,
@@ -12,6 +12,11 @@ import {
   tutorConversations,
   mindMaps,
   platformSettings,
+  classes,
+  classEnrollments,
+  todos,
+  exams,
+  classResources,
   type User,
   type InsertUser,
   type Note,
@@ -33,10 +38,19 @@ import {
   type MindMap,
   type InsertMindMap,
   type PlatformSetting,
+  type Class,
+  type InsertClass,
+  type ClassEnrollment,
+  type InsertClassEnrollment,
+  type Todo,
+  type InsertTodo,
+  type Exam,
+  type InsertExam,
+  type ClassResource,
+  type InsertClassResource,
 } from "@shared/schema";
 
 export interface IStorage {
-  // Users
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
@@ -44,14 +58,12 @@ export interface IStorage {
   getAllStudents(): Promise<User[]>;
   deleteUser(id: string): Promise<void>;
 
-  // Notes
   getUserNotes(userId: string): Promise<Note[]>;
   getNote(id: string): Promise<Note | undefined>;
   createNote(note: InsertNote): Promise<Note>;
   updateNote(id: string, updates: Partial<Note>): Promise<Note | undefined>;
   deleteNote(id: string): Promise<void>;
 
-  // Flashcards
   getUserFlashcards(userId: string): Promise<Flashcard[]>;
   getDueFlashcards(userId: string): Promise<Flashcard[]>;
   getFlashcard(id: string): Promise<Flashcard | undefined>;
@@ -59,25 +71,20 @@ export interface IStorage {
   updateFlashcard(id: string, updates: Partial<Flashcard>): Promise<Flashcard | undefined>;
   deleteFlashcard(id: string): Promise<void>;
 
-  // Quizzes
   getUserQuizzes(userId: string): Promise<Quiz[]>;
   getQuiz(id: string): Promise<Quiz | undefined>;
   createQuiz(quiz: InsertQuiz): Promise<Quiz>;
   deleteQuiz(id: string): Promise<void>;
 
-  // Quiz Attempts
   getUserQuizAttempts(userId: string): Promise<QuizAttempt[]>;
   createQuizAttempt(attempt: InsertQuizAttempt): Promise<QuizAttempt>;
 
-  // Study Sessions
   getUserStudySessions(userId: string): Promise<StudySession[]>;
   createStudySession(session: InsertStudySession): Promise<StudySession>;
 
-  // Achievements
   getUserAchievements(userId: string): Promise<Achievement[]>;
   createAchievement(achievement: InsertAchievement): Promise<Achievement>;
 
-  // Study Groups
   getUserStudyGroups(userId: string): Promise<StudyGroup[]>;
   getAllStudyGroups(): Promise<StudyGroup[]>;
   getStudyGroup(id: string): Promise<StudyGroup | undefined>;
@@ -85,28 +92,61 @@ export interface IStorage {
   updateStudyGroup(id: string, updates: Partial<StudyGroup>): Promise<StudyGroup | undefined>;
   deleteStudyGroup(id: string): Promise<void>;
 
-  // Tutor Conversations
   getUserConversations(userId: string): Promise<TutorConversation[]>;
   getConversation(id: string): Promise<TutorConversation | undefined>;
   createConversation(conversation: InsertTutorConversation): Promise<TutorConversation>;
   updateConversation(id: string, updates: Partial<TutorConversation>): Promise<TutorConversation | undefined>;
   deleteConversation(id: string): Promise<void>;
 
-  // Mind Maps
   getUserMindMaps(userId: string): Promise<MindMap[]>;
   getMindMap(id: string): Promise<MindMap | undefined>;
   createMindMap(mindMap: InsertMindMap): Promise<MindMap>;
   updateMindMap(id: string, updates: Partial<MindMap>): Promise<MindMap | undefined>;
   deleteMindMap(id: string): Promise<void>;
 
-  // Platform Settings
   getSetting(key: string): Promise<PlatformSetting | undefined>;
   setSetting(key: string, value: string): Promise<PlatformSetting>;
   getAllSettings(): Promise<PlatformSetting[]>;
+
+  // CLASS MANAGEMENT
+  getTeacherClasses(teacherId: string): Promise<Class[]>;
+  getStudentClasses(studentId: string): Promise<Class[]>;
+  getClass(classId: string): Promise<Class | undefined>;
+  createClass(classData: InsertClass): Promise<Class>;
+  updateClass(classId: string, updates: Partial<Class>): Promise<Class | undefined>;
+  deleteClass(classId: string): Promise<void>;
+  getClassByCode(code: string): Promise<Class | undefined>;
+
+  // CLASS ENROLLMENTS
+  enrollStudent(classId: string, studentId: string): Promise<ClassEnrollment>;
+  getClassStudents(classId: string): Promise<User[]>;
+  isStudentEnrolled(classId: string, studentId: string): Promise<boolean>;
+
+  // TODOS
+  getClassTodos(classId: string): Promise<Todo[]>;
+  getTodo(todoId: string): Promise<Todo | undefined>;
+  createTodo(todo: InsertTodo): Promise<Todo>;
+  updateTodo(todoId: string, updates: Partial<Todo>): Promise<Todo | undefined>;
+  deleteTodo(todoId: string): Promise<void>;
+  getStudentTodos(studentId: string): Promise<Todo[]>; // Todos for all enrolled classes
+
+  // EXAMS
+  getClassExams(classId: string): Promise<Exam[]>;
+  getExam(examId: string): Promise<Exam | undefined>;
+  createExam(exam: InsertExam): Promise<Exam>;
+  updateExam(examId: string, updates: Partial<Exam>): Promise<Exam | undefined>;
+  deleteExam(examId: string): Promise<void>;
+  getUpcomingExams(studentId: string): Promise<Exam[]>; // Exams for all enrolled classes
+
+  // CLASS RESOURCES
+  getClassResources(classId: string): Promise<ClassResource[]>;
+  getResource(resourceId: string): Promise<ClassResource | undefined>;
+  createResource(resource: InsertClassResource): Promise<ClassResource>;
+  deleteResource(resourceId: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
-  // Users
+  // ==================== USERS ====================
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
@@ -135,7 +175,7 @@ export class DatabaseStorage implements IStorage {
     await db.delete(users).where(eq(users.id, id));
   }
 
-  // Notes
+  // ==================== NOTES ====================
   async getUserNotes(userId: string): Promise<Note[]> {
     return await db.select().from(notes).where(eq(notes.userId, userId));
   }
@@ -159,7 +199,7 @@ export class DatabaseStorage implements IStorage {
     await db.delete(notes).where(eq(notes.id, id));
   }
 
-  // Flashcards
+  // ==================== FLASHCARDS ====================
   async getUserFlashcards(userId: string): Promise<Flashcard[]> {
     return await db.select().from(flashcards).where(eq(flashcards.userId, userId));
   }
@@ -190,7 +230,7 @@ export class DatabaseStorage implements IStorage {
     await db.delete(flashcards).where(eq(flashcards.id, id));
   }
 
-  // Quizzes
+  // ==================== QUIZZES ====================
   async getUserQuizzes(userId: string): Promise<Quiz[]> {
     return await db.select().from(quizzes).where(eq(quizzes.userId, userId));
   }
@@ -209,7 +249,7 @@ export class DatabaseStorage implements IStorage {
     await db.delete(quizzes).where(eq(quizzes.id, id));
   }
 
-  // Quiz Attempts
+  // ==================== QUIZ ATTEMPTS ====================
   async getUserQuizAttempts(userId: string): Promise<QuizAttempt[]> {
     return await db.select().from(quizAttempts).where(eq(quizAttempts.userId, userId));
   }
@@ -219,7 +259,7 @@ export class DatabaseStorage implements IStorage {
     return attempt;
   }
 
-  // Study Sessions
+  // ==================== STUDY SESSIONS ====================
   async getUserStudySessions(userId: string): Promise<StudySession[]> {
     return await db.select().from(studySessions).where(eq(studySessions.userId, userId));
   }
@@ -229,7 +269,7 @@ export class DatabaseStorage implements IStorage {
     return session;
   }
 
-  // Achievements
+  // ==================== ACHIEVEMENTS ====================
   async getUserAchievements(userId: string): Promise<Achievement[]> {
     return await db.select().from(achievements).where(eq(achievements.userId, userId));
   }
@@ -239,7 +279,7 @@ export class DatabaseStorage implements IStorage {
     return achievement;
   }
 
-  // Study Groups
+  // ==================== STUDY GROUPS ====================
   async getUserStudyGroups(userId: string): Promise<StudyGroup[]> {
     return await db
       .select()
@@ -270,7 +310,7 @@ export class DatabaseStorage implements IStorage {
     await db.delete(studyGroups).where(eq(studyGroups.id, id));
   }
 
-  // Tutor Conversations
+  // ==================== TUTOR CONVERSATIONS ====================
   async getUserConversations(userId: string): Promise<TutorConversation[]> {
     return await db.select().from(tutorConversations).where(eq(tutorConversations.userId, userId));
   }
@@ -298,7 +338,7 @@ export class DatabaseStorage implements IStorage {
     await db.delete(tutorConversations).where(eq(tutorConversations.id, id));
   }
 
-  // Mind Maps
+  // ==================== MIND MAPS ====================
   async getUserMindMaps(userId: string): Promise<MindMap[]> {
     return await db.select().from(mindMaps).where(eq(mindMaps.userId, userId));
   }
@@ -326,7 +366,7 @@ export class DatabaseStorage implements IStorage {
     await db.delete(mindMaps).where(eq(mindMaps.id, id));
   }
 
-  // Platform Settings
+  // ==================== PLATFORM SETTINGS ====================
   async getSetting(key: string): Promise<PlatformSetting | undefined> {
     const [setting] = await db.select().from(platformSettings).where(eq(platformSettings.key, key));
     return setting;
@@ -346,6 +386,168 @@ export class DatabaseStorage implements IStorage {
 
   async getAllSettings(): Promise<PlatformSetting[]> {
     return await db.select().from(platformSettings);
+  }
+
+  // ==================== CLASSES ====================
+  async getTeacherClasses(teacherId: string): Promise<Class[]> {
+    return await db.select().from(classes).where(eq(classes.teacherId, teacherId));
+  }
+
+  async getStudentClasses(studentId: string): Promise<Class[]> {
+    return await db
+      .select()
+      .from(classes)
+      .innerJoin(classEnrollments, eq(classes.id, classEnrollments.classId))
+      .where(eq(classEnrollments.studentId, studentId))
+      .then(results => results.map(r => r.classes));
+  }
+
+  async getClass(classId: string): Promise<Class | undefined> {
+    const [cls] = await db.select().from(classes).where(eq(classes.id, classId));
+    return cls;
+  }
+
+  async createClass(insertClass: InsertClass): Promise<Class> {
+    const [cls] = await db.insert(classes).values(insertClass).returning();
+    return cls;
+  }
+
+  async updateClass(classId: string, updates: Partial<Class>): Promise<Class | undefined> {
+    const [cls] = await db.update(classes).set(updates).where(eq(classes.id, classId)).returning();
+    return cls;
+  }
+
+  async deleteClass(classId: string): Promise<void> {
+    await db.delete(classes).where(eq(classes.id, classId));
+  }
+
+  async getClassByCode(code: string): Promise<Class | undefined> {
+    const [cls] = await db.select().from(classes).where(eq(classes.code, code));
+    return cls;
+  }
+
+  // ==================== CLASS ENROLLMENTS ====================
+  async enrollStudent(classId: string, studentId: string): Promise<ClassEnrollment> {
+    const [enrollment] = await db.insert(classEnrollments).values({ classId, studentId }).returning();
+    return enrollment;
+  }
+
+  async getClassStudents(classId: string): Promise<User[]> {
+    return await db
+      .select()
+      .from(users)
+      .innerJoin(classEnrollments, eq(users.id, classEnrollments.studentId))
+      .where(eq(classEnrollments.classId, classId))
+      .then(results => results.map(r => r.users));
+  }
+
+  async isStudentEnrolled(classId: string, studentId: string): Promise<boolean> {
+    const [enrollment] = await db
+      .select()
+      .from(classEnrollments)
+      .where(and(eq(classEnrollments.classId, classId), eq(classEnrollments.studentId, studentId)));
+    return !!enrollment;
+  }
+
+  // ==================== TODOS ====================
+  async getClassTodos(classId: string): Promise<Todo[]> {
+    return await db
+      .select()
+      .from(todos)
+      .where(eq(todos.classId, classId))
+      .orderBy(todos.dueDate);
+  }
+
+  async getTodo(todoId: string): Promise<Todo | undefined> {
+    const [todo] = await db.select().from(todos).where(eq(todos.id, todoId));
+    return todo;
+  }
+
+  async createTodo(insertTodo: InsertTodo): Promise<Todo> {
+    const [todo] = await db.insert(todos).values(insertTodo).returning();
+    return todo;
+  }
+
+  async updateTodo(todoId: string, updates: Partial<Todo>): Promise<Todo | undefined> {
+    const [todo] = await db.update(todos).set(updates).where(eq(todos.id, todoId)).returning();
+    return todo;
+  }
+
+  async deleteTodo(todoId: string): Promise<void> {
+    await db.delete(todos).where(eq(todos.id, todoId));
+  }
+
+  async getStudentTodos(studentId: string): Promise<Todo[]> {
+    return await db
+      .select()
+      .from(todos)
+      .innerJoin(classEnrollments, eq(todos.classId, classEnrollments.classId))
+      .where(eq(classEnrollments.studentId, studentId))
+      .orderBy(desc(todos.dueDate))
+      .then(results => results.map(r => r.todos));
+  }
+
+  // ==================== EXAMS ====================
+  async getClassExams(classId: string): Promise<Exam[]> {
+    return await db
+      .select()
+      .from(exams)
+      .where(eq(exams.classId, classId))
+      .orderBy(exams.date);
+  }
+
+  async getExam(examId: string): Promise<Exam | undefined> {
+    const [exam] = await db.select().from(exams).where(eq(exams.id, examId));
+    return exam;
+  }
+
+  async createExam(insertExam: InsertExam): Promise<Exam> {
+    const [exam] = await db.insert(exams).values(insertExam).returning();
+    return exam;
+  }
+
+  async updateExam(examId: string, updates: Partial<Exam>): Promise<Exam | undefined> {
+    const [exam] = await db.update(exams).set(updates).where(eq(exams.id, examId)).returning();
+    return exam;
+  }
+
+  async deleteExam(examId: string): Promise<void> {
+    await db.delete(exams).where(eq(exams.id, examId));
+  }
+
+  async getUpcomingExams(studentId: string): Promise<Exam[]> {
+    return await db
+      .select()
+      .from(exams)
+      .innerJoin(classEnrollments, eq(exams.classId, classEnrollments.classId))
+      .where(and(
+        eq(classEnrollments.studentId, studentId),
+      ))
+      .orderBy(exams.date)
+      .then(results => results.map(r => r.exams));
+  }
+
+  // ==================== CLASS RESOURCES ====================
+  async getClassResources(classId: string): Promise<ClassResource[]> {
+    return await db
+      .select()
+      .from(classResources)
+      .where(eq(classResources.classId, classId))
+      .orderBy(desc(classResources.createdAt));
+  }
+
+  async getResource(resourceId: string): Promise<ClassResource | undefined> {
+    const [resource] = await db.select().from(classResources).where(eq(classResources.id, resourceId));
+    return resource;
+  }
+
+  async createResource(insertResource: InsertClassResource): Promise<ClassResource> {
+    const [resource] = await db.insert(classResources).values(insertResource).returning();
+    return resource;
+  }
+
+  async deleteResource(resourceId: string): Promise<void> {
+    await db.delete(classResources).where(eq(classResources.id, resourceId));
   }
 }
 
