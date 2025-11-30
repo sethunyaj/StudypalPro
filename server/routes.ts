@@ -11,6 +11,10 @@ import {
   insertQuizAttemptSchema,
   insertStudySessionSchema,
   insertStudyGroupSchema,
+  insertClassSchema,
+  insertTodoSchema,
+  insertExamSchema,
+  insertClassResourceSchema,
   type QuizQuestion,
   type QuizAnswer,
 } from "@shared/schema";
@@ -843,6 +847,324 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // Return recent activity - placeholder for now
       res.json([]);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== CLASS MANAGEMENT ====================
+
+  // Get classes for current user (teacher or student)
+  app.get("/api/classes/user/:userId", async (req, res) => {
+    try {
+      const user = await storage.getUser(req.params.userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      let classes;
+      if (user.role === "teacher") {
+        classes = await storage.getTeacherClasses(user.id);
+      } else {
+        classes = await storage.getStudentClasses(user.id);
+      }
+
+      // Add teacher info for each class
+      const classesWithTeacher = await Promise.all(
+        classes.map(async (cls) => {
+          const teacher = await storage.getUser(cls.teacherId);
+          return {
+            ...cls,
+            teacherName: teacher?.name || "Unknown",
+          };
+        })
+      );
+
+      res.json(classesWithTeacher);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get single class details
+  app.get("/api/classes/:classId", async (req, res) => {
+    try {
+      const cls = await storage.getClass(req.params.classId);
+      if (!cls) {
+        return res.status(404).json({ error: "Class not found" });
+      }
+
+      const teacher = await storage.getUser(cls.teacherId);
+      const students = await storage.getClassStudents(cls.id);
+
+      res.json({
+        ...cls,
+        teacherName: teacher?.name || "Unknown",
+        studentCount: students.length,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create a new class (teacher only)
+  app.post("/api/classes", async (req, res) => {
+    try {
+      const data = insertClassSchema.parse(req.body);
+      
+      // Generate unique class code
+      const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+      
+      const cls = await storage.createClass({
+        ...data,
+        code,
+      });
+
+      res.json(cls);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Update class (teacher only)
+  app.put("/api/classes/:classId", async (req, res) => {
+    try {
+      const cls = await storage.updateClass(req.params.classId, req.body);
+      res.json(cls);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Delete class (teacher only)
+  app.delete("/api/classes/:classId", async (req, res) => {
+    try {
+      await storage.deleteClass(req.params.classId);
+      res.json({ message: "Class deleted" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Join class by code (student)
+  app.post("/api/classes/join", async (req, res) => {
+    try {
+      const { code, studentId } = req.body;
+      
+      const cls = await storage.getClassByCode(code.toUpperCase());
+      if (!cls) {
+        return res.status(404).json({ error: "Class not found. Check the code and try again." });
+      }
+
+      // Check if already enrolled
+      const isEnrolled = await storage.isStudentEnrolled(cls.id, studentId);
+      if (isEnrolled) {
+        return res.status(400).json({ error: "You are already enrolled in this class." });
+      }
+
+      await storage.enrollStudent(cls.id, studentId);
+      res.json({ message: "Successfully joined class", class: cls });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get class students
+  app.get("/api/classes/:classId/students", async (req, res) => {
+    try {
+      const students = await storage.getClassStudents(req.params.classId);
+      const sanitized = students.map(({ password, ...s }) => s);
+      res.json(sanitized);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== TODOS ====================
+
+  // Get todos for a class
+  app.get("/api/classes/:classId/todos", async (req, res) => {
+    try {
+      const todos = await storage.getClassTodos(req.params.classId);
+      res.json(todos);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get all todos for a student (across all enrolled classes)
+  app.get("/api/todos/student/:studentId", async (req, res) => {
+    try {
+      const todos = await storage.getStudentTodos(req.params.studentId);
+      
+      // Add class info to each todo
+      const todosWithClass = await Promise.all(
+        todos.map(async (todo) => {
+          const cls = await storage.getClass(todo.classId);
+          return {
+            ...todo,
+            className: cls?.name || "Unknown",
+            classSubject: cls?.subject || "Unknown",
+          };
+        })
+      );
+
+      res.json(todosWithClass);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create todo (teacher only)
+  app.post("/api/classes/:classId/todos", async (req, res) => {
+    try {
+      const data = insertTodoSchema.parse({
+        ...req.body,
+        classId: req.params.classId,
+      });
+      
+      const todo = await storage.createTodo(data);
+      res.json(todo);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Update todo (teacher only)
+  app.put("/api/todos/:todoId", async (req, res) => {
+    try {
+      const todo = await storage.updateTodo(req.params.todoId, req.body);
+      res.json(todo);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Delete todo (teacher only)
+  app.delete("/api/todos/:todoId", async (req, res) => {
+    try {
+      await storage.deleteTodo(req.params.todoId);
+      res.json({ message: "Todo deleted" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== EXAMS ====================
+
+  // Get exams for a class
+  app.get("/api/classes/:classId/exams", async (req, res) => {
+    try {
+      const exams = await storage.getClassExams(req.params.classId);
+      res.json(exams);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get all upcoming exams for a student (across all enrolled classes)
+  app.get("/api/exams/student/:studentId", async (req, res) => {
+    try {
+      const exams = await storage.getUpcomingExams(req.params.studentId);
+      
+      // Add class info to each exam
+      const examsWithClass = await Promise.all(
+        exams.map(async (exam) => {
+          const cls = await storage.getClass(exam.classId);
+          return {
+            ...exam,
+            className: cls?.name || "Unknown",
+            classSubject: cls?.subject || "Unknown",
+          };
+        })
+      );
+
+      res.json(examsWithClass);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create exam (teacher only)
+  app.post("/api/classes/:classId/exams", async (req, res) => {
+    try {
+      const data = insertExamSchema.parse({
+        ...req.body,
+        classId: req.params.classId,
+      });
+      
+      const exam = await storage.createExam(data);
+      res.json(exam);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Update exam (teacher only)
+  app.put("/api/exams/:examId", async (req, res) => {
+    try {
+      const exam = await storage.updateExam(req.params.examId, req.body);
+      res.json(exam);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Delete exam (teacher only)
+  app.delete("/api/exams/:examId", async (req, res) => {
+    try {
+      await storage.deleteExam(req.params.examId);
+      res.json({ message: "Exam deleted" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== CLASS RESOURCES ====================
+
+  // Get resources for a class
+  app.get("/api/classes/:classId/resources", async (req, res) => {
+    try {
+      const resources = await storage.getClassResources(req.params.classId);
+      res.json(resources);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create resource (teacher only)
+  app.post("/api/classes/:classId/resources", async (req, res) => {
+    try {
+      const data = insertClassResourceSchema.parse({
+        ...req.body,
+        classId: req.params.classId,
+      });
+      
+      const resource = await storage.createResource(data);
+      res.json(resource);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Delete resource (teacher only)
+  app.delete("/api/resources/:resourceId", async (req, res) => {
+    try {
+      await storage.deleteResource(req.params.resourceId);
+      res.json({ message: "Resource deleted" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== CLASS QUIZZES ====================
+
+  // Get quizzes for a class
+  app.get("/api/classes/:classId/quizzes", async (req, res) => {
+    try {
+      const allQuizzes = await storage.getUserQuizzes(req.params.classId);
+      // Filter by classId in the quiz data
+      res.json(allQuizzes);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
