@@ -3,7 +3,42 @@ import { pgTable, text, varchar, integer, timestamp, boolean, jsonb } from "driz
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// Quiz types for AI-generated quizzes
+// Quiz question types for teacher-created quizzes
+export type QuestionType = "mcq" | "multiple_select" | "short_answer" | "essay";
+
+export interface BaseQuizQuestion {
+  id: string;
+  question: string;
+  points: number;
+  explanation?: string;
+}
+
+export interface MCQQuestion extends BaseQuizQuestion {
+  type: "mcq";
+  options: string[];
+  correctAnswer: number;
+}
+
+export interface MultipleSelectQuestion extends BaseQuizQuestion {
+  type: "multiple_select";
+  options: string[];
+  correctAnswers: number[];
+}
+
+export interface ShortAnswerQuestion extends BaseQuizQuestion {
+  type: "short_answer";
+  acceptedAnswers?: string[];
+}
+
+export interface EssayQuestion extends BaseQuizQuestion {
+  type: "essay";
+  rubric?: string;
+  maxWords?: number;
+}
+
+export type TeacherQuizQuestion = MCQQuestion | MultipleSelectQuestion | ShortAnswerQuestion | EssayQuestion;
+
+// Legacy quiz types for AI-generated quizzes (kept for compatibility)
 export interface QuizQuestion {
   id: string;
   question: string;
@@ -16,6 +51,18 @@ export interface QuizAnswer {
   questionId: string;
   selectedAnswer: number;
   isCorrect: boolean;
+}
+
+// Answer types for teacher-created quizzes
+export interface TeacherQuizAnswer {
+  questionId: string;
+  questionType: QuestionType;
+  selectedAnswer?: number;
+  selectedAnswers?: number[];
+  textAnswer?: string;
+  isCorrect?: boolean;
+  pointsAwarded?: number;
+  feedback?: string;
 }
 
 // Users table
@@ -223,6 +270,56 @@ export const insertQuizAttemptSchema = createInsertSchema(quizAttempts).omit({
 export type InsertQuizAttempt = z.infer<typeof insertQuizAttemptSchema>;
 export type QuizAttempt = typeof quizAttempts.$inferSelect;
 
+// Teacher-created quizzes (with multiple question types)
+export const teacherQuizzes = pgTable("teacher_quizzes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  classId: text("class_id").notNull(),
+  teacherId: text("teacher_id").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  questions: jsonb("questions").notNull(),
+  timeLimit: integer("time_limit"),
+  passingScore: integer("passing_score"),
+  totalPoints: integer("total_points").notNull(),
+  isPublished: boolean("is_published").notNull().default(false),
+  dueDate: timestamp("due_date"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertTeacherQuizSchema = createInsertSchema(teacherQuizzes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  dueDate: z.coerce.date().nullable().optional(),
+});
+export type InsertTeacherQuiz = z.infer<typeof insertTeacherQuizSchema>;
+export type TeacherQuiz = typeof teacherQuizzes.$inferSelect;
+
+// Teacher quiz attempts (student submissions)
+export const teacherQuizAttempts = pgTable("teacher_quiz_attempts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  quizId: text("quiz_id").notNull(),
+  studentId: text("student_id").notNull(),
+  answers: jsonb("answers").notNull(),
+  autoScore: integer("auto_score").notNull().default(0),
+  manualScore: integer("manual_score"),
+  totalScore: integer("total_score"),
+  status: text("status").notNull().default("submitted"),
+  timeSpent: integer("time_spent").notNull(),
+  gradedBy: text("graded_by"),
+  gradedAt: timestamp("graded_at"),
+  submittedAt: timestamp("submitted_at").notNull().defaultNow(),
+});
+
+export const insertTeacherQuizAttemptSchema = createInsertSchema(teacherQuizAttempts).omit({
+  id: true,
+  submittedAt: true,
+});
+export type InsertTeacherQuizAttempt = z.infer<typeof insertTeacherQuizAttemptSchema>;
+export type TeacherQuizAttempt = typeof teacherQuizAttempts.$inferSelect;
+
 // Study sessions (Pomodoro)
 export const studySessions = pgTable("study_sessions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -315,12 +412,14 @@ export type MindMap = typeof mindMaps.$inferSelect;
 
 // Platform settings
 export const platformSettings = pgTable("platform_settings", {
-  key: text("key").primaryKey(),
-  value: text("value").notNull(),
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  key: text("key").notNull(),
+  value: text("value"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const insertPlatformSettingSchema = createInsertSchema(platformSettings).omit({
+  id: true,
   updatedAt: true,
 });
 export type InsertPlatformSetting = z.infer<typeof insertPlatformSettingSchema>;

@@ -17,6 +17,8 @@ import {
   todos,
   exams,
   classResources,
+  teacherQuizzes,
+  teacherQuizAttempts,
   type User,
   type InsertUser,
   type Note,
@@ -48,6 +50,10 @@ import {
   type InsertExam,
   type ClassResource,
   type InsertClassResource,
+  type TeacherQuiz,
+  type InsertTeacherQuiz,
+  type TeacherQuizAttempt,
+  type InsertTeacherQuizAttempt,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -119,6 +125,7 @@ export interface IStorage {
 
   // CLASS ENROLLMENTS
   enrollStudent(classId: string, studentId: string): Promise<ClassEnrollment>;
+  unenrollStudent(classId: string, studentId: string): Promise<void>;
   getClassStudents(classId: string): Promise<User[]>;
   isStudentEnrolled(classId: string, studentId: string): Promise<boolean>;
 
@@ -143,6 +150,20 @@ export interface IStorage {
   getResource(resourceId: string): Promise<ClassResource | undefined>;
   createResource(resource: InsertClassResource): Promise<ClassResource>;
   deleteResource(resourceId: string): Promise<void>;
+
+  // TEACHER QUIZZES
+  getClassTeacherQuizzes(classId: string): Promise<TeacherQuiz[]>;
+  getTeacherQuiz(quizId: string): Promise<TeacherQuiz | undefined>;
+  createTeacherQuiz(quiz: InsertTeacherQuiz): Promise<TeacherQuiz>;
+  updateTeacherQuiz(quizId: string, updates: Partial<TeacherQuiz>): Promise<TeacherQuiz | undefined>;
+  deleteTeacherQuiz(quizId: string): Promise<void>;
+  getStudentTeacherQuizzes(studentId: string): Promise<TeacherQuiz[]>;
+
+  // TEACHER QUIZ ATTEMPTS
+  getQuizAttempts(quizId: string): Promise<TeacherQuizAttempt[]>;
+  getStudentQuizAttempt(quizId: string, studentId: string): Promise<TeacherQuizAttempt | undefined>;
+  createTeacherQuizAttempt(attempt: InsertTeacherQuizAttempt): Promise<TeacherQuizAttempt>;
+  updateTeacherQuizAttempt(attemptId: string, updates: Partial<TeacherQuizAttempt>): Promise<TeacherQuizAttempt | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -432,6 +453,12 @@ export class DatabaseStorage implements IStorage {
     return enrollment;
   }
 
+  async unenrollStudent(classId: string, studentId: string): Promise<void> {
+    await db.delete(classEnrollments).where(
+      and(eq(classEnrollments.classId, classId), eq(classEnrollments.studentId, studentId))
+    );
+  }
+
   async getClassStudents(classId: string): Promise<User[]> {
     return await db
       .select()
@@ -548,6 +575,78 @@ export class DatabaseStorage implements IStorage {
 
   async deleteResource(resourceId: string): Promise<void> {
     await db.delete(classResources).where(eq(classResources.id, resourceId));
+  }
+
+  // ==================== TEACHER QUIZZES ====================
+  async getClassTeacherQuizzes(classId: string): Promise<TeacherQuiz[]> {
+    return await db
+      .select()
+      .from(teacherQuizzes)
+      .where(eq(teacherQuizzes.classId, classId))
+      .orderBy(desc(teacherQuizzes.createdAt));
+  }
+
+  async getTeacherQuiz(quizId: string): Promise<TeacherQuiz | undefined> {
+    const [quiz] = await db.select().from(teacherQuizzes).where(eq(teacherQuizzes.id, quizId));
+    return quiz;
+  }
+
+  async createTeacherQuiz(insertQuiz: InsertTeacherQuiz): Promise<TeacherQuiz> {
+    const [quiz] = await db.insert(teacherQuizzes).values(insertQuiz).returning();
+    return quiz;
+  }
+
+  async updateTeacherQuiz(quizId: string, updates: Partial<TeacherQuiz>): Promise<TeacherQuiz | undefined> {
+    const [quiz] = await db.update(teacherQuizzes).set({ ...updates, updatedAt: new Date() }).where(eq(teacherQuizzes.id, quizId)).returning();
+    return quiz;
+  }
+
+  async deleteTeacherQuiz(quizId: string): Promise<void> {
+    await db.delete(teacherQuizAttempts).where(eq(teacherQuizAttempts.quizId, quizId));
+    await db.delete(teacherQuizzes).where(eq(teacherQuizzes.id, quizId));
+  }
+
+  async getStudentTeacherQuizzes(studentId: string): Promise<TeacherQuiz[]> {
+    return await db
+      .select()
+      .from(teacherQuizzes)
+      .innerJoin(classEnrollments, eq(teacherQuizzes.classId, classEnrollments.classId))
+      .where(and(
+        eq(classEnrollments.studentId, studentId),
+        eq(teacherQuizzes.isPublished, true)
+      ))
+      .orderBy(desc(teacherQuizzes.createdAt))
+      .then(results => results.map(r => r.teacher_quizzes));
+  }
+
+  // ==================== TEACHER QUIZ ATTEMPTS ====================
+  async getQuizAttempts(quizId: string): Promise<TeacherQuizAttempt[]> {
+    return await db
+      .select()
+      .from(teacherQuizAttempts)
+      .where(eq(teacherQuizAttempts.quizId, quizId))
+      .orderBy(desc(teacherQuizAttempts.submittedAt));
+  }
+
+  async getStudentQuizAttempt(quizId: string, studentId: string): Promise<TeacherQuizAttempt | undefined> {
+    const [attempt] = await db
+      .select()
+      .from(teacherQuizAttempts)
+      .where(and(
+        eq(teacherQuizAttempts.quizId, quizId),
+        eq(teacherQuizAttempts.studentId, studentId)
+      ));
+    return attempt;
+  }
+
+  async createTeacherQuizAttempt(insertAttempt: InsertTeacherQuizAttempt): Promise<TeacherQuizAttempt> {
+    const [attempt] = await db.insert(teacherQuizAttempts).values(insertAttempt).returning();
+    return attempt;
+  }
+
+  async updateTeacherQuizAttempt(attemptId: string, updates: Partial<TeacherQuizAttempt>): Promise<TeacherQuizAttempt | undefined> {
+    const [attempt] = await db.update(teacherQuizAttempts).set(updates).where(eq(teacherQuizAttempts.id, attemptId)).returning();
+    return attempt;
   }
 }
 

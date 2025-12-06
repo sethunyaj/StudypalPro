@@ -19,9 +19,12 @@ import {
   insertTodoSchema,
   insertExamSchema,
   insertClassResourceSchema,
+  insertTeacherQuizSchema,
+  insertTeacherQuizAttemptSchema,
   type QuizQuestion,
   type QuizAnswer,
 } from "@shared/schema";
+import { z } from "zod";
 
 // SM-2 Algorithm for spaced repetition
 function calculateNextReview(quality: number, flashcard: any) {
@@ -1074,6 +1077,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Add student to class by username (teacher only)
+  app.post("/api/classes/:classId/students", async (req, res) => {
+    try {
+      const { username } = req.body;
+      const classId = req.params.classId;
+
+      // Find student by username
+      const student = await storage.getUserByUsername(username);
+      if (!student) {
+        return res.status(404).json({ error: "Student not found. Check the username and try again." });
+      }
+
+      if (student.role !== "student") {
+        return res.status(400).json({ error: "Only students can be added to classes." });
+      }
+
+      // Check if already enrolled
+      const isEnrolled = await storage.isStudentEnrolled(classId, student.id);
+      if (isEnrolled) {
+        return res.status(400).json({ error: "This student is already enrolled in this class." });
+      }
+
+      await storage.enrollStudent(classId, student.id);
+      const { password, ...sanitizedStudent } = student;
+      res.json({ message: "Student added successfully", student: sanitizedStudent });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Remove student from class (teacher only)
+  app.delete("/api/classes/:classId/students/:studentId", async (req, res) => {
+    try {
+      const { classId, studentId } = req.params;
+
+      // Check if student is enrolled
+      const isEnrolled = await storage.isStudentEnrolled(classId, studentId);
+      if (!isEnrolled) {
+        return res.status(404).json({ error: "Student is not enrolled in this class." });
+      }
+
+      await storage.unenrollStudent(classId, studentId);
+      res.json({ message: "Student removed successfully" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // ==================== TODOS ====================
 
   // Get todos for a class
@@ -1257,8 +1308,177 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/classes/:classId/quizzes", async (req, res) => {
     try {
       const allQuizzes = await storage.getUserQuizzes(req.params.classId);
-      // Filter by classId in the quiz data
       res.json(allQuizzes);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== TEACHER QUIZZES ====================
+
+  // Get teacher quizzes for a class
+  app.get("/api/classes/:classId/teacher-quizzes", async (req, res) => {
+    try {
+      const quizzes = await storage.getClassTeacherQuizzes(req.params.classId);
+      res.json(quizzes);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get a specific teacher quiz
+  app.get("/api/teacher-quizzes/:quizId", async (req, res) => {
+    try {
+      const quiz = await storage.getTeacherQuiz(req.params.quizId);
+      if (!quiz) {
+        return res.status(404).json({ error: "Quiz not found" });
+      }
+      res.json(quiz);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create teacher quiz
+  app.post("/api/classes/:classId/teacher-quizzes", async (req, res) => {
+    try {
+      const validationSchema = insertTeacherQuizSchema.extend({
+        questions: z.array(z.object({
+          id: z.string(),
+          question: z.string().min(1, "Question text is required"),
+          type: z.enum(["mcq", "multiple_select", "short_answer", "essay"]),
+          points: z.number().min(1),
+          options: z.array(z.string()).optional(),
+          correctAnswer: z.number().optional(),
+          correctAnswers: z.array(z.number()).optional(),
+          acceptedAnswers: z.array(z.string()).optional(),
+          rubric: z.string().optional(),
+          maxWords: z.number().optional(),
+        })).min(1, "At least one question is required"),
+      });
+      
+      const data = {
+        ...req.body,
+        classId: req.params.classId,
+      };
+      
+      const validated = validationSchema.parse(data);
+      const quiz = await storage.createTeacherQuiz(validated);
+      res.json(quiz);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ error: error.errors[0]?.message || "Invalid quiz data" });
+      }
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Update teacher quiz
+  app.put("/api/teacher-quizzes/:quizId", async (req, res) => {
+    try {
+      const quiz = await storage.updateTeacherQuiz(req.params.quizId, req.body);
+      res.json(quiz);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Delete teacher quiz
+  app.delete("/api/teacher-quizzes/:quizId", async (req, res) => {
+    try {
+      await storage.deleteTeacherQuiz(req.params.quizId);
+      res.json({ message: "Quiz deleted" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get student's available quizzes
+  app.get("/api/student/:studentId/teacher-quizzes", async (req, res) => {
+    try {
+      const quizzes = await storage.getStudentTeacherQuizzes(req.params.studentId);
+      res.json(quizzes);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== TEACHER QUIZ ATTEMPTS ====================
+
+  // Get all attempts for a quiz (teacher view)
+  app.get("/api/teacher-quizzes/:quizId/attempts", async (req, res) => {
+    try {
+      const attempts = await storage.getQuizAttempts(req.params.quizId);
+      
+      // Add student info to each attempt
+      const attemptsWithStudent = await Promise.all(
+        attempts.map(async (attempt) => {
+          const student = await storage.getUser(attempt.studentId);
+          return {
+            ...attempt,
+            studentName: student?.name || "Unknown",
+            studentUsername: student?.username || "unknown",
+          };
+        })
+      );
+      
+      res.json(attemptsWithStudent);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get student's attempt for a quiz
+  app.get("/api/teacher-quizzes/:quizId/attempts/:studentId", async (req, res) => {
+    try {
+      const attempt = await storage.getStudentQuizAttempt(req.params.quizId, req.params.studentId);
+      res.json(attempt || null);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Submit quiz attempt (student)
+  app.post("/api/teacher-quizzes/:quizId/attempts", async (req, res) => {
+    try {
+      const { studentId, answers, timeSpent, autoScore } = req.body;
+      
+      // Check if student already submitted
+      const existing = await storage.getStudentQuizAttempt(req.params.quizId, studentId);
+      if (existing) {
+        return res.status(400).json({ error: "You have already submitted this quiz" });
+      }
+      
+      const attempt = await storage.createTeacherQuizAttempt({
+        quizId: req.params.quizId,
+        studentId,
+        answers,
+        timeSpent,
+        autoScore: autoScore || 0,
+        status: "submitted",
+      });
+      
+      res.json(attempt);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Grade quiz attempt (teacher)
+  app.put("/api/teacher-quiz-attempts/:attemptId/grade", async (req, res) => {
+    try {
+      const { manualScore, answers, gradedBy } = req.body;
+      
+      const attempt = await storage.updateTeacherQuizAttempt(req.params.attemptId, {
+        manualScore,
+        answers,
+        totalScore: (req.body.autoScore || 0) + (manualScore || 0),
+        status: "graded",
+        gradedBy,
+        gradedAt: new Date(),
+      });
+      
+      res.json(attempt);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

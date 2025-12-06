@@ -16,12 +16,16 @@ import {
   LogOut, Plus, Users, BookOpen, Calendar, FileText, Link2, 
   CheckSquare, Clock, ArrowLeft, GraduationCap, ClipboardList,
   Trophy, Flame, Target, BookMarked, Trash2, ExternalLink, Upload,
-  Download, File, Paperclip
+  Download, File, Paperclip, Brain, Edit2, Eye, Grip, 
+  Check, X, List, AlignLeft, CircleDot, ChevronRight
 } from "lucide-react";
 import { ObjectUploader } from "@/components/ObjectUploader";
 import { format, formatDistanceToNow, isPast, isToday, isTomorrow } from "date-fns";
 import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
-import type { Class, Todo, Exam, ClassResource } from "@shared/schema";
+import type { Class, Todo, Exam, ClassResource, TeacherQuiz, TeacherQuizQuestion, QuestionType } from "@shared/schema";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 
 type ClassWithTeacher = Class & { teacherName: string; studentCount?: number };
 type TodoWithClass = Todo & { className: string; classSubject: string };
@@ -368,9 +372,13 @@ function ClassDashboard({ classData, user, onBack, onLogout }: {
     queryKey: ["/api/classes", classData.id, "resources"],
   });
 
-  const { data: students = [] } = useQuery<any[]>({
+  const { data: students = [], refetch: refetchStudents } = useQuery<any[]>({
     queryKey: ["/api/classes", classData.id, "students"],
     enabled: isTeacher,
+  });
+
+  const { data: teacherQuizzes = [], refetch: refetchQuizzes } = useQuery<TeacherQuiz[]>({
+    queryKey: ["/api/classes", classData.id, "teacher-quizzes"],
   });
 
   return (
@@ -422,6 +430,10 @@ function ClassDashboard({ classData, user, onBack, onLogout }: {
                   <FileText className="h-4 w-4" />
                   Resources
                 </TabsTrigger>
+                <TabsTrigger value="quizzes" className="gap-2 data-[state=active]:bg-card" data-testid="tab-quizzes">
+                  <Brain className="h-4 w-4" />
+                  Quizzes
+                </TabsTrigger>
                 {isTeacher && (
                   <TabsTrigger value="students" className="gap-2 data-[state=active]:bg-card" data-testid="tab-students">
                     <Users className="h-4 w-4" />
@@ -464,9 +476,23 @@ function ClassDashboard({ classData, user, onBack, onLogout }: {
                 />
               </TabsContent>
 
+              <TabsContent value="quizzes" className="mt-0">
+                <QuizzesTab 
+                  classId={classData.id}
+                  quizzes={teacherQuizzes}
+                  isTeacher={isTeacher}
+                  userId={user.id}
+                  onRefresh={refetchQuizzes}
+                />
+              </TabsContent>
+
               {isTeacher && (
                 <TabsContent value="students" className="mt-0">
-                  <StudentsTab students={students as any[]} />
+                  <StudentsTab 
+                    students={students as any[]} 
+                    classId={classData.id} 
+                    onRefresh={refetchStudents}
+                  />
                 </TabsContent>
               )}
             </Tabs>
@@ -1333,17 +1359,1034 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
   );
 }
 
-function StudentsTab({ students }: { students: any[] }) {
+function QuizzesTab({ classId, quizzes, isTeacher, userId, onRefresh }: { 
+  classId: string; 
+  quizzes: TeacherQuiz[]; 
+  isTeacher: boolean; 
+  userId: string;
+  onRefresh: () => void;
+}) {
+  const { toast } = useToast();
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState<TeacherQuiz | null>(null);
+  const [editingQuiz, setEditingQuiz] = useState<TeacherQuiz | null>(null);
+
+  const deleteMutation = useMutation({
+    mutationFn: async (quizId: string) => {
+      return await apiRequest("DELETE", `/api/teacher-quizzes/${quizId}`);
+    },
+    onSuccess: () => {
+      toast({ title: "Quiz deleted", description: "The quiz has been removed" });
+      onRefresh();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const togglePublishMutation = useMutation({
+    mutationFn: async ({ quizId, isPublished }: { quizId: string; isPublished: boolean }) => {
+      return await apiRequest("PUT", `/api/teacher-quizzes/${quizId}`, { isPublished });
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Quiz status updated" });
+      onRefresh();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+  });
+
+  if (editingQuiz || showCreateDialog) {
+    return (
+      <QuizBuilder
+        classId={classId}
+        teacherId={userId}
+        existingQuiz={editingQuiz || undefined}
+        onSave={() => {
+          setEditingQuiz(null);
+          setShowCreateDialog(false);
+          onRefresh();
+        }}
+        onCancel={() => {
+          setEditingQuiz(null);
+          setShowCreateDialog(false);
+        }}
+      />
+    );
+  }
+
+  if (selectedQuiz) {
+    return (
+      <QuizDetails
+        quiz={selectedQuiz}
+        isTeacher={isTeacher}
+        userId={userId}
+        onBack={() => setSelectedQuiz(null)}
+        onRefresh={onRefresh}
+      />
+    );
+  }
+
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Enrolled Students ({students.length})</h3>
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <h3 className="text-lg font-semibold">
+          {isTeacher ? `Class Quizzes (${quizzes.length})` : `Available Quizzes (${quizzes.filter(q => q.isPublished).length})`}
+        </h3>
+        {isTeacher && (
+          <Button size="sm" onClick={() => setShowCreateDialog(true)} data-testid="button-create-quiz">
+            <Plus className="h-4 w-4 mr-2" />
+            Create Quiz
+          </Button>
+        )}
+      </div>
+
+      {(isTeacher ? quizzes : quizzes.filter(q => q.isPublished)).length === 0 ? (
+        <Card className="border">
+          <CardContent className="p-8 text-center">
+            <Brain className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <p className="text-muted-foreground">
+              {isTeacher ? "No quizzes created yet. Create your first quiz!" : "No quizzes available yet."}
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {(isTeacher ? quizzes : quizzes.filter(q => q.isPublished)).map((quiz) => {
+            const questions = quiz.questions as TeacherQuizQuestion[];
+            return (
+              <Card key={quiz.id} className="border" data-testid={`quiz-card-${quiz.id}`}>
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="font-medium truncate">{quiz.title}</h4>
+                        {isTeacher && (
+                          <Badge variant={quiz.isPublished ? "default" : "secondary"} className="text-xs shrink-0">
+                            {quiz.isPublished ? "Published" : "Draft"}
+                          </Badge>
+                        )}
+                      </div>
+                      {quiz.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{quiz.description}</p>
+                      )}
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <List className="h-3 w-3" />
+                          {questions?.length || 0} questions
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Target className="h-3 w-3" />
+                          {quiz.totalPoints} pts
+                        </span>
+                        {quiz.timeLimit && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {quiz.timeLimit} min
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setSelectedQuiz(quiz)}
+                        data-testid={`button-view-quiz-${quiz.id}`}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      {isTeacher && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setEditingQuiz(quiz)}
+                            data-testid={`button-edit-quiz-${quiz.id}`}
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => deleteMutation.mutate(quiz.id)}
+                            data-testid={`button-delete-quiz-${quiz.id}`}
+                          >
+                            <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  {isTeacher && (
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t">
+                      <span className="text-xs text-muted-foreground">
+                        {quiz.isPublished ? "Visible to students" : "Hidden from students"}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <Label htmlFor={`publish-${quiz.id}`} className="text-xs">Publish</Label>
+                        <Switch
+                          id={`publish-${quiz.id}`}
+                          checked={quiz.isPublished}
+                          onCheckedChange={(checked) => 
+                            togglePublishMutation.mutate({ quizId: quiz.id, isPublished: checked })
+                          }
+                          data-testid={`switch-publish-${quiz.id}`}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function QuizBuilder({ classId, teacherId, existingQuiz, onSave, onCancel }: {
+  classId: string;
+  teacherId: string;
+  existingQuiz?: TeacherQuiz;
+  onSave: () => void;
+  onCancel: () => void;
+}) {
+  const { toast } = useToast();
+  const [title, setTitle] = useState(existingQuiz?.title || "");
+  const [description, setDescription] = useState(existingQuiz?.description || "");
+  const [timeLimit, setTimeLimit] = useState<string>(existingQuiz?.timeLimit?.toString() || "");
+  const [passingScore, setPassingScore] = useState<string>(existingQuiz?.passingScore?.toString() || "");
+  const [questions, setQuestions] = useState<TeacherQuizQuestion[]>(
+    (existingQuiz?.questions as TeacherQuizQuestion[]) || []
+  );
+
+  const totalPoints = questions.reduce((sum, q) => sum + q.points, 0);
+
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const data = {
+        title,
+        description: description || null,
+        teacherId,
+        questions,
+        totalPoints,
+        timeLimit: timeLimit ? parseInt(timeLimit) : null,
+        passingScore: passingScore ? parseInt(passingScore) : null,
+        isPublished: false,
+      };
+
+      if (existingQuiz) {
+        return await apiRequest("PUT", `/api/teacher-quizzes/${existingQuiz.id}`, data);
+      }
+      return await apiRequest("POST", `/api/classes/${classId}/teacher-quizzes`, data);
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: existingQuiz ? "Quiz updated!" : "Quiz created!" });
+      onSave();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const addQuestion = (type: QuestionType) => {
+    const baseQuestion = {
+      id: crypto.randomUUID(),
+      question: "",
+      points: 1,
+    };
+
+    let newQuestion: TeacherQuizQuestion;
+    switch (type) {
+      case "mcq":
+        newQuestion = { ...baseQuestion, type: "mcq", options: ["", "", "", ""], correctAnswer: 0 };
+        break;
+      case "multiple_select":
+        newQuestion = { ...baseQuestion, type: "multiple_select", options: ["", "", "", ""], correctAnswers: [] };
+        break;
+      case "short_answer":
+        newQuestion = { ...baseQuestion, type: "short_answer", acceptedAnswers: [] };
+        break;
+      case "essay":
+        newQuestion = { ...baseQuestion, type: "essay", rubric: "", maxWords: undefined };
+        break;
+    }
+    setQuestions([...questions, newQuestion]);
+  };
+
+  const updateQuestion = (index: number, updates: Partial<TeacherQuizQuestion>) => {
+    const newQuestions = [...questions];
+    newQuestions[index] = { ...newQuestions[index], ...updates } as TeacherQuizQuestion;
+    setQuestions(newQuestions);
+  };
+
+  const removeQuestion = (index: number) => {
+    setQuestions(questions.filter((_, i) => i !== index));
+  };
+
+  const moveQuestion = (index: number, direction: "up" | "down") => {
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= questions.length) return;
+    const newQuestions = [...questions];
+    [newQuestions[index], newQuestions[newIndex]] = [newQuestions[newIndex], newQuestions[index]];
+    setQuestions(newQuestions);
+  };
+
+  const getQuestionTypeIcon = (type: QuestionType) => {
+    switch (type) {
+      case "mcq": return <CircleDot className="h-4 w-4" />;
+      case "multiple_select": return <CheckSquare className="h-4 w-4" />;
+      case "short_answer": return <AlignLeft className="h-4 w-4" />;
+      case "essay": return <FileText className="h-4 w-4" />;
+    }
+  };
+
+  const getQuestionTypeName = (type: QuestionType) => {
+    switch (type) {
+      case "mcq": return "Multiple Choice";
+      case "multiple_select": return "Multiple Select";
+      case "short_answer": return "Short Answer";
+      case "essay": return "Essay";
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={onCancel}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h3 className="text-lg font-semibold">
+            {existingQuiz ? "Edit Quiz" : "Create Quiz"}
+          </h3>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={onCancel}>Cancel</Button>
+          <Button 
+            onClick={() => createMutation.mutate()} 
+            disabled={!title.trim() || questions.length === 0 || createMutation.isPending}
+            data-testid="button-save-quiz"
+          >
+            {createMutation.isPending ? "Saving..." : "Save Quiz"}
+          </Button>
+        </div>
+      </div>
+
+      <Card className="border">
+        <CardContent className="p-4 space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="quiz-title">Quiz Title *</Label>
+              <Input
+                id="quiz-title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter quiz title"
+                data-testid="input-quiz-title"
+              />
+            </div>
+            <div className="flex gap-4">
+              <div className="space-y-2 flex-1">
+                <Label htmlFor="time-limit">Time Limit (min)</Label>
+                <Input
+                  id="time-limit"
+                  type="number"
+                  value={timeLimit}
+                  onChange={(e) => setTimeLimit(e.target.value)}
+                  placeholder="Optional"
+                  data-testid="input-time-limit"
+                />
+              </div>
+              <div className="space-y-2 flex-1">
+                <Label htmlFor="passing-score">Passing Score (%)</Label>
+                <Input
+                  id="passing-score"
+                  type="number"
+                  value={passingScore}
+                  onChange={(e) => setPassingScore(e.target.value)}
+                  placeholder="Optional"
+                  data-testid="input-passing-score"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="quiz-description">Description</Label>
+            <Textarea
+              id="quiz-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Optional description"
+              rows={2}
+              data-testid="input-quiz-description"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <h4 className="font-medium">Questions ({questions.length}) - Total: {totalPoints} points</h4>
+          <div className="flex gap-2 flex-wrap">
+            <Button size="sm" variant="outline" onClick={() => addQuestion("mcq")} data-testid="button-add-mcq">
+              <CircleDot className="h-4 w-4 mr-1" /> MCQ
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => addQuestion("multiple_select")} data-testid="button-add-multiselect">
+              <CheckSquare className="h-4 w-4 mr-1" /> Multi-Select
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => addQuestion("short_answer")} data-testid="button-add-shortanswer">
+              <AlignLeft className="h-4 w-4 mr-1" /> Short Answer
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => addQuestion("essay")} data-testid="button-add-essay">
+              <FileText className="h-4 w-4 mr-1" /> Essay
+            </Button>
+          </div>
+        </div>
+
+        {questions.length === 0 ? (
+          <Card className="border">
+            <CardContent className="p-8 text-center">
+              <List className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">
+                No questions yet. Add your first question using the buttons above.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {questions.map((q, index) => (
+              <Card key={q.id} className="border" data-testid={`question-card-${index}`}>
+                <CardContent className="p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex flex-col gap-1 pt-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => moveQuestion(index, "up")}
+                        disabled={index === 0}
+                      >
+                        <ChevronRight className="h-4 w-4 -rotate-90" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => moveQuestion(index, "down")}
+                        disabled={index === questions.length - 1}
+                      >
+                        <ChevronRight className="h-4 w-4 rotate-90" />
+                      </Button>
+                    </div>
+                    <div className="flex-1 space-y-4">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="gap-1">
+                            {getQuestionTypeIcon(q.type)}
+                            {getQuestionTypeName(q.type)}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">Q{index + 1}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2">
+                            <Label htmlFor={`points-${q.id}`} className="text-xs">Points:</Label>
+                            <Input
+                              id={`points-${q.id}`}
+                              type="number"
+                              min="1"
+                              className="w-16 h-8"
+                              value={q.points}
+                              onChange={(e) => updateQuestion(index, { points: parseInt(e.target.value) || 1 })}
+                            />
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => removeQuestion(index)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <Textarea
+                        value={q.question}
+                        onChange={(e) => updateQuestion(index, { question: e.target.value })}
+                        placeholder="Enter your question..."
+                        rows={2}
+                        data-testid={`input-question-${index}`}
+                      />
+
+                      {(q.type === "mcq" || q.type === "multiple_select") && (
+                        <div className="space-y-2">
+                          <Label className="text-sm">Answer Options:</Label>
+                          {q.options.map((opt, optIndex) => (
+                            <div key={optIndex} className="flex items-center gap-2">
+                              {q.type === "mcq" ? (
+                                <input
+                                  type="radio"
+                                  name={`correct-${q.id}`}
+                                  checked={q.correctAnswer === optIndex}
+                                  onChange={() => updateQuestion(index, { correctAnswer: optIndex })}
+                                  className="w-4 h-4"
+                                />
+                              ) : (
+                                <Checkbox
+                                  checked={q.correctAnswers.includes(optIndex)}
+                                  onCheckedChange={(checked) => {
+                                    const newCorrect = checked
+                                      ? [...q.correctAnswers, optIndex]
+                                      : q.correctAnswers.filter(i => i !== optIndex);
+                                    updateQuestion(index, { correctAnswers: newCorrect });
+                                  }}
+                                />
+                              )}
+                              <Input
+                                value={opt}
+                                onChange={(e) => {
+                                  const newOptions = [...q.options];
+                                  newOptions[optIndex] = e.target.value;
+                                  updateQuestion(index, { options: newOptions });
+                                }}
+                                placeholder={`Option ${optIndex + 1}`}
+                                className="flex-1"
+                              />
+                              {q.options.length > 2 && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={() => {
+                                    const newOptions = q.options.filter((_, i) => i !== optIndex);
+                                    const updates: any = { options: newOptions };
+                                    if (q.type === "mcq" && q.correctAnswer >= newOptions.length) {
+                                      updates.correctAnswer = 0;
+                                    }
+                                    if (q.type === "multiple_select") {
+                                      updates.correctAnswers = q.correctAnswers
+                                        .filter(i => i !== optIndex)
+                                        .map(i => i > optIndex ? i - 1 : i);
+                                    }
+                                    updateQuestion(index, updates);
+                                  }}
+                                >
+                                  <X className="h-3 w-3" />
+                                </Button>
+                              )}
+                            </div>
+                          ))}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => updateQuestion(index, { options: [...q.options, ""] })}
+                          >
+                            <Plus className="h-3 w-3 mr-1" /> Add Option
+                          </Button>
+                        </div>
+                      )}
+
+                      {q.type === "short_answer" && (
+                        <div className="space-y-2">
+                          <Label className="text-sm">Accepted Answers (for auto-grading):</Label>
+                          <Input
+                            value={q.acceptedAnswers?.join(", ") || ""}
+                            onChange={(e) => updateQuestion(index, { 
+                              acceptedAnswers: e.target.value.split(",").map(s => s.trim()).filter(Boolean)
+                            })}
+                            placeholder="Enter accepted answers separated by commas"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Leave empty for manual grading only
+                          </p>
+                        </div>
+                      )}
+
+                      {q.type === "essay" && (
+                        <div className="space-y-3">
+                          <div className="space-y-2">
+                            <Label className="text-sm">Grading Rubric (optional):</Label>
+                            <Textarea
+                              value={q.rubric || ""}
+                              onChange={(e) => updateQuestion(index, { rubric: e.target.value })}
+                              placeholder="Enter grading guidelines..."
+                              rows={2}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-sm">Max Words (optional):</Label>
+                            <Input
+                              type="number"
+                              value={q.maxWords || ""}
+                              onChange={(e) => updateQuestion(index, { maxWords: parseInt(e.target.value) || undefined })}
+                              placeholder="No limit"
+                              className="w-32"
+                            />
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Essay questions require manual grading
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function QuizDetails({ quiz, isTeacher, userId, onBack, onRefresh }: {
+  quiz: TeacherQuiz;
+  isTeacher: boolean;
+  userId: string;
+  onBack: () => void;
+  onRefresh: () => void;
+}) {
+  const { toast } = useToast();
+  const questions = quiz.questions as TeacherQuizQuestion[];
+  const [takingQuiz, setTakingQuiz] = useState(false);
+
+  const { data: existingAttempt } = useQuery({
+    queryKey: ["/api/teacher-quizzes", quiz.id, "attempts", userId],
+    enabled: !isTeacher,
+  });
+
+  const { data: allAttempts = [] } = useQuery({
+    queryKey: ["/api/teacher-quizzes", quiz.id, "attempts"],
+    enabled: isTeacher,
+  });
+
+  if (takingQuiz && !isTeacher && !existingAttempt) {
+    return (
+      <TakeQuiz
+        quiz={quiz}
+        studentId={userId}
+        onComplete={() => {
+          setTakingQuiz(false);
+          onRefresh();
+        }}
+        onCancel={() => setTakingQuiz(false)}
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={onBack}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h3 className="text-lg font-semibold">{quiz.title}</h3>
+            {quiz.description && (
+              <p className="text-sm text-muted-foreground">{quiz.description}</p>
+            )}
+          </div>
+        </div>
+        {!isTeacher && !existingAttempt && quiz.isPublished && (
+          <Button onClick={() => setTakingQuiz(true)} data-testid="button-take-quiz">
+            <Brain className="h-4 w-4 mr-2" />
+            Take Quiz
+          </Button>
+        )}
+      </div>
+
+      <div className="flex items-center gap-4 text-sm">
+        <Badge variant="outline" className="gap-1">
+          <List className="h-3 w-3" />
+          {questions.length} questions
+        </Badge>
+        <Badge variant="outline" className="gap-1">
+          <Target className="h-3 w-3" />
+          {quiz.totalPoints} points
+        </Badge>
+        {quiz.timeLimit && (
+          <Badge variant="outline" className="gap-1">
+            <Clock className="h-3 w-3" />
+            {quiz.timeLimit} minutes
+          </Badge>
+        )}
+        {quiz.passingScore && (
+          <Badge variant="outline" className="gap-1">
+            <Check className="h-3 w-3" />
+            {quiz.passingScore}% to pass
+          </Badge>
+        )}
+      </div>
+
+      {!isTeacher && existingAttempt && (
+        <Card className="border bg-primary/5">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <Check className="h-5 w-5 text-primary" />
+              <div>
+                <p className="font-medium">Quiz Completed</p>
+                <p className="text-sm text-muted-foreground">
+                  Score: {(existingAttempt as any).totalScore || (existingAttempt as any).autoScore || 0} / {quiz.totalPoints} points
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {isTeacher && (
+        <Card className="border">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Student Submissions ({(allAttempts as any[]).length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {(allAttempts as any[]).length === 0 ? (
+              <p className="text-sm text-muted-foreground">No submissions yet</p>
+            ) : (
+              <div className="space-y-2">
+                {(allAttempts as any[]).map((attempt: any) => (
+                  <div key={attempt.id} className="flex items-center justify-between p-2 rounded border">
+                    <div>
+                      <p className="font-medium text-sm">{attempt.studentName}</p>
+                      <p className="text-xs text-muted-foreground">@{attempt.studentUsername}</p>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant={attempt.status === "graded" ? "default" : "secondary"}>
+                        {attempt.status === "graded" ? `${attempt.totalScore}/${quiz.totalPoints}` : "Pending"}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="space-y-4">
+        <h4 className="font-medium">Questions Preview</h4>
+        {questions.map((q, index) => (
+          <Card key={q.id} className="border">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-2">
+                <span className="text-sm font-medium text-muted-foreground">Q{index + 1}.</span>
+                <div className="flex-1">
+                  <p className="font-medium mb-2">{q.question}</p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Badge variant="outline" className="text-xs">
+                      {q.type === "mcq" ? "Multiple Choice" : 
+                       q.type === "multiple_select" ? "Multiple Select" :
+                       q.type === "short_answer" ? "Short Answer" : "Essay"}
+                    </Badge>
+                    <span>{q.points} pts</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TakeQuiz({ quiz, studentId, onComplete, onCancel }: {
+  quiz: TeacherQuiz;
+  studentId: string;
+  onComplete: () => void;
+  onCancel: () => void;
+}) {
+  const { toast } = useToast();
+  const questions = quiz.questions as TeacherQuizQuestion[];
+  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [timeLeft, setTimeLeft] = useState(quiz.timeLimit ? quiz.timeLimit * 60 : null);
+  const [startTime] = useState(Date.now());
+
+  useEffect(() => {
+    if (timeLeft === null || timeLeft <= 0) return;
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev === null || prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      handleSubmit();
+    }
+  }, [timeLeft]);
+
+  const submitMutation = useMutation({
+    mutationFn: async () => {
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+      let autoScore = 0;
+      
+      const formattedAnswers = questions.map(q => {
+        const answer = answers[q.id];
+        let isCorrect = false;
+        let pointsAwarded = 0;
+        
+        if (q.type === "mcq" && answer !== undefined && q.correctAnswer === answer) {
+          isCorrect = true;
+          pointsAwarded = q.points;
+          autoScore += q.points;
+        } else if (q.type === "multiple_select" && answer && Array.isArray(answer)) {
+          const correctNums = [...q.correctAnswers].map(Number).sort((a, b) => a - b);
+          const givenNums = [...(answer as (number | string)[])].map(Number).sort((a, b) => a - b);
+          const correct = correctNums.join(",");
+          const given = givenNums.join(",");
+          if (correct === given) {
+            isCorrect = true;
+            pointsAwarded = q.points;
+            autoScore += q.points;
+          }
+        } else if (q.type === "short_answer" && answer && q.acceptedAnswers?.length) {
+          const normalizedAnswer = answer.toLowerCase().trim();
+          if (q.acceptedAnswers.some(a => a.toLowerCase().trim() === normalizedAnswer)) {
+            isCorrect = true;
+            pointsAwarded = q.points;
+            autoScore += q.points;
+          }
+        }
+        
+        return {
+          questionId: q.id,
+          questionType: q.type,
+          selectedAnswer: q.type === "mcq" ? answer : undefined,
+          selectedAnswers: q.type === "multiple_select" ? answer : undefined,
+          textAnswer: (q.type === "short_answer" || q.type === "essay") ? answer : undefined,
+          isCorrect: (q.type === "mcq" || q.type === "multiple_select" || (q.type === "short_answer" && q.acceptedAnswers?.length)) ? isCorrect : undefined,
+          pointsAwarded,
+        };
+      });
+      
+      return await apiRequest("POST", `/api/teacher-quizzes/${quiz.id}/attempts`, {
+        studentId,
+        answers: formattedAnswers,
+        timeSpent,
+        autoScore,
+      });
+    },
+    onSuccess: () => {
+      toast({ title: "Quiz Submitted!", description: "Your answers have been recorded." });
+      onComplete();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const handleSubmit = () => {
+    submitMutation.mutate();
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-4 flex-wrap sticky top-0 bg-background py-2 z-10">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={onCancel}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h3 className="text-lg font-semibold">{quiz.title}</h3>
+        </div>
+        <div className="flex items-center gap-4">
+          {timeLeft !== null && (
+            <Badge variant={timeLeft < 60 ? "destructive" : "outline"} className="gap-1 text-base px-3 py-1">
+              <Clock className="h-4 w-4" />
+              {formatTime(timeLeft)}
+            </Badge>
+          )}
+          <Button 
+            onClick={handleSubmit} 
+            disabled={submitMutation.isPending}
+            data-testid="button-submit-quiz"
+          >
+            {submitMutation.isPending ? "Submitting..." : "Submit Quiz"}
+          </Button>
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        {questions.map((q, index) => (
+          <Card key={q.id} className="border" data-testid={`take-question-${index}`}>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-2 mb-4">
+                <span className="text-sm font-medium text-muted-foreground">Q{index + 1}.</span>
+                <div className="flex-1">
+                  <p className="font-medium">{q.question}</p>
+                  <span className="text-xs text-muted-foreground">{q.points} points</span>
+                </div>
+              </div>
+
+              {q.type === "mcq" && (
+                <RadioGroup
+                  value={answers[q.id]?.toString()}
+                  onValueChange={(value) => setAnswers({ ...answers, [q.id]: parseInt(value) })}
+                >
+                  {q.options.map((opt, optIndex) => (
+                    <div key={optIndex} className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50">
+                      <RadioGroupItem value={optIndex.toString()} id={`${q.id}-${optIndex}`} />
+                      <Label htmlFor={`${q.id}-${optIndex}`} className="flex-1 cursor-pointer">{opt}</Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              )}
+
+              {q.type === "multiple_select" && (
+                <div className="space-y-2">
+                  {q.options.map((opt, optIndex) => (
+                    <div key={optIndex} className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50">
+                      <Checkbox
+                        id={`${q.id}-${optIndex}`}
+                        checked={(answers[q.id] || []).includes(optIndex)}
+                        onCheckedChange={(checked) => {
+                          const current = answers[q.id] || [];
+                          const newAnswers = checked
+                            ? [...current, optIndex]
+                            : current.filter((i: number) => i !== optIndex);
+                          setAnswers({ ...answers, [q.id]: newAnswers });
+                        }}
+                      />
+                      <Label htmlFor={`${q.id}-${optIndex}`} className="flex-1 cursor-pointer">{opt}</Label>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {q.type === "short_answer" && (
+                <Input
+                  value={answers[q.id] || ""}
+                  onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
+                  placeholder="Enter your answer..."
+                />
+              )}
+
+              {q.type === "essay" && (
+                <div className="space-y-2">
+                  <Textarea
+                    value={answers[q.id] || ""}
+                    onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
+                    placeholder="Write your essay..."
+                    rows={6}
+                  />
+                  {q.maxWords && (
+                    <p className="text-xs text-muted-foreground">
+                      Max words: {q.maxWords} | Current: {(answers[q.id] || "").split(/\s+/).filter(Boolean).length}
+                    </p>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StudentsTab({ students, classId, onRefresh }: { students: any[]; classId: string; onRefresh: () => void }) {
+  const { toast } = useToast();
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [studentUsername, setStudentUsername] = useState("");
+
+  const addStudentMutation = useMutation({
+    mutationFn: async (username: string) => {
+      return await apiRequest("POST", `/api/classes/${classId}/students`, { username });
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Student added to class!" });
+      setShowAddDialog(false);
+      setStudentUsername("");
+      onRefresh();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const removeStudentMutation = useMutation({
+    mutationFn: async (studentId: string) => {
+      return await apiRequest("DELETE", `/api/classes/${classId}/students/${studentId}`);
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Student removed from class" });
+      onRefresh();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+  });
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <h3 className="text-lg font-semibold">Enrolled Students ({students.length})</h3>
+        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+          <DialogTrigger asChild>
+            <Button size="sm" data-testid="button-add-student">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Student
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Student to Class</DialogTitle>
+              <DialogDescription>
+                Enter the student's username to add them to this class.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="student-username">Student Username</Label>
+                <Input
+                  id="student-username"
+                  data-testid="input-student-username"
+                  value={studentUsername}
+                  onChange={(e) => setStudentUsername(e.target.value)}
+                  placeholder="Enter student's username"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddDialog(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => addStudentMutation.mutate(studentUsername)}
+                disabled={!studentUsername.trim() || addStudentMutation.isPending}
+                data-testid="button-confirm-add-student"
+              >
+                {addStudentMutation.isPending ? "Adding..." : "Add Student"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
       
       {students.length === 0 ? (
         <Card className="border">
           <CardContent className="p-8 text-center">
             <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">
-              No students enrolled yet. Share your class code to get students started!
+              No students enrolled yet. Share your class code or add students manually.
             </p>
           </CardContent>
         </Card>
@@ -1352,16 +2395,27 @@ function StudentsTab({ students }: { students: any[] }) {
           {students.map((student: any) => (
             <Card key={student.id} className="border" data-testid={`student-item-${student.id}`}>
               <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
-                    <span className="text-sm font-semibold text-primary">
-                      {student.name?.charAt(0)?.toUpperCase() || "?"}
-                    </span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+                      <span className="text-sm font-semibold text-primary">
+                        {student.name?.charAt(0)?.toUpperCase() || "?"}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-medium">{student.name}</p>
+                      <p className="text-xs text-muted-foreground">@{student.username}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium">{student.name}</p>
-                    <p className="text-xs text-muted-foreground">@{student.username}</p>
-                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeStudentMutation.mutate(student.id)}
+                    disabled={removeStudentMutation.isPending}
+                    data-testid={`button-remove-student-${student.id}`}
+                  >
+                    <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                  </Button>
                 </div>
                 <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
