@@ -1,0 +1,79 @@
+Hey Replit, please continue working on my existing StudyPal project. I just need a few focused improvements:
+
+Clean white background
+
+Change the overall background colour of the app (all pages) to a clean, professional white.
+
+Make sure text, buttons, cards, and navigation are still easy to read and look professional on white (adjust text colours, borders, shadows, etc. as needed).
+
+Keep the look minimal, modern and not cluttered.
+
+Teacher can add/remove students (in addition to class code)
+
+Keep the current “student joins with unique class code” flow as it is.
+
+Add a “Manage Students” section for teachers for each class where they can:
+
+See a list of students in that class.
+
+Add a student manually (e.g. name + email/username or whatever fields my current auth system needs).
+
+Remove a student from that class.
+
+Respect permissions: only the teacher for that class (and any existing admin role) should be able to add/remove students.
+
+Reuse the current data models/auth approach as much as possible instead of inventing something totally new.
+
+In-app quiz builder (more advanced, not just uploads)
+
+Keep the existing quiz/upload feature, but add an option for teachers to create quizzes directly inside the app.
+
+From a class page, teachers should have a “Create Quiz” or similar button that opens an in-app quiz builder.
+
+Quiz settings: title, description, class, due date, time limit, points (overall or per question), and basic visibility settings (e.g. publish/unpublish).
+
+Question features (make this fairly advanced, but still realistic for the current stack):
+
+Support at least:
+
+Multiple choice (single correct)
+
+Multiple select (multiple correct)
+
+Short answer
+
+Long/essay
+
+Allow teachers to:
+
+Add multiple questions.
+
+Reorder questions.
+
+Set points per question.
+
+For MCQ/Multiple select, define options and mark correct ones.
+
+Attach an image/illustration to a question (reuse any existing upload mechanism if possible).
+
+Student side:
+
+Students should see available quizzes in their class and take them in-app.
+
+If a time limit is set, show a basic countdown and prevent submissions after time is up.
+
+Grading:
+
+Auto-grade the objective parts (MCQ/Multiple select).
+
+Store scores.
+
+Give teachers a simple results view per quiz (list of students, score, completion status).
+
+Allow manual marking of long/essay answers.
+
+Finally, please:
+
+Implement these directly in the existing structure of the project.
+
+Tell me clearly what you can update fully in this environment and what you cannot do (for example, any limits around database migrations, file uploads, or auth changes), and highlight anything I’ll need to configure or finish manually.
