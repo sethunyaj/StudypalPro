@@ -44,9 +44,9 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen hibiscus-gradient">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto p-4 md:p-6">
-        <Card className="glass-effect shadow-2xl overflow-hidden">
+        <Card className="shadow-lg border overflow-hidden">
           {/* Header */}
           <CardHeader className="bg-gradient-to-r from-chart-5/10 via-primary/10 to-chart-2/10 border-b pb-4">
             <div className="flex flex-wrap items-center justify-between gap-4">

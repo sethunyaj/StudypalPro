@@ -100,9 +100,9 @@ export default function ClassesPage() {
   }
 
   return (
-    <div className="min-h-screen hibiscus-gradient">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto p-4 md:p-6">
-        <Card className="glass-effect shadow-2xl overflow-hidden">
+        <Card className="shadow-lg border overflow-hidden">
           <CardHeader className="bg-gradient-to-r from-primary/10 via-chart-2/10 to-chart-3/10 border-b pb-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -211,7 +211,7 @@ export default function ClassesPage() {
                     ))}
                   </div>
                 ) : classes.length === 0 ? (
-                  <Card className="glass-effect">
+                  <Card className="border">
                     <CardContent className="p-8 text-center">
                       <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                       <h3 className="text-lg font-semibold mb-2">No Classes Yet</h3>
@@ -238,7 +238,7 @@ export default function ClassesPage() {
 
               {!isTeacher && (
                 <div className="space-y-6">
-                  <Card className="glass-effect">
+                  <Card className="border">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-base flex items-center gap-2">
                         <Clock className="h-4 w-4 text-chart-2" />
@@ -264,7 +264,7 @@ export default function ClassesPage() {
                     </CardContent>
                   </Card>
 
-                  <Card className="glass-effect">
+                  <Card className="border">
                     <CardHeader className="pb-3">
                       <CardTitle className="text-base flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-chart-3" />
@@ -316,7 +316,7 @@ function ClassCard({ classData, onClick, isTeacher }: {
 
   return (
     <Card 
-      className={`glass-effect hover-elevate cursor-pointer transition-all bg-gradient-to-br ${gradientClass} border`}
+      className={`border hover-elevate cursor-pointer transition-all bg-gradient-to-br ${gradientClass} border`}
       onClick={onClick}
       data-testid={`card-class-${classData.id}`}
     >
@@ -374,9 +374,9 @@ function ClassDashboard({ classData, user, onBack, onLogout }: {
   });
 
   return (
-    <div className="min-h-screen hibiscus-gradient">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto p-4 md:p-6">
-        <Card className="glass-effect shadow-2xl overflow-hidden">
+        <Card className="shadow-lg border overflow-hidden">
           <CardHeader className="bg-gradient-to-r from-primary/10 via-chart-2/10 to-chart-3/10 border-b pb-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -702,7 +702,7 @@ function TodosTab({ classId, todos, isTeacher, userId, onRefresh }: {
       </div>
 
       {todos.length === 0 ? (
-        <Card className="glass-effect">
+        <Card className="border">
           <CardContent className="p-8 text-center">
             <CheckSquare className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">
@@ -715,7 +715,7 @@ function TodosTab({ classId, todos, isTeacher, userId, onRefresh }: {
           {todos.map((todo) => {
             const status = getDueStatus(todo.dueDate);
             return (
-              <Card key={todo.id} className="glass-effect" data-testid={`todo-item-${todo.id}`}>
+              <Card key={todo.id} className="border" data-testid={`todo-item-${todo.id}`}>
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
@@ -939,7 +939,7 @@ function ExamsTab({ classId, exams, isTeacher, userId, onRefresh }: {
       </div>
 
       {exams.length === 0 ? (
-        <Card className="glass-effect">
+        <Card className="border">
           <CardContent className="p-8 text-center">
             <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">
@@ -953,7 +953,7 @@ function ExamsTab({ classId, exams, isTeacher, userId, onRefresh }: {
             const examDate = new Date(exam.date);
             const isPastExam = isPast(examDate);
             return (
-              <Card key={exam.id} className={`glass-effect ${isPastExam ? "opacity-60" : ""}`} data-testid={`exam-item-${exam.id}`}>
+              <Card key={exam.id} className={`border ${isPastExam ? "opacity-60" : ""}`} data-testid={`exam-item-${exam.id}`}>
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
@@ -1249,7 +1249,7 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
       </div>
 
       {resources.length === 0 ? (
-        <Card className="glass-effect">
+        <Card className="border">
           <CardContent className="p-8 text-center">
             <BookMarked className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">
@@ -1260,7 +1260,7 @@ function ResourcesTab({ classId, resources, isTeacher, userId, onRefresh }: {
       ) : (
         <div className="grid gap-3 md:grid-cols-2">
           {resources.map((resource) => (
-            <Card key={resource.id} className="glass-effect" data-testid={`resource-item-${resource.id}`}>
+            <Card key={resource.id} className="border" data-testid={`resource-item-${resource.id}`}>
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
@@ -1339,7 +1339,7 @@ function StudentsTab({ students }: { students: any[] }) {
       <h3 className="text-lg font-semibold">Enrolled Students ({students.length})</h3>
       
       {students.length === 0 ? (
-        <Card className="glass-effect">
+        <Card className="border">
           <CardContent className="p-8 text-center">
             <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">
@@ -1350,7 +1350,7 @@ function StudentsTab({ students }: { students: any[] }) {
       ) : (
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {students.map((student: any) => (
-            <Card key={student.id} className="glass-effect" data-testid={`student-item-${student.id}`}>
+            <Card key={student.id} className="border" data-testid={`student-item-${student.id}`}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">

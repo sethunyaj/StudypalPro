@@ -166,8 +166,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen hibiscus-gradient flex items-center justify-center p-4">
-      <Card className="w-full max-w-md glass-effect shadow-xl">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-lg border">
         <CardHeader className="text-center pb-4">
           <div className="mx-auto mb-4">
             <img src={logoPath} alt="Hibiscus StudyPal" className="h-32 w-auto mx-auto" />
