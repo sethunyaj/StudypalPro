@@ -7,6 +7,8 @@ import multer from "multer";
 import { Client } from "@replit/object-storage";
 import { randomUUID } from "crypto";
 import path from "path";
+import fs from "fs";
+import { mdToPdf } from "md-to-pdf";
 import {
   insertUserSchema,
   insertNoteSchema,
@@ -1481,6 +1483,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(attempt);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== INSTRUCTION MANUAL PDF ====================
+  
+  // Generate and download instruction manual as PDF
+  app.get("/api/instruction-manual/pdf", async (req, res) => {
+    try {
+      const manualPath = path.join(process.cwd(), "INSTRUCTION_MANUAL.md");
+      
+      if (!fs.existsSync(manualPath)) {
+        return res.status(404).json({ error: "Instruction manual not found" });
+      }
+      
+      const pdf = await mdToPdf(
+        { path: manualPath },
+        {
+          launch_options: {
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+          },
+          pdf_options: {
+            format: "A4",
+            margin: { top: "20mm", right: "20mm", bottom: "20mm", left: "20mm" },
+            printBackground: true,
+          },
+          css: `
+            body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+              line-height: 1.6;
+              color: #333;
+            }
+            h1 { 
+              color: #16a34a; 
+              border-bottom: 2px solid #16a34a;
+              padding-bottom: 10px;
+            }
+            h2 { 
+              color: #15803d; 
+              margin-top: 30px;
+              border-bottom: 1px solid #ddd;
+              padding-bottom: 8px;
+            }
+            h3 { color: #166534; }
+            table { 
+              border-collapse: collapse; 
+              width: 100%; 
+              margin: 20px 0;
+            }
+            th, td { 
+              border: 1px solid #ddd; 
+              padding: 12px; 
+              text-align: left; 
+            }
+            th { 
+              background-color: #16a34a; 
+              color: white; 
+            }
+            tr:nth-child(even) { background-color: #f9f9f9; }
+            code { 
+              background-color: #f4f4f4; 
+              padding: 2px 6px; 
+              border-radius: 3px;
+              font-family: monospace;
+            }
+            blockquote {
+              border-left: 4px solid #16a34a;
+              padding-left: 16px;
+              color: #666;
+              margin: 20px 0;
+            }
+            strong { color: #111; }
+            hr { 
+              border: none; 
+              border-top: 2px solid #16a34a; 
+              margin: 30px 0; 
+            }
+          `,
+        }
+      );
+      
+      if (pdf) {
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", "attachment; filename=Hibiscus_StudyPal_Instruction_Manual.pdf");
+        res.send(pdf.content);
+      } else {
+        res.status(500).json({ error: "Failed to generate PDF" });
+      }
+    } catch (error: any) {
+      console.error("PDF generation error:", error);
+      res.status(500).json({ error: "Failed to generate PDF: " + error.message });
     }
   });
 
