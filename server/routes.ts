@@ -9,6 +9,16 @@ import { randomUUID } from "crypto";
 import path from "path";
 import fs from "fs";
 import { mdToPdf } from "md-to-pdf";
+import { execSync } from "child_process";
+
+// Get system Chromium path for PDF generation
+function getChromiumPath(): string {
+  try {
+    return execSync("which chromium").toString().trim();
+  } catch {
+    return "";
+  }
+}
 import {
   insertUserSchema,
   insertNoteSchema,
@@ -1497,11 +1507,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Instruction manual not found" });
       }
       
+      // Get system Chromium path for production compatibility
+      const chromiumPath = getChromiumPath();
+      
       const pdf = await mdToPdf(
         { path: manualPath },
         {
           launch_options: {
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage'],
+            ...(chromiumPath && { executablePath: chromiumPath }),
           },
           pdf_options: {
             format: "A4",
