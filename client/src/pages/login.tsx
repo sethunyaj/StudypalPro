@@ -166,8 +166,32 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-lg border">
+    <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
+      {/* Animated Rainbow Gradient Background */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-rose-400 via-fuchsia-500 via-violet-500 via-blue-500 via-teal-400 via-emerald-400 via-yellow-400 to-orange-400 animate-gradient-shift"
+        style={{
+          backgroundSize: '400% 400%',
+          animation: 'gradientShift 15s ease infinite',
+        }}
+      />
+      
+      {/* Decorative Floating Orbs */}
+      <div className="absolute top-10 left-10 w-72 h-72 bg-pink-300/40 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-300/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-yellow-300/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
+      <div className="absolute bottom-1/3 right-1/3 w-48 h-48 bg-emerald-300/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      
+      {/* CSS Animation */}
+      <style>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
+      
+      <Card className="w-full max-w-md shadow-2xl border-0 backdrop-blur-xl bg-white/90 dark:bg-gray-900/90 relative z-10">
         <CardHeader className="text-center pb-4">
           <div className="mx-auto mb-4">
             <img src={logoPath} alt="Hibiscus StudyPal" className="h-32 w-auto mx-auto" />
