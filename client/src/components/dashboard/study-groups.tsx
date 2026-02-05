@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Users, Plus, UserPlus, Crown } from "lucide-react";
+import { Users, Plus, UserPlus, Crown, Copy, Check } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,15 +19,18 @@ interface StudyGroupsProps {
 export default function StudyGroups({ userId }: StudyGroupsProps) {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [subject, setSubject] = useState("");
+  const [joinCode, setJoinCode] = useState("");
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
-  const { data: groups } = useQuery({
+  const { data: groups } = useQuery<any[]>({
     queryKey: ['/api/study-groups', userId],
   });
 
-  const { data: allGroups } = useQuery({
+  const { data: allGroups } = useQuery<any[]>({
     queryKey: ['/api/study-groups/all'],
   });
 
@@ -60,6 +63,27 @@ export default function StudyGroups({ userId }: StudyGroupsProps) {
     },
   });
 
+  const joinByCodeMutation = useMutation({
+    mutationFn: (code: string) => apiRequest("POST", "/api/study-groups/join-by-code", { code, userId }),
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/study-groups', userId] });
+      queryClient.invalidateQueries({ queryKey: ['/api/study-groups/all'] });
+      toast({ title: "Joined group!", description: `Welcome to ${data.name}` });
+      setJoinCode("");
+      setIsJoinDialogOpen(false);
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const copyCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(code);
+    toast({ title: "Code copied!", description: "Share this code with friends to invite them" });
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
+
   const resetForm = () => {
     setName("");
     setDescription("");
@@ -87,13 +111,54 @@ export default function StudyGroups({ userId }: StudyGroupsProps) {
           <h2 className="text-2xl font-bold">Study Groups</h2>
           <p className="text-sm text-muted-foreground">Learn together, achieve more</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button data-testid="button-create-group">
-              <Plus className="h-4 w-4 mr-2" />
-              Create Group
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          {/* Join by Code Dialog */}
+          <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" data-testid="button-join-by-code">
+                <UserPlus className="h-4 w-4 mr-2" />
+                Join by Code
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Join Study Group</DialogTitle>
+                <DialogDescription>Enter the group code shared by your friend</DialogDescription>
+              </DialogHeader>
+              <form onSubmit={(e) => { e.preventDefault(); joinByCodeMutation.mutate(joinCode); }} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="joinCode">Group Code</Label>
+                  <Input
+                    id="joinCode"
+                    data-testid="input-join-code"
+                    value={joinCode}
+                    onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+                    placeholder="Enter 6-character code"
+                    maxLength={6}
+                    className="text-center text-lg font-mono tracking-widest uppercase"
+                    required
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  data-testid="button-submit-join-code" 
+                  disabled={joinByCodeMutation.isPending || joinCode.length !== 6}
+                  className="w-full"
+                >
+                  {joinByCodeMutation.isPending ? "Joining..." : "Join Group"}
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+          
+          {/* Create Group Dialog */}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button data-testid="button-create-group">
+                <Plus className="h-4 w-4 mr-2" />
+                Create Group
+              </Button>
+            </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Create Study Group</DialogTitle>
@@ -139,6 +204,7 @@ export default function StudyGroups({ userId }: StudyGroupsProps) {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* My Groups */}
@@ -155,7 +221,25 @@ export default function StudyGroups({ userId }: StudyGroupsProps) {
                       <Crown className="h-4 w-4 text-chart-2 flex-shrink-0" />
                     )}
                   </div>
-                  <Badge variant="secondary" className="w-fit">{group.subject}</Badge>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Badge variant="secondary">{group.subject}</Badge>
+                    {group.code && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-6 px-2 font-mono text-xs"
+                        onClick={() => copyCode(group.code)}
+                        data-testid={`button-copy-code-${group.id}`}
+                      >
+                        {copiedCode === group.code ? (
+                          <Check className="h-3 w-3 mr-1 text-green-500" />
+                        ) : (
+                          <Copy className="h-3 w-3 mr-1" />
+                        )}
+                        {group.code}
+                      </Button>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {group.description && (

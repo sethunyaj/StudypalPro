@@ -730,8 +730,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/study-groups", async (req, res) => {
     try {
       const data = insertStudyGroupSchema.parse(req.body);
-      const group = await storage.createStudyGroup(data);
+      // Generate unique 6-character group code
+      const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const group = await storage.createStudyGroup({ ...data, code });
       res.json(group);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Join study group by code
+  app.post("/api/study-groups/join-by-code", async (req, res) => {
+    try {
+      const { code, userId } = req.body;
+      
+      if (!code || !userId) {
+        return res.status(400).json({ error: "Code and userId are required" });
+      }
+      
+      const group = await storage.getStudyGroupByCode(code.toUpperCase());
+      
+      if (!group) {
+        return res.status(404).json({ error: "Study group not found. Please check the code and try again." });
+      }
+      
+      const memberIds = group.memberIds || [];
+      if (memberIds.includes(userId)) {
+        return res.status(400).json({ error: "You're already a member of this group" });
+      }
+      
+      memberIds.push(userId);
+      const updated = await storage.updateStudyGroup(group.id, { memberIds });
+      
+      res.json(updated);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }

@@ -94,7 +94,8 @@ export interface IStorage {
   getUserStudyGroups(userId: string): Promise<StudyGroup[]>;
   getAllStudyGroups(): Promise<StudyGroup[]>;
   getStudyGroup(id: string): Promise<StudyGroup | undefined>;
-  createStudyGroup(group: InsertStudyGroup): Promise<StudyGroup>;
+  getStudyGroupByCode(code: string): Promise<StudyGroup | undefined>;
+  createStudyGroup(group: InsertStudyGroup & { code: string }): Promise<StudyGroup>;
   updateStudyGroup(id: string, updates: Partial<StudyGroup>): Promise<StudyGroup | undefined>;
   deleteStudyGroup(id: string): Promise<void>;
 
@@ -317,7 +318,12 @@ export class DatabaseStorage implements IStorage {
     return group;
   }
 
-  async createStudyGroup(insertStudyGroup: InsertStudyGroup): Promise<StudyGroup> {
+  async getStudyGroupByCode(code: string): Promise<StudyGroup | undefined> {
+    const [group] = await db.select().from(studyGroups).where(eq(studyGroups.code, code));
+    return group;
+  }
+
+  async createStudyGroup(insertStudyGroup: InsertStudyGroup & { code: string }): Promise<StudyGroup> {
     const [group] = await db.insert(studyGroups).values(insertStudyGroup).returning();
     return group;
   }

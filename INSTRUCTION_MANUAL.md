@@ -131,9 +131,11 @@ Once you've joined a class, you can access:
 - Customizable session lengths
 
 **Study Groups**
-- Join or create study groups
-- Collaborate with classmates
-- Share resources and notes
+- Create study groups and get a unique **Group Code** (6 characters)
+- Share your group code with friends so they can join
+- Click the code on your group card to copy it
+- Use "Join by Code" button to enter a code from a friend
+- Collaborate with classmates in group discussions
 
 ### Gamification & Progress
 

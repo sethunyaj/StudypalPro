@@ -361,6 +361,7 @@ export const studyGroups = pgTable("study_groups", {
   name: text("name").notNull(),
   description: text("description"),
   subject: text("subject"),
+  code: varchar("code", { length: 6 }).notNull().unique(),
   creatorId: text("creator_id").notNull(),
   memberIds: text("member_ids").array().notNull().default(sql`ARRAY[]::text[]`),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -368,6 +369,7 @@ export const studyGroups = pgTable("study_groups", {
 
 export const insertStudyGroupSchema = createInsertSchema(studyGroups).omit({
   id: true,
+  code: true,
   createdAt: true,
 });
 export type InsertStudyGroup = z.infer<typeof insertStudyGroupSchema>;
