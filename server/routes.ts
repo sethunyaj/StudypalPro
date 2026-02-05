@@ -809,6 +809,121 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ==================== GROUP MESSAGES ====================
+  app.get("/api/study-groups/:id/messages", async (req, res) => {
+    try {
+      const messages = await storage.getGroupMessages(req.params.id);
+      res.json(messages);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/study-groups/:id/messages", async (req, res) => {
+    try {
+      const { userId, userName, content } = req.body;
+      const message = await storage.createGroupMessage({
+        groupId: req.params.id,
+        userId,
+        userName,
+        content,
+      });
+      res.json(message);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/group-messages/:id", async (req, res) => {
+    try {
+      await storage.deleteGroupMessage(req.params.id);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // ==================== GROUP NOTES ====================
+  app.get("/api/study-groups/:id/notes", async (req, res) => {
+    try {
+      const notes = await storage.getGroupNotes(req.params.id);
+      res.json(notes);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/study-groups/:id/notes", async (req, res) => {
+    try {
+      const { userId, userName, title, content } = req.body;
+      const note = await storage.createGroupNote({
+        groupId: req.params.id,
+        userId,
+        userName,
+        title,
+        content,
+      });
+      res.json(note);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.put("/api/group-notes/:id", async (req, res) => {
+    try {
+      const { title, content } = req.body;
+      const note = await storage.updateGroupNote(req.params.id, { title, content });
+      res.json(note);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/group-notes/:id", async (req, res) => {
+    try {
+      await storage.deleteGroupNote(req.params.id);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // ==================== GROUP ANNOUNCEMENTS ====================
+  app.get("/api/study-groups/:id/announcements", async (req, res) => {
+    try {
+      const announcements = await storage.getGroupAnnouncements(req.params.id);
+      res.json(announcements);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/study-groups/:id/announcements", async (req, res) => {
+    try {
+      const { userId, userName, title, content, pinned } = req.body;
+      const announcement = await storage.createGroupAnnouncement({
+        groupId: req.params.id,
+        userId,
+        userName,
+        title,
+        content,
+        pinned: pinned || false,
+      });
+      res.json(announcement);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/group-announcements/:id", async (req, res) => {
+    try {
+      await storage.deleteGroupAnnouncement(req.params.id);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
   // ==================== ACHIEVEMENTS ====================
   
   app.get("/api/achievements/:userId", async (req, res) => {
