@@ -375,6 +375,62 @@ export const insertStudyGroupSchema = createInsertSchema(studyGroups).omit({
 export type InsertStudyGroup = z.infer<typeof insertStudyGroupSchema>;
 export type StudyGroup = typeof studyGroups.$inferSelect;
 
+// Study group messages (chat)
+export const groupMessages = pgTable("group_messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  groupId: text("group_id").notNull(),
+  userId: text("user_id").notNull(),
+  userName: text("user_name").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertGroupMessageSchema = createInsertSchema(groupMessages).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertGroupMessage = z.infer<typeof insertGroupMessageSchema>;
+export type GroupMessage = typeof groupMessages.$inferSelect;
+
+// Study group shared notes
+export const groupNotes = pgTable("group_notes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  groupId: text("group_id").notNull(),
+  userId: text("user_id").notNull(),
+  userName: text("user_name").notNull(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertGroupNoteSchema = createInsertSchema(groupNotes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type InsertGroupNote = z.infer<typeof insertGroupNoteSchema>;
+export type GroupNote = typeof groupNotes.$inferSelect;
+
+// Study group announcements
+export const groupAnnouncements = pgTable("group_announcements", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  groupId: text("group_id").notNull(),
+  userId: text("user_id").notNull(),
+  userName: text("user_name").notNull(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  pinned: boolean("pinned").default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertGroupAnnouncementSchema = createInsertSchema(groupAnnouncements).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertGroupAnnouncement = z.infer<typeof insertGroupAnnouncementSchema>;
+export type GroupAnnouncement = typeof groupAnnouncements.$inferSelect;
+
 // AI tutor conversations
 export const tutorConversations = pgTable("tutor_conversations", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),

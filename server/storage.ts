@@ -9,6 +9,9 @@ import {
   studySessions,
   achievements,
   studyGroups,
+  groupMessages,
+  groupNotes,
+  groupAnnouncements,
   tutorConversations,
   mindMaps,
   platformSettings,
@@ -35,6 +38,12 @@ import {
   type InsertAchievement,
   type StudyGroup,
   type InsertStudyGroup,
+  type GroupMessage,
+  type InsertGroupMessage,
+  type GroupNote,
+  type InsertGroupNote,
+  type GroupAnnouncement,
+  type InsertGroupAnnouncement,
   type TutorConversation,
   type InsertTutorConversation,
   type MindMap,
@@ -98,6 +107,22 @@ export interface IStorage {
   createStudyGroup(group: InsertStudyGroup & { code: string }): Promise<StudyGroup>;
   updateStudyGroup(id: string, updates: Partial<StudyGroup>): Promise<StudyGroup | undefined>;
   deleteStudyGroup(id: string): Promise<void>;
+
+  // Group messages
+  getGroupMessages(groupId: string): Promise<GroupMessage[]>;
+  createGroupMessage(message: InsertGroupMessage): Promise<GroupMessage>;
+  deleteGroupMessage(id: string): Promise<void>;
+
+  // Group notes
+  getGroupNotes(groupId: string): Promise<GroupNote[]>;
+  createGroupNote(note: InsertGroupNote): Promise<GroupNote>;
+  updateGroupNote(id: string, updates: Partial<GroupNote>): Promise<GroupNote | undefined>;
+  deleteGroupNote(id: string): Promise<void>;
+
+  // Group announcements
+  getGroupAnnouncements(groupId: string): Promise<GroupAnnouncement[]>;
+  createGroupAnnouncement(announcement: InsertGroupAnnouncement): Promise<GroupAnnouncement>;
+  deleteGroupAnnouncement(id: string): Promise<void>;
 
   getUserConversations(userId: string): Promise<TutorConversation[]>;
   getConversation(id: string): Promise<TutorConversation | undefined>;
@@ -335,6 +360,53 @@ export class DatabaseStorage implements IStorage {
 
   async deleteStudyGroup(id: string): Promise<void> {
     await db.delete(studyGroups).where(eq(studyGroups.id, id));
+  }
+
+  // ==================== GROUP MESSAGES ====================
+  async getGroupMessages(groupId: string): Promise<GroupMessage[]> {
+    return await db.select().from(groupMessages).where(eq(groupMessages.groupId, groupId)).orderBy(groupMessages.createdAt);
+  }
+
+  async createGroupMessage(message: InsertGroupMessage): Promise<GroupMessage> {
+    const [newMessage] = await db.insert(groupMessages).values(message).returning();
+    return newMessage;
+  }
+
+  async deleteGroupMessage(id: string): Promise<void> {
+    await db.delete(groupMessages).where(eq(groupMessages.id, id));
+  }
+
+  // ==================== GROUP NOTES ====================
+  async getGroupNotes(groupId: string): Promise<GroupNote[]> {
+    return await db.select().from(groupNotes).where(eq(groupNotes.groupId, groupId)).orderBy(desc(groupNotes.createdAt));
+  }
+
+  async createGroupNote(note: InsertGroupNote): Promise<GroupNote> {
+    const [newNote] = await db.insert(groupNotes).values(note).returning();
+    return newNote;
+  }
+
+  async updateGroupNote(id: string, updates: Partial<GroupNote>): Promise<GroupNote | undefined> {
+    const [note] = await db.update(groupNotes).set({ ...updates, updatedAt: new Date() }).where(eq(groupNotes.id, id)).returning();
+    return note;
+  }
+
+  async deleteGroupNote(id: string): Promise<void> {
+    await db.delete(groupNotes).where(eq(groupNotes.id, id));
+  }
+
+  // ==================== GROUP ANNOUNCEMENTS ====================
+  async getGroupAnnouncements(groupId: string): Promise<GroupAnnouncement[]> {
+    return await db.select().from(groupAnnouncements).where(eq(groupAnnouncements.groupId, groupId)).orderBy(desc(groupAnnouncements.createdAt));
+  }
+
+  async createGroupAnnouncement(announcement: InsertGroupAnnouncement): Promise<GroupAnnouncement> {
+    const [newAnnouncement] = await db.insert(groupAnnouncements).values(announcement).returning();
+    return newAnnouncement;
+  }
+
+  async deleteGroupAnnouncement(id: string): Promise<void> {
+    await db.delete(groupAnnouncements).where(eq(groupAnnouncements.id, id));
   }
 
   // ==================== TUTOR CONVERSATIONS ====================
