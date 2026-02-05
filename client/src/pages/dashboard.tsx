@@ -161,7 +161,7 @@ export default function Dashboard() {
               </TabsContent>
               
               <TabsContent value="groups" className="mt-0">
-                <StudyGroups userId={user.id} />
+                <StudyGroups userId={user.id} userName={user.name} />
               </TabsContent>
             </Tabs>
           </CardContent>

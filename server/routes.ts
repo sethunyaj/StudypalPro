@@ -27,6 +27,9 @@ import {
   insertQuizAttemptSchema,
   insertStudySessionSchema,
   insertStudyGroupSchema,
+  insertGroupMessageSchema,
+  insertGroupNoteSchema,
+  insertGroupAnnouncementSchema,
   insertClassSchema,
   insertTodoSchema,
   insertExamSchema,
@@ -821,13 +824,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/study-groups/:id/messages", async (req, res) => {
     try {
-      const { userId, userName, content } = req.body;
-      const message = await storage.createGroupMessage({
+      const validated = insertGroupMessageSchema.parse({
         groupId: req.params.id,
-        userId,
-        userName,
-        content,
+        userId: req.body.userId,
+        userName: req.body.userName,
+        content: req.body.content,
       });
+      const message = await storage.createGroupMessage(validated);
       res.json(message);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
@@ -855,14 +858,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/study-groups/:id/notes", async (req, res) => {
     try {
-      const { userId, userName, title, content } = req.body;
-      const note = await storage.createGroupNote({
+      const validated = insertGroupNoteSchema.parse({
         groupId: req.params.id,
-        userId,
-        userName,
-        title,
-        content,
+        userId: req.body.userId,
+        userName: req.body.userName,
+        title: req.body.title,
+        content: req.body.content,
       });
+      const note = await storage.createGroupNote(validated);
       res.json(note);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
@@ -900,15 +903,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/study-groups/:id/announcements", async (req, res) => {
     try {
-      const { userId, userName, title, content, pinned } = req.body;
-      const announcement = await storage.createGroupAnnouncement({
+      const validated = insertGroupAnnouncementSchema.parse({
         groupId: req.params.id,
-        userId,
-        userName,
-        title,
-        content,
-        pinned: pinned || false,
+        userId: req.body.userId,
+        userName: req.body.userName,
+        title: req.body.title,
+        content: req.body.content,
+        pinned: req.body.pinned || false,
       });
+      const announcement = await storage.createGroupAnnouncement(validated);
       res.json(announcement);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
