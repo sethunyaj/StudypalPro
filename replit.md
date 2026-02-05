@@ -11,7 +11,17 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 - **UI Components**: Shadcn/ui with custom Hibiscus theme
 - **Charts**: Chart.js with react-chartjs-2
 
-## Recent Changes (November 30, 2025)
+## Recent Changes (February 05, 2026)
+- **COMPLETED**: Study Group Interactive Features
+  - Group Chat: Real-time messaging within study groups
+  - Shared Notes: Collaborative note-sharing with group members
+  - Announcements: Group creators can post announcements (with pin support)
+  - Members Tab: View all group members with creator badge
+  - Leaderboard: Group XP leaderboard for gamification
+  - Shareable 6-character group codes for easy invites
+  - Tabbed interface (Chat, Notes, Announcements, Members, Leaderboard)
+
+## Previous Changes (November 30, 2025)
 - Complete redesign with Hibiscus theme (red, yellow, green gradient)
 - Added comprehensive data schemas for all features
 - Implemented glassmorphic design system
