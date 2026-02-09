@@ -1,10 +1,17 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Plus, Trash2, ZoomIn, ZoomOut, Maximize, 
-  Palette, GripVertical, Link2, Unlink
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Plus, Trash2, ZoomIn, ZoomOut, Maximize,
+  Palette, GripVertical, Link2, Unlink, Save,
+  ArrowLeft, FileText, Clock
 } from "lucide-react";
 
 interface MindMapProps {
@@ -41,6 +48,10 @@ const NODE_COLORS = [
 
 const ROOT_COLOR = { value: "#1e293b", bg: "#1e293b", border: "#334155", text: "#ffffff" };
 
+const DEFAULT_NODES: MindNode[] = [
+  { id: "root", text: "Main Topic", x: 0, y: 0, color: ROOT_COLOR.value, parentId: null, width: 180, height: 56 }
+];
+
 function getColorScheme(color: string) {
   return NODE_COLORS.find(c => c.value === color) || NODE_COLORS[0];
 }
@@ -66,10 +77,17 @@ function cubicBezierPath(x1: number, y1: number, x2: number, y2: number): string
 }
 
 export default function MindMap({ userId }: MindMapProps) {
+  const { toast } = useToast();
+  const [viewMode, setViewMode] = useState<"list" | "editor">("list");
+  const [activeMapId, setActiveMapId] = useState<string | null>(null);
+  const [mapTitle, setMapTitle] = useState("Untitled Mind Map");
+  const [mapSubject, setMapSubject] = useState("");
+  const [showNewDialog, setShowNewDialog] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const [newSubject, setNewSubject] = useState("");
+
   const containerRef = useRef<HTMLDivElement>(null);
-  const [nodes, setNodes] = useState<MindNode[]>([
-    { id: "root", text: "Main Topic", x: 0, y: 0, color: ROOT_COLOR.value, parentId: null, width: 180, height: 56 }
-  ]);
+  const [nodes, setNodes] = useState<MindNode[]>([...DEFAULT_NODES]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -80,6 +98,114 @@ export default function MindMap({ userId }: MindMapProps) {
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [dragInfo, setDragInfo] = useState<{ nodeId: string; startX: number; startY: number; nodeStartX: number; nodeStartY: number } | null>(null);
   const [connectMode, setConnectMode] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  const { data: savedMaps, isLoading: mapsLoading } = useQuery<any[]>({
+    queryKey: ['/api/mind-maps', userId],
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data: any) => apiRequest("POST", "/api/mind-maps", data),
+    onSuccess: async (res) => {
+      const map = await res.json();
+      queryClient.invalidateQueries({ queryKey: ['/api/mind-maps', userId] });
+      setActiveMapId(map.id);
+      setViewMode("editor");
+      setHasUnsavedChanges(false);
+      toast({ title: "Mind map created!" });
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: any }) => apiRequest("PUT", `/api/mind-map/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/mind-maps', userId] });
+      setHasUnsavedChanges(false);
+      toast({ title: "Mind map saved!" });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/mind-map/${id}`),
+    onSuccess: (_res, deletedId) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/mind-maps', userId] });
+      if (activeMapId === deletedId) {
+        setActiveMapId(null);
+        setViewMode("list");
+        resetCanvas();
+      }
+      toast({ title: "Mind map deleted" });
+    },
+  });
+
+  const resetCanvas = () => {
+    setNodes([...DEFAULT_NODES]);
+    setEdges([]);
+    setSelectedId(null);
+    setEditingId(null);
+    setShowColorPicker(null);
+    setConnectMode(false);
+    setHasUnsavedChanges(false);
+    setMapTitle("Untitled Mind Map");
+    setMapSubject("");
+  };
+
+  const loadMap = (map: any) => {
+    const data = map.nodes as any;
+    const loadedNodes = Array.isArray(data?.nodes) && data.nodes.length > 0 ? data.nodes : [...DEFAULT_NODES];
+    const loadedEdges = Array.isArray(data?.edges) ? data.edges : [];
+    setActiveMapId(map.id);
+    setMapTitle(map.title);
+    setMapSubject(map.subject || "");
+    setNodes(loadedNodes);
+    setEdges(loadedEdges);
+    setSelectedId(null);
+    setEditingId(null);
+    setShowColorPicker(null);
+    setConnectMode(false);
+    setHasUnsavedChanges(false);
+    setViewMode("editor");
+    setTimeout(() => centerViewport(), 100);
+  };
+
+  const saveMap = () => {
+    const mapData = { nodes, edges };
+    if (activeMapId) {
+      updateMutation.mutate({
+        id: activeMapId,
+        data: { title: mapTitle, subject: mapSubject || null, nodes: mapData, updatedAt: new Date().toISOString() },
+      });
+    } else {
+      createMutation.mutate({
+        userId,
+        title: mapTitle,
+        subject: mapSubject || null,
+        nodes: mapData,
+      });
+    }
+  };
+
+  const createNewMap = () => {
+    resetCanvas();
+    setActiveMapId(null);
+    setMapTitle(newTitle || "Untitled Mind Map");
+    setMapSubject(newSubject);
+    setNewTitle("");
+    setNewSubject("");
+    setShowNewDialog(false);
+    setViewMode("editor");
+    setTimeout(() => centerViewport(), 100);
+  };
+
+  const goBackToList = () => {
+    if (hasUnsavedChanges) {
+      const confirmed = window.confirm("You have unsaved changes. Are you sure you want to go back?");
+      if (!confirmed) return;
+    }
+    setActiveMapId(null);
+    setViewMode("list");
+    resetCanvas();
+  };
 
   const centerViewport = useCallback(() => {
     if (!containerRef.current) return;
@@ -88,8 +214,9 @@ export default function MindMap({ userId }: MindMapProps) {
   }, []);
 
   useEffect(() => {
+    if (!activeMapId) return;
     centerViewport();
-  }, [centerViewport]);
+  }, [activeMapId, centerViewport]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -105,10 +232,16 @@ export default function MindMap({ userId }: MindMapProps) {
         setShowColorPicker(null);
         setConnectMode(false);
       }
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        saveMap();
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedId, editingId]);
+  }, [selectedId, editingId, nodes, edges, activeMapId, mapTitle, mapSubject]);
+
+  const markChanged = () => setHasUnsavedChanges(true);
 
   const addChildNode = (parentId: string) => {
     const parent = nodes.find(n => n.id === parentId);
@@ -136,6 +269,7 @@ export default function MindMap({ userId }: MindMapProps) {
     setSelectedId(newId);
     setEditingId(newId);
     setEditText("New Idea");
+    markChanged();
   };
 
   const deleteNode = (nodeId: string) => {
@@ -151,17 +285,20 @@ export default function MindMap({ userId }: MindMapProps) {
     setNodes(prev => prev.filter(n => !toDelete.has(n.id)));
     setEdges(prev => prev.filter(e => !toDelete.has(e.from) && !toDelete.has(e.to)));
     setSelectedId(null);
+    markChanged();
   };
 
   const updateNodeText = (nodeId: string, text: string) => {
     setNodes(prev => prev.map(n => n.id === nodeId ? { ...n, text: text || "Untitled" } : n));
     setEditingId(null);
+    markChanged();
   };
 
   const updateNodeColor = (nodeId: string, color: string) => {
     if (nodeId === "root") return;
     setNodes(prev => prev.map(n => n.id === nodeId ? { ...n, color } : n));
     setShowColorPicker(null);
+    markChanged();
   };
 
   const handleContainerMouseDown = (e: React.MouseEvent) => {
@@ -188,6 +325,7 @@ export default function MindMap({ userId }: MindMapProps) {
   };
 
   const handleContainerMouseUp = () => {
+    if (dragInfo) markChanged();
     setIsPanning(false);
     setDragInfo(null);
   };
@@ -203,6 +341,7 @@ export default function MindMap({ userId }: MindMapProps) {
       );
       if (!alreadyConnected) {
         setEdges(prev => [...prev, { id: `edge_${Date.now()}`, from: selectedId, to: nodeId }]);
+        markChanged();
       }
       setConnectMode(false);
       return;
@@ -235,18 +374,168 @@ export default function MindMap({ userId }: MindMapProps) {
     }));
   };
 
-  const selectedNode = nodes.find(n => n.id === selectedId);
+  // ===================== LIST VIEW =====================
+  if (viewMode === "list") {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold" data-testid="text-mind-map-title">Mind Maps</h2>
+            <p className="text-sm text-muted-foreground">Visualize your ideas and connections</p>
+          </div>
+          <Dialog open={showNewDialog} onOpenChange={setShowNewDialog}>
+            <DialogTrigger asChild>
+              <Button data-testid="button-new-mind-map">
+                <Plus className="h-4 w-4 mr-2" />
+                New Mind Map
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Mind Map</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="map-title">Title</Label>
+                  <Input
+                    id="map-title"
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    placeholder="e.g., Biology Chapter 5"
+                    data-testid="input-map-title"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="map-subject">Subject (optional)</Label>
+                  <Input
+                    id="map-subject"
+                    value={newSubject}
+                    onChange={(e) => setNewSubject(e.target.value)}
+                    placeholder="e.g., Biology"
+                    data-testid="input-map-subject"
+                  />
+                </div>
+                <Button onClick={createNewMap} className="w-full" data-testid="button-create-map">
+                  Create Mind Map
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
 
+        {mapsLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map(i => (
+              <Card key={i} className="animate-pulse">
+                <CardContent className="p-6">
+                  <div className="h-4 bg-muted rounded w-3/4 mb-3" />
+                  <div className="h-3 bg-muted rounded w-1/2" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : savedMaps && savedMaps.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {savedMaps.map((map: any) => {
+              const nodeCount = (map.nodes?.nodes || []).length;
+              const edgeCount = (map.nodes?.edges || []).length;
+              return (
+                <Card
+                  key={map.id}
+                  className="cursor-pointer hover-elevate transition-shadow"
+                  onClick={() => loadMap(map)}
+                  data-testid={`card-mind-map-${map.id}`}
+                >
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <CardTitle className="text-base truncate">{map.title}</CardTitle>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteMutation.mutate(map.id);
+                        }}
+                        data-testid={`button-delete-map-${map.id}`}
+                      >
+                        <Trash2 className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      {map.subject && <Badge variant="secondary">{map.subject}</Badge>}
+                      <Badge variant="outline">{nodeCount} nodes</Badge>
+                      <Badge variant="outline">{edgeCount} connections</Badge>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Clock className="h-3 w-3" />
+                      <span>{new Date(map.updatedAt).toLocaleDateString()}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No mind maps yet</h3>
+              <p className="text-sm text-muted-foreground mb-4">Create your first mind map to start visualizing your ideas</p>
+              <Button onClick={() => setShowNewDialog(true)} data-testid="button-create-first-map">
+                <Plus className="h-4 w-4 mr-2" />
+                Create Mind Map
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    );
+  }
+
+  // ===================== EDITOR VIEW =====================
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold" data-testid="text-mind-map-title">Mind Maps</h2>
-          <p className="text-sm text-muted-foreground">Visualize your ideas and connections</p>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={goBackToList}
+            data-testid="button-back-to-list"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div>
+            <div className="flex items-center gap-2">
+              <Input
+                value={mapTitle}
+                onChange={(e) => { setMapTitle(e.target.value); markChanged(); }}
+                className="text-lg font-bold border-0 p-0 h-auto shadow-none focus-visible:ring-0 bg-transparent"
+                data-testid="input-map-title-edit"
+              />
+              {hasUnsavedChanges && (
+                <Badge variant="outline" className="text-xs">Unsaved</Badge>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {nodes.length} nodes · {edges.length} connections
+            </p>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button
+            onClick={saveMap}
+            disabled={createMutation.isPending || updateMutation.isPending}
+            data-testid="button-save-map"
+          >
+            <Save className="h-4 w-4 mr-2" />
+            {createMutation.isPending || updateMutation.isPending ? "Saving..." : "Save"}
+          </Button>
+          <Button
             onClick={() => selectedId ? addChildNode(selectedId) : addChildNode("root")}
+            variant="outline"
             data-testid="button-add-node"
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -324,7 +613,7 @@ export default function MindMap({ userId }: MindMapProps) {
 
       <Card className="relative">
         <CardContent className="p-0">
-          <div className="absolute top-3 left-3 z-10 text-xs text-muted-foreground select-none pointer-events-none">
+          <div className="absolute top-3 left-3 z-10 text-xs text-muted-foreground select-none pointer-events-none" data-testid="text-canvas-instructions">
             {connectMode
               ? "Click another node to connect"
               : "Drag background to pan \u00b7 Drag nodes to move \u00b7 Double-click to edit"}
@@ -512,7 +801,7 @@ export default function MindMap({ userId }: MindMapProps) {
           <kbd className="px-1.5 py-0.5 rounded border bg-muted font-mono">Del</kbd> Delete
         </span>
         <span className="flex items-center gap-1.5">
-          <kbd className="px-1.5 py-0.5 rounded border bg-muted font-mono">Esc</kbd> Deselect
+          <kbd className="px-1.5 py-0.5 rounded border bg-muted font-mono">Ctrl+S</kbd> Save
         </span>
         <span className="ml-auto opacity-70">Zoom: {Math.round(viewport.scale * 100)}%</span>
       </div>
