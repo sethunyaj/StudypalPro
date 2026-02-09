@@ -2,9 +2,13 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { 
   Plus, Trash2, ZoomIn, ZoomOut, Maximize, 
-  Palette, GripVertical, Link2, Unlink
+  Palette, GripVertical, Link2, Unlink,
+  Save, FolderOpen, FileText, X
 } from "lucide-react";
 
 interface MindMapProps {
@@ -80,6 +84,72 @@ export default function MindMap({ userId }: MindMapProps) {
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [dragInfo, setDragInfo] = useState<{ nodeId: string; startX: number; startY: number; nodeStartX: number; nodeStartY: number } | null>(null);
   const [connectMode, setConnectMode] = useState(false);
+  const [currentMapId, setCurrentMapId] = useState<string | null>(null);
+  const [mapTitle, setMapTitle] = useState("Untitled Mind Map");
+  const [showSavedMaps, setShowSavedMaps] = useState(false);
+  const { toast } = useToast();
+
+  const { data: savedMaps } = useQuery<any[]>({
+    queryKey: ['/api/mind-maps', userId],
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async (data: { title: string; nodes: any }) => {
+      if (currentMapId) {
+        return apiRequest("PUT", `/api/mind-maps/${currentMapId}`, data);
+      } else {
+        return apiRequest("POST", "/api/mind-maps", { ...data, userId });
+      }
+    },
+    onSuccess: async (res) => {
+      const result = await res.json();
+      if (!currentMapId && result.id) {
+        setCurrentMapId(result.id);
+      }
+      queryClient.invalidateQueries({ queryKey: ['/api/mind-maps', userId] });
+      toast({ title: "Mind map saved!" });
+    },
+    onError: () => {
+      toast({ title: "Failed to save", variant: "destructive" });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => apiRequest("DELETE", `/api/mind-maps/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/mind-maps', userId] });
+      toast({ title: "Mind map deleted" });
+    },
+  });
+
+  const handleSave = () => {
+    saveMutation.mutate({
+      title: mapTitle,
+      nodes: { nodes, edges },
+    });
+  };
+
+  const handleLoad = async (map: any) => {
+    setCurrentMapId(map.id);
+    setMapTitle(map.title);
+    const data = map.nodes as { nodes: MindNode[]; edges: Edge[] };
+    setNodes(data.nodes || []);
+    setEdges(data.edges || []);
+    setShowSavedMaps(false);
+    setSelectedId(null);
+    centerViewport();
+    toast({ title: `Loaded "${map.title}"` });
+  };
+
+  const handleNew = () => {
+    setCurrentMapId(null);
+    setMapTitle("Untitled Mind Map");
+    setNodes([{ id: "root", text: "Main Topic", x: 0, y: 0, color: ROOT_COLOR.value, parentId: null, width: 180, height: 56 }]);
+    setEdges([]);
+    setSelectedId(null);
+    setShowSavedMaps(false);
+    centerViewport();
+  };
 
   const centerViewport = useCallback(() => {
     if (!containerRef.current) return;
@@ -246,6 +316,30 @@ export default function MindMap({ userId }: MindMapProps) {
         </div>
         <div className="flex flex-wrap gap-2">
           <Button
+            onClick={handleSave}
+            disabled={saveMutation.isPending}
+            data-testid="button-save-mind-map"
+          >
+            <Save className="h-4 w-4 mr-2" />
+            {saveMutation.isPending ? "Saving..." : "Save"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setShowSavedMaps(!showSavedMaps)}
+            data-testid="button-load-mind-map"
+          >
+            <FolderOpen className="h-4 w-4 mr-2" />
+            My Maps
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleNew}
+            data-testid="button-new-mind-map"
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            New
+          </Button>
+          <Button
             onClick={() => selectedId ? addChildNode(selectedId) : addChildNode("root")}
             data-testid="button-add-node"
           >
@@ -318,6 +412,68 @@ export default function MindMap({ userId }: MindMapProps) {
                 );
               })}
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="flex items-center gap-3">
+        <Input
+          value={mapTitle}
+          onChange={(e) => setMapTitle(e.target.value)}
+          className="max-w-xs text-sm font-medium"
+          placeholder="Mind map title..."
+          data-testid="input-mind-map-title"
+        />
+        {currentMapId && (
+          <span className="text-xs text-muted-foreground" data-testid="text-map-status">Saved</span>
+        )}
+        {!currentMapId && (
+          <span className="text-xs text-muted-foreground" data-testid="text-map-status">Unsaved</span>
+        )}
+      </div>
+
+      {showSavedMaps && (
+        <Card>
+          <CardContent className="py-3 px-4">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium">Saved Mind Maps</span>
+              <Button variant="ghost" size="icon" onClick={() => setShowSavedMaps(false)} data-testid="button-close-saved-maps">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            {(!savedMaps || savedMaps.length === 0) ? (
+              <p className="text-sm text-muted-foreground" data-testid="text-no-saved-maps">No saved mind maps yet. Create one and click Save!</p>
+            ) : (
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {savedMaps.map((map: any) => (
+                  <div key={map.id} className="flex items-center justify-between gap-2 p-2 rounded-md border" data-testid={`saved-map-${map.id}`}>
+                    <button
+                      className="flex-1 text-left text-sm font-medium truncate hover-elevate rounded-md px-2 py-1"
+                      onClick={() => handleLoad(map)}
+                      data-testid={`button-load-map-${map.id}`}
+                    >
+                      {map.title}
+                    </button>
+                    <span className="text-xs text-muted-foreground flex-shrink-0">
+                      {new Date(map.updatedAt).toLocaleDateString()}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        if (currentMapId === map.id) {
+                          handleNew();
+                        }
+                        deleteMutation.mutate(map.id);
+                      }}
+                      data-testid={`button-delete-map-${map.id}`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

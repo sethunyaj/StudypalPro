@@ -36,6 +36,7 @@ import {
   insertClassResourceSchema,
   insertTeacherQuizSchema,
   insertTeacherQuizAttemptSchema,
+  insertMindMapSchema,
   type QuizQuestion,
   type QuizAnswer,
 } from "@shared/schema";
@@ -1640,6 +1641,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       res.json(attempt);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== MIND MAPS ====================
+
+  app.get("/api/mind-maps/:userId", async (req, res) => {
+    try {
+      const maps = await storage.getUserMindMaps(req.params.userId);
+      res.json(maps);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/mind-maps/detail/:id", async (req, res) => {
+    try {
+      const map = await storage.getMindMap(req.params.id);
+      if (!map) return res.status(404).json({ error: "Mind map not found" });
+      res.json(map);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/mind-maps", async (req, res) => {
+    try {
+      const data = insertMindMapSchema.parse(req.body);
+      const map = await storage.createMindMap(data);
+      res.json(map);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.put("/api/mind-maps/:id", async (req, res) => {
+    try {
+      const { title, nodes, subject } = req.body;
+      const map = await storage.updateMindMap(req.params.id, { title, nodes, subject });
+      if (!map) return res.status(404).json({ error: "Mind map not found" });
+      res.json(map);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/mind-maps/:id", async (req, res) => {
+    try {
+      await storage.deleteMindMap(req.params.id);
+      res.json({ success: true });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
