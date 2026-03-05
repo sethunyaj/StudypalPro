@@ -63,6 +63,15 @@ import {
   type InsertTeacherQuiz,
   type TeacherQuizAttempt,
   type InsertTeacherQuizAttempt,
+  newsPosts,
+  newsLikes,
+  newsComments,
+  type NewsPost,
+  type InsertNewsPost,
+  type NewsLike,
+  type InsertNewsLike,
+  type NewsComment,
+  type InsertNewsComment,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -190,6 +199,25 @@ export interface IStorage {
   getStudentQuizAttempt(quizId: string, studentId: string): Promise<TeacherQuizAttempt | undefined>;
   createTeacherQuizAttempt(attempt: InsertTeacherQuizAttempt): Promise<TeacherQuizAttempt>;
   updateTeacherQuizAttempt(attemptId: string, updates: Partial<TeacherQuizAttempt>): Promise<TeacherQuizAttempt | undefined>;
+
+  // NEWS & UPDATES
+  getPublishedNewsPosts(): Promise<NewsPost[]>;
+  getAllNewsPosts(): Promise<NewsPost[]>;
+  getNewsPost(id: string): Promise<NewsPost | undefined>;
+  createNewsPost(post: InsertNewsPost): Promise<NewsPost>;
+  updateNewsPost(id: string, updates: Partial<NewsPost>): Promise<NewsPost | undefined>;
+  deleteNewsPost(id: string): Promise<void>;
+
+  // NEWS LIKES
+  getPostLikeCount(postId: string): Promise<number>;
+  getUserLikeForPost(postId: string, userId: string): Promise<NewsLike | undefined>;
+  toggleNewsLike(postId: string, userId: string): Promise<boolean>;
+
+  // NEWS COMMENTS
+  getPostComments(postId: string): Promise<NewsComment[]>;
+  createNewsComment(comment: InsertNewsComment): Promise<NewsComment>;
+  deleteNewsComment(id: string): Promise<void>;
+  getPostCommentCount(postId: string): Promise<number>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -725,6 +753,96 @@ export class DatabaseStorage implements IStorage {
   async updateTeacherQuizAttempt(attemptId: string, updates: Partial<TeacherQuizAttempt>): Promise<TeacherQuizAttempt | undefined> {
     const [attempt] = await db.update(teacherQuizAttempts).set(updates).where(eq(teacherQuizAttempts.id, attemptId)).returning();
     return attempt;
+  }
+
+  // ==================== NEWS & UPDATES ====================
+  async getPublishedNewsPosts(): Promise<NewsPost[]> {
+    return await db
+      .select()
+      .from(newsPosts)
+      .where(
+        sql`(${newsPosts.status} = 'published') OR (${newsPosts.status} = 'scheduled' AND ${newsPosts.scheduledAt} <= NOW())`
+      )
+      .orderBy(desc(newsPosts.createdAt));
+  }
+
+  async getAllNewsPosts(): Promise<NewsPost[]> {
+    return await db.select().from(newsPosts).orderBy(desc(newsPosts.createdAt));
+  }
+
+  async getNewsPost(id: string): Promise<NewsPost | undefined> {
+    const [post] = await db.select().from(newsPosts).where(eq(newsPosts.id, id));
+    return post;
+  }
+
+  async createNewsPost(post: InsertNewsPost): Promise<NewsPost> {
+    const [newPost] = await db.insert(newsPosts).values(post).returning();
+    return newPost;
+  }
+
+  async updateNewsPost(id: string, updates: Partial<NewsPost>): Promise<NewsPost | undefined> {
+    const [post] = await db.update(newsPosts).set(updates).where(eq(newsPosts.id, id)).returning();
+    return post;
+  }
+
+  async deleteNewsPost(id: string): Promise<void> {
+    await db.delete(newsComments).where(eq(newsComments.postId, id));
+    await db.delete(newsLikes).where(eq(newsLikes.postId, id));
+    await db.delete(newsPosts).where(eq(newsPosts.id, id));
+  }
+
+  // ==================== NEWS LIKES ====================
+  async getPostLikeCount(postId: string): Promise<number> {
+    const result = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(newsLikes)
+      .where(eq(newsLikes.postId, postId));
+    return result[0]?.count ?? 0;
+  }
+
+  async getUserLikeForPost(postId: string, userId: string): Promise<NewsLike | undefined> {
+    const [like] = await db
+      .select()
+      .from(newsLikes)
+      .where(and(eq(newsLikes.postId, postId), eq(newsLikes.userId, userId)));
+    return like;
+  }
+
+  async toggleNewsLike(postId: string, userId: string): Promise<boolean> {
+    const existing = await this.getUserLikeForPost(postId, userId);
+    if (existing) {
+      await db.delete(newsLikes).where(eq(newsLikes.id, existing.id));
+      return false;
+    } else {
+      await db.insert(newsLikes).values({ postId, userId });
+      return true;
+    }
+  }
+
+  // ==================== NEWS COMMENTS ====================
+  async getPostComments(postId: string): Promise<NewsComment[]> {
+    return await db
+      .select()
+      .from(newsComments)
+      .where(eq(newsComments.postId, postId))
+      .orderBy(desc(newsComments.createdAt));
+  }
+
+  async createNewsComment(comment: InsertNewsComment): Promise<NewsComment> {
+    const [newComment] = await db.insert(newsComments).values(comment).returning();
+    return newComment;
+  }
+
+  async deleteNewsComment(id: string): Promise<void> {
+    await db.delete(newsComments).where(eq(newsComments.id, id));
+  }
+
+  async getPostCommentCount(postId: string): Promise<number> {
+    const result = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(newsComments)
+      .where(eq(newsComments.postId, postId));
+    return result[0]?.count ?? 0;
   }
 }
 

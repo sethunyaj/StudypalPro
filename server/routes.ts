@@ -37,6 +37,8 @@ import {
   insertTeacherQuizSchema,
   insertTeacherQuizAttemptSchema,
   insertMindMapSchema,
+  insertNewsPostSchema,
+  insertNewsCommentSchema,
   type QuizQuestion,
   type QuizAnswer,
 } from "@shared/schema";
@@ -1788,6 +1790,206 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("PDF generation error:", error);
       res.status(500).json({ error: "Failed to generate PDF: " + error.message });
+    }
+  });
+
+  // ==================== NEWS & UPDATES ====================
+
+  app.get("/api/news", async (req, res) => {
+    try {
+      const userId = req.query.userId as string | undefined;
+      const user = userId ? await storage.getUser(userId) : null;
+      const isAdmin = user?.role === "admin";
+
+      const posts = isAdmin
+        ? await storage.getAllNewsPosts()
+        : await storage.getPublishedNewsPosts();
+
+      const postsWithMeta = await Promise.all(
+        posts.map(async (post) => {
+          const likeCount = await storage.getPostLikeCount(post.id);
+          const commentCount = await storage.getPostCommentCount(post.id);
+          const userLike = userId
+            ? await storage.getUserLikeForPost(post.id, userId)
+            : undefined;
+          return {
+            ...post,
+            likeCount,
+            commentCount,
+            isLikedByUser: !!userLike,
+          };
+        })
+      );
+
+      res.json(postsWithMeta);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/news/:id", async (req, res) => {
+    try {
+      const post = await storage.getNewsPost(req.params.id);
+      if (!post) return res.status(404).json({ error: "Post not found" });
+
+      const userId = req.query.userId as string | undefined;
+      const user = userId ? await storage.getUser(userId) : null;
+      const isAdmin = user?.role === "admin";
+
+      if (!isAdmin) {
+        const isVisible =
+          post.status === "published" ||
+          (post.status === "scheduled" && post.scheduledAt && new Date(post.scheduledAt) <= new Date());
+        if (!isVisible) {
+          return res.status(404).json({ error: "Post not found" });
+        }
+      }
+
+      const likeCount = await storage.getPostLikeCount(post.id);
+      const commentCount = await storage.getPostCommentCount(post.id);
+      const userLike = userId
+        ? await storage.getUserLikeForPost(post.id, userId)
+        : undefined;
+
+      res.json({
+        ...post,
+        likeCount,
+        commentCount,
+        isLikedByUser: !!userLike,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/news", async (req, res) => {
+    try {
+      const { authorId } = req.body;
+      if (!authorId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(authorId);
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Only admins can create posts" });
+      }
+
+      const parsed = insertNewsPostSchema.parse(req.body);
+      const post = await storage.createNewsPost(parsed);
+      res.status(201).json(post);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/news/:id", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Only admins can update posts" });
+      }
+
+      const updateSchema = z.object({
+        userId: z.string(),
+        type: z.enum(["newsletter", "video"]).optional(),
+        title: z.string().optional(),
+        body: z.string().nullable().optional(),
+        imageUrl: z.string().nullable().optional(),
+        attachmentUrl: z.string().nullable().optional(),
+        attachmentName: z.string().nullable().optional(),
+        videoUrl: z.string().nullable().optional(),
+        videoProvider: z.string().nullable().optional(),
+        authorName: z.string().optional(),
+        authorRole: z.string().optional(),
+        status: z.enum(["published", "scheduled", "draft"]).optional(),
+        scheduledAt: z.coerce.date().nullable().optional(),
+      });
+
+      const parsed = updateSchema.parse(req.body);
+      const { userId: _, ...updates } = parsed;
+      const post = await storage.updateNewsPost(req.params.id, updates);
+      if (!post) return res.status(404).json({ error: "Post not found" });
+      res.json(post);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/news/:id", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Only admins can delete posts" });
+      }
+
+      await storage.deleteNewsPost(req.params.id);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/news/:id/like", async (req, res) => {
+    try {
+      const { userId } = req.body;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+      const liked = await storage.toggleNewsLike(req.params.id, userId);
+      const likeCount = await storage.getPostLikeCount(req.params.id);
+      res.json({ liked, likeCount });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/news/:id/comments", async (req, res) => {
+    try {
+      const comments = await storage.getPostComments(req.params.id);
+      res.json(comments);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/news/:id/comments", async (req, res) => {
+    try {
+      const { userId, userName, content } = req.body;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+      const parsed = insertNewsCommentSchema.parse({
+        postId: req.params.id,
+        userId,
+        userName,
+        content,
+      });
+      const comment = await storage.createNewsComment(parsed);
+      res.status(201).json(comment);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/news/:id/comments/:commentId", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+      const user = await storage.getUser(userId);
+      if (!user) return res.status(401).json({ error: "Unauthorized" });
+
+      const comments = await storage.getPostComments(req.params.id);
+      const comment = comments.find(c => c.id === req.params.commentId);
+      if (!comment) return res.status(404).json({ error: "Comment not found" });
+
+      if (comment.userId !== userId && user.role !== "admin") {
+        return res.status(403).json({ error: "You can only delete your own comments" });
+      }
+
+      await storage.deleteNewsComment(req.params.commentId);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
   });
 

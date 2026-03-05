@@ -482,3 +482,63 @@ export const insertPlatformSettingSchema = createInsertSchema(platformSettings).
 });
 export type InsertPlatformSetting = z.infer<typeof insertPlatformSettingSchema>;
 export type PlatformSetting = typeof platformSettings.$inferSelect;
+
+// News & Updates posts
+export const newsPosts = pgTable("news_posts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  type: text("type").notNull(), // "newsletter" or "video"
+  title: text("title").notNull(),
+  body: text("body"),
+  imageUrl: text("image_url"),
+  attachmentUrl: text("attachment_url"),
+  attachmentName: text("attachment_name"),
+  videoUrl: text("video_url"),
+  videoProvider: text("video_provider"), // "youtube" or "vimeo"
+  authorName: text("author_name").notNull(),
+  authorRole: text("author_role").notNull(),
+  authorId: text("author_id").notNull(),
+  status: text("status").notNull().default("published"), // "published", "scheduled", "draft"
+  scheduledAt: timestamp("scheduled_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertNewsPostSchema = createInsertSchema(newsPosts).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  scheduledAt: z.coerce.date().nullable().optional(),
+});
+export type InsertNewsPost = z.infer<typeof insertNewsPostSchema>;
+export type NewsPost = typeof newsPosts.$inferSelect;
+
+// News likes
+export const newsLikes = pgTable("news_likes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  postId: text("post_id").notNull(),
+  userId: text("user_id").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertNewsLikeSchema = createInsertSchema(newsLikes).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertNewsLike = z.infer<typeof insertNewsLikeSchema>;
+export type NewsLike = typeof newsLikes.$inferSelect;
+
+// News comments
+export const newsComments = pgTable("news_comments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  postId: text("post_id").notNull(),
+  userId: text("user_id").notNull(),
+  userName: text("user_name").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertNewsCommentSchema = createInsertSchema(newsComments).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertNewsComment = z.infer<typeof insertNewsCommentSchema>;
+export type NewsComment = typeof newsComments.$inferSelect;
