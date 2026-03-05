@@ -730,7 +730,7 @@ export default function NewsPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setLocation("/dashboard")}
+                  onClick={() => setLocation(user.role === "admin" ? "/admin" : "/dashboard")}
                   data-testid="button-back-dashboard"
                 >
                   <ArrowLeft className="h-5 w-5" />

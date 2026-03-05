@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, Brain, FileText, LogOut, BarChart3, Settings } from "lucide-react";
+import { Users, Brain, FileText, LogOut, BarChart3, Settings, Newspaper } from "lucide-react";
 import StudentManagement from "@/components/admin/student-management";
 import ContentManagement from "@/components/admin/content-management";
 import AdminAnalytics from "@/components/admin/admin-analytics";
@@ -138,6 +138,10 @@ export default function AdminDashboard() {
                 <TabsTrigger value="analytics" className="gap-2 data-[state=active]:bg-card" data-testid="tab-analytics">
                   <BarChart3 className="h-4 w-4" />
                   Analytics
+                </TabsTrigger>
+                <TabsTrigger value="news" className="gap-2 data-[state=active]:bg-card" data-testid="tab-news" onClick={() => setLocation("/news")}>
+                  <Newspaper className="h-4 w-4" />
+                  News & Updates
                 </TabsTrigger>
               </TabsList>
             </Tabs>
