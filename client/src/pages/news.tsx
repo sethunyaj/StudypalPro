@@ -88,16 +88,18 @@ function VideoEmbed({ url, orientation = "landscape" }: { url: string; orientati
   const isPortrait = orientation === "portrait";
   const isSquare = orientation === "square";
 
+  const aspectRatio = isPortrait ? "9/16" : isSquare ? "1/1" : "16/9";
+
   return (
     <div
-      className={`relative rounded-md overflow-hidden bg-muted ${
-        isPortrait ? "w-full max-w-xs mx-auto" : isSquare ? "w-full max-w-md mx-auto" : "w-full"
-      }`}
-      style={{ paddingTop: isPortrait ? "177.78%" : isSquare ? "100%" : "56.25%" }}
+      className={`flex justify-center ${isPortrait ? "w-full" : ""}`}
       data-testid="video-embed"
     >
       <iframe
-        className="absolute inset-0 w-full h-full"
+        className={`rounded-md bg-muted ${
+          isPortrait ? "w-full max-w-[280px]" : isSquare ? "w-full max-w-[400px]" : "w-full"
+        }`}
+        style={{ aspectRatio }}
         src={embedUrl}
         title="Video"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
