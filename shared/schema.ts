@@ -494,6 +494,7 @@ export const newsPosts = pgTable("news_posts", {
   attachmentName: text("attachment_name"),
   videoUrl: text("video_url"),
   videoProvider: text("video_provider"), // "youtube" or "vimeo"
+  videoOrientation: text("video_orientation").default("landscape"), // "landscape", "portrait", or "square"
   authorName: text("author_name").notNull(),
   authorRole: text("author_role").notNull(),
   authorId: text("author_id").notNull(),

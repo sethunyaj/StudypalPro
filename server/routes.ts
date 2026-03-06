@@ -1898,6 +1898,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         attachmentName: z.string().nullable().optional(),
         videoUrl: z.string().nullable().optional(),
         videoProvider: z.string().nullable().optional(),
+        videoOrientation: z.string().nullable().optional(),
         authorName: z.string().optional(),
         authorRole: z.string().optional(),
         status: z.enum(["published", "scheduled", "draft"]).optional(),

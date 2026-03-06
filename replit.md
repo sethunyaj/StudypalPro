@@ -11,7 +11,14 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 - **UI Components**: Shadcn/ui with custom Hibiscus theme
 - **Charts**: Chart.js with react-chartjs-2
 
-## Recent Changes (March 05, 2026)
+## Recent Changes (March 06, 2026)
+- **COMPLETED**: Video Orientation Support
+  - Video embeds now support landscape (16:9), portrait (9:16), and square (1:1) orientations
+  - Orientation selector in video post create/edit dialog with live preview
+  - New `videoOrientation` column in `news_posts` table (defaults to "landscape")
+  - Existing videos default to landscape orientation
+
+## Previous Changes (March 05, 2026)
 - **COMPLETED**: News & Updates Feature
   - Unified content feed for newsletters and video posts
   - Newsletter posts: title, body, optional image, optional PDF attachment

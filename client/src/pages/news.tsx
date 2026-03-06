@@ -63,7 +63,7 @@ function extractVideoId(url: string): { provider: string; id: string } | null {
   return null;
 }
 
-function VideoEmbed({ url }: { url: string }) {
+function VideoEmbed({ url, orientation = "landscape" }: { url: string; orientation?: string }) {
   const info = extractVideoId(url);
   if (!info) {
     return (
@@ -85,8 +85,17 @@ function VideoEmbed({ url }: { url: string }) {
       ? `https://www.youtube-nocookie.com/embed/${info.id}`
       : `https://player.vimeo.com/video/${info.id}`;
 
+  const isPortrait = orientation === "portrait";
+  const isSquare = orientation === "square";
+
   return (
-    <div className="relative w-full pt-[56.25%] rounded-md overflow-hidden bg-muted" data-testid="video-embed">
+    <div
+      className={`relative rounded-md overflow-hidden bg-muted ${
+        isPortrait ? "w-full max-w-xs mx-auto" : isSquare ? "w-full max-w-md mx-auto" : "w-full"
+      }`}
+      style={{ paddingTop: isPortrait ? "177.78%" : isSquare ? "100%" : "56.25%" }}
+      data-testid="video-embed"
+    >
       <iframe
         className="absolute inset-0 w-full h-full"
         src={embedUrl}
@@ -327,7 +336,7 @@ function PostCard({
       </CardHeader>
       <CardContent className="space-y-3">
         {post.type === "video" && post.videoUrl && (
-          <VideoEmbed url={post.videoUrl} />
+          <VideoEmbed url={post.videoUrl} orientation={post.videoOrientation || "landscape"} />
         )}
 
         {post.imageUrl && (
@@ -410,6 +419,7 @@ function CreateEditPostDialog({
   const [attachmentUrl, setAttachmentUrl] = useState("");
   const [attachmentName, setAttachmentName] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
+  const [videoOrientation, setVideoOrientation] = useState<"landscape" | "portrait" | "square">("landscape");
   const [authorName, setAuthorName] = useState(user?.name || "");
   const [authorRole, setAuthorRole] = useState("CEO");
   const [publishMode, setPublishMode] = useState<"now" | "scheduled">("now");
@@ -425,6 +435,7 @@ function CreateEditPostDialog({
       setAttachmentUrl(editingPost.attachmentUrl || "");
       setAttachmentName(editingPost.attachmentName || "");
       setVideoUrl(editingPost.videoUrl || "");
+      setVideoOrientation((editingPost.videoOrientation as "landscape" | "portrait" | "square") || "landscape");
       setAuthorName(editingPost.authorName);
       setAuthorRole(editingPost.authorRole);
       if (editingPost.status === "scheduled" && editingPost.scheduledAt) {
@@ -445,6 +456,7 @@ function CreateEditPostDialog({
       setAttachmentUrl("");
       setAttachmentName("");
       setVideoUrl("");
+      setVideoOrientation("landscape");
       setAuthorName(user?.name || "");
       setAuthorRole("CEO");
       setPublishMode("now");
@@ -504,6 +516,7 @@ function CreateEditPostDialog({
       attachmentName: attachmentName.trim() || null,
       videoUrl: postType === "video" ? videoUrl.trim() || null : null,
       videoProvider: postType === "video" && videoUrl ? (extractVideoId(videoUrl)?.provider || null) : null,
+      videoOrientation: postType === "video" ? videoOrientation : null,
       authorName: authorName.trim(),
       authorRole: authorRole.trim(),
       authorId: user.id,
@@ -563,20 +576,35 @@ function CreateEditPostDialog({
           </div>
 
           {postType === "video" && (
-            <div>
-              <Label>Video URL (YouTube or Vimeo)</Label>
-              <Input
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://youtube.com/watch?v=..."
-                data-testid="input-video-url"
-              />
+            <>
+              <div>
+                <Label>Video URL (YouTube or Vimeo)</Label>
+                <Input
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  placeholder="https://youtube.com/watch?v=..."
+                  data-testid="input-video-url"
+                />
+              </div>
+              <div>
+                <Label>Video Orientation</Label>
+                <Select value={videoOrientation} onValueChange={(v) => setVideoOrientation(v as "landscape" | "portrait" | "square")}>
+                  <SelectTrigger data-testid="select-video-orientation">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="landscape">Landscape (16:9)</SelectItem>
+                    <SelectItem value="portrait">Portrait (9:16)</SelectItem>
+                    <SelectItem value="square">Square (1:1)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               {videoUrl && extractVideoId(videoUrl) && (
                 <div className="mt-2">
-                  <VideoEmbed url={videoUrl} />
+                  <VideoEmbed url={videoUrl} orientation={videoOrientation} />
                 </div>
               )}
-            </div>
+            </>
           )}
 
           <div className="grid grid-cols-2 gap-3">
