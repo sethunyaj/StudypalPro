@@ -61,6 +61,7 @@ import {
   Download,
   ExternalLink,
   X,
+  Play,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import type { TrainingTopic, TrainingItem } from "@shared/schema";
@@ -477,24 +478,26 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
           ))}
 
           {ungroupedItems.length > 0 && (
-            <div className="space-y-1">
+            <div>
               <div className="flex items-center gap-2 px-2 py-1">
                 <span className="text-sm font-medium text-muted-foreground">No topic</span>
               </div>
-              {ungroupedItems.map((item) => (
-                <TrainingItemRow
-                  key={item.id}
-                  item={item}
-                  onEdit={() => openEditItem(item)}
-                  onDelete={() => {
-                    setDeleteTarget({ type: "item", id: item.id, title: item.title });
-                    setShowDeleteDialog(true);
-                  }}
-                  isAdmin={isAdmin}
-                  isExpanded={expandedItem === item.id}
-                  onToggleExpand={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
-                />
-              ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+                {ungroupedItems.map((item) => (
+                  <TrainingItemRow
+                    key={item.id}
+                    item={item}
+                    onEdit={() => openEditItem(item)}
+                    onDelete={() => {
+                      setDeleteTarget({ type: "item", id: item.id, title: item.title });
+                      setShowDeleteDialog(true);
+                    }}
+                    isAdmin={isAdmin}
+                    isExpanded={expandedItem === item.id}
+                    onToggleExpand={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
+                  />
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -807,21 +810,23 @@ function TopicSection({
       </div>
 
       {!collapsed && (
-        <div className="ml-4 space-y-1">
+        <div className="ml-4">
           {items.length === 0 ? (
             <p className="text-sm text-muted-foreground px-2 py-2">No items in this topic</p>
           ) : (
-            items.map((item) => (
-              <TrainingItemRow
-                key={item.id}
-                item={item}
-                onEdit={() => onEditItem(item)}
-                onDelete={() => onDeleteItem(item)}
-                isAdmin={isAdmin}
-                isExpanded={expandedItem === item.id}
-                onToggleExpand={() => onToggleExpand(item.id)}
-              />
-            ))
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+              {items.map((item) => (
+                <TrainingItemRow
+                  key={item.id}
+                  item={item}
+                  onEdit={() => onEditItem(item)}
+                  onDelete={() => onDeleteItem(item)}
+                  isAdmin={isAdmin}
+                  isExpanded={expandedItem === item.id}
+                  onToggleExpand={() => onToggleExpand(item.id)}
+                />
+              ))}
+            </div>
           )}
         </div>
       )}
@@ -846,56 +851,51 @@ function TrainingItemRow({
 }) {
   const Icon = TYPE_ICONS[item.type] || BookOpen;
   const iconColor = TYPE_COLORS[item.type] || "text-muted-foreground";
+  const videoInfo = item.videoUrl ? extractVideoId(item.videoUrl) : null;
+  const thumbnailUrl = videoInfo?.provider === "youtube"
+    ? `https://img.youtube.com/vi/${videoInfo.id}/mqdefault.jpg`
+    : null;
 
   return (
-    <Card className="border hover-elevate cursor-pointer" data-testid={`card-training-item-${item.id}`} onClick={onToggleExpand}>
-      <CardContent className="p-3">
-        <div className="flex items-center gap-3">
-          <div className={`shrink-0 ${iconColor}`}>
-            <Icon className="h-5 w-5" />
+    <>
+      <Card className="border hover-elevate cursor-pointer flex flex-col" data-testid={`card-training-item-${item.id}`} onClick={onToggleExpand}>
+        {thumbnailUrl && (
+          <div className="relative w-full overflow-hidden rounded-t-md" style={{ aspectRatio: "16/9" }}>
+            <img
+              src={thumbnailUrl}
+              alt={item.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+              <div className="bg-black/70 rounded-full p-2">
+                <Play className="h-5 w-5 text-white fill-white" />
+              </div>
+            </div>
+            <Badge
+              variant={item.status === "posted" ? "default" : "secondary"}
+              className="absolute top-2 left-2 text-xs"
+              data-testid={`badge-status-${item.id}`}
+            >
+              {item.status === "posted" ? "Posted" : "Draft"}
+            </Badge>
           </div>
-
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-medium text-sm truncate">{item.title}</span>
-              <Badge
-                variant={item.status === "posted" ? "default" : "secondary"}
-                className="text-xs"
-                data-testid={`badge-status-${item.id}`}
-              >
-                {item.status === "posted" ? (
-                  <><Eye className="h-3 w-3 mr-1" /> Posted</>
-                ) : (
-                  <><EyeOff className="h-3 w-3 mr-1" /> Draft</>
-                )}
-              </Badge>
-              {item.videoUrl && (
-                <Video className="h-3 w-3 text-muted-foreground shrink-0" />
-              )}
-              {(item.attachmentPath || item.attachmentUrl) && (
-                <Paperclip className="h-3 w-3 text-muted-foreground shrink-0" />
+        )}
+        <CardContent className={`p-3 flex-1 flex flex-col ${!thumbnailUrl ? 'justify-center' : ''}`}>
+          <div className="flex items-start gap-2">
+            <div className={`shrink-0 mt-0.5 ${iconColor}`}>
+              <Icon className="h-4 w-4" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-sm line-clamp-2 leading-snug">{item.title}</p>
+              {item.description && (
+                <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
               )}
             </div>
-            {!isExpanded && item.description && (
-              <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{item.description}</p>
-            )}
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {TYPE_LABELS[item.type]}
-              {item.updatedAt && ` · Edited ${formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true })}`}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-1 shrink-0">
-            {isExpanded ? (
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-            ) : (
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            )}
             {isAdmin && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="icon" variant="ghost" onClick={(e) => e.stopPropagation()} data-testid={`button-item-menu-${item.id}`}>
-                    <MoreVertical className="h-4 w-4" />
+                  <Button size="icon" variant="ghost" className="shrink-0" onClick={(e) => e.stopPropagation()} data-testid={`button-item-menu-${item.id}`}>
+                    <MoreVertical className="h-3.5 w-3.5" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -911,10 +911,50 @@ function TrainingItemRow({
               </DropdownMenu>
             )}
           </div>
-        </div>
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
+            {!thumbnailUrl && (
+              <Badge
+                variant={item.status === "posted" ? "default" : "secondary"}
+                className="text-xs"
+                data-testid={!thumbnailUrl ? `badge-status-${item.id}` : undefined}
+              >
+                {item.status === "posted" ? "Posted" : "Draft"}
+              </Badge>
+            )}
+            <span className="text-xs text-muted-foreground">{TYPE_LABELS[item.type]}</span>
+            {item.videoUrl && !thumbnailUrl && (
+              <Video className="h-3 w-3 text-muted-foreground shrink-0" />
+            )}
+            {(item.attachmentPath || item.attachmentUrl) && (
+              <Paperclip className="h-3 w-3 text-muted-foreground shrink-0" />
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
-        {isExpanded && (
-          <div className="mt-3 ml-8 space-y-3 border-t pt-3" data-testid={`expanded-content-${item.id}`}>
+      <Dialog open={isExpanded} onOpenChange={(open) => { if (!open) onToggleExpand(); }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+          <DialogHeader className="shrink-0">
+            <div className="flex items-center gap-2">
+              <div className={iconColor}>
+                <Icon className="h-5 w-5" />
+              </div>
+              <DialogTitle className="flex-1">{item.title}</DialogTitle>
+            </div>
+            <DialogDescription>
+              <span className="flex items-center gap-2 flex-wrap">
+                <Badge
+                  variant={item.status === "posted" ? "default" : "secondary"}
+                  className="text-xs"
+                >
+                  {item.status === "posted" ? "Posted" : "Draft"}
+                </Badge>
+                <span>{TYPE_LABELS[item.type]}</span>
+                {item.updatedAt && <span>Edited {formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true })}</span>}
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 overflow-y-auto flex-1 pr-1" data-testid={`expanded-content-${item.id}`}>
             {item.description && (
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">Description</p>
@@ -928,9 +968,11 @@ function TrainingItemRow({
               </div>
             )}
             {item.videoUrl && (
-              <div onClick={(e) => e.stopPropagation()}>
+              <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">Video</p>
-                <TrainingVideoEmbed url={item.videoUrl} />
+                <div className="max-w-lg">
+                  <TrainingVideoEmbed url={item.videoUrl} />
+                </div>
               </div>
             )}
             {item.attachmentPath && (
@@ -941,7 +983,6 @@ function TrainingItemRow({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-primary flex items-center gap-2 p-2 border rounded-md hover-elevate"
-                  onClick={(e) => e.stopPropagation()}
                   data-testid={`link-file-${item.id}`}
                 >
                   <FileText className="h-4 w-4 shrink-0" />
@@ -958,7 +999,6 @@ function TrainingItemRow({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-primary underline flex items-center gap-1"
-                  onClick={(e) => e.stopPropagation()}
                   data-testid={`link-attachment-${item.id}`}
                 >
                   <ExternalLink className="h-3 w-3" />
@@ -970,8 +1010,8 @@ function TrainingItemRow({
               <p className="text-sm text-muted-foreground">No additional content available.</p>
             )}
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
