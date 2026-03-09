@@ -74,10 +74,13 @@ import {
   type InsertNewsComment,
   trainingTopics,
   trainingItems,
+  trainingProgress,
   type TrainingTopic,
   type InsertTrainingTopic,
   type TrainingItem,
   type InsertTrainingItem,
+  type TrainingProgress,
+  type InsertTrainingProgress,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -86,6 +89,7 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, updates: Partial<User>): Promise<User | undefined>;
   getAllStudents(): Promise<User[]>;
+  getTeachers(): Promise<User[]>;
   deleteUser(id: string): Promise<void>;
 
   getUserNotes(userId: string): Promise<Note[]>;
@@ -237,6 +241,10 @@ export interface IStorage {
   createTrainingItem(item: InsertTrainingItem): Promise<TrainingItem>;
   updateTrainingItem(id: string, updates: Partial<TrainingItem>): Promise<TrainingItem | undefined>;
   deleteTrainingItem(id: string): Promise<void>;
+
+  getTrainingProgressByUser(userId: string): Promise<TrainingProgress[]>;
+  getAllTrainingProgress(): Promise<TrainingProgress[]>;
+  toggleTrainingProgress(userId: string, itemId: string): Promise<TrainingProgress>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -263,6 +271,10 @@ export class DatabaseStorage implements IStorage {
 
   async getAllStudents(): Promise<User[]> {
     return await db.select().from(users).where(eq(users.role, "student"));
+  }
+
+  async getTeachers(): Promise<User[]> {
+    return await db.select().from(users).where(eq(users.role, "teacher"));
   }
 
   async deleteUser(id: string): Promise<void> {
@@ -908,6 +920,31 @@ export class DatabaseStorage implements IStorage {
 
   async deleteTrainingItem(id: string): Promise<void> {
     await db.delete(trainingItems).where(eq(trainingItems.id, id));
+  }
+
+  async getTrainingProgressByUser(userId: string): Promise<TrainingProgress[]> {
+    return await db.select().from(trainingProgress).where(eq(trainingProgress.userId, userId));
+  }
+
+  async getAllTrainingProgress(): Promise<TrainingProgress[]> {
+    return await db.select().from(trainingProgress);
+  }
+
+  async toggleTrainingProgress(userId: string, itemId: string): Promise<TrainingProgress> {
+    const [existing] = await db.select().from(trainingProgress)
+      .where(and(eq(trainingProgress.userId, userId), eq(trainingProgress.itemId, itemId)));
+    if (existing) {
+      const newCompleted = !existing.completed;
+      const [updated] = await db.update(trainingProgress)
+        .set({ completed: newCompleted, completedAt: newCompleted ? new Date() : null })
+        .where(eq(trainingProgress.id, existing.id))
+        .returning();
+      return updated;
+    }
+    const [created] = await db.insert(trainingProgress)
+      .values({ userId, itemId, completed: true, completedAt: new Date() })
+      .returning();
+    return created;
   }
 }
 

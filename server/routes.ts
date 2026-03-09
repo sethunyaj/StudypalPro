@@ -2134,6 +2134,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/training/progress", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      if (userId) {
+        const progress = await storage.getTrainingProgressByUser(userId);
+        return res.json(progress);
+      }
+      const progress = await storage.getAllTrainingProgress();
+      res.json(progress);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/training/progress/toggle", async (req, res) => {
+    try {
+      const { userId, itemId } = req.body;
+      if (!userId || !itemId) return res.status(400).json({ error: "userId and itemId required" });
+      const progress = await storage.toggleTrainingProgress(userId, itemId);
+      res.json(progress);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/training/progress/all-teachers", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Admin only" });
+      }
+      const teachers = await storage.getTeachers();
+      const allProgress = await storage.getAllTrainingProgress();
+      const items = await storage.getAllTrainingItems();
+      const postedItems = items.filter(i => i.status === "posted");
+
+      const teacherProgress = teachers.map(teacher => {
+        const teacherCompletions = allProgress.filter(p => p.userId === teacher.id && p.completed);
+        const completedItemIds = new Set(teacherCompletions.map(p => p.itemId));
+        const completedCount = postedItems.filter(i => completedItemIds.has(i.id)).length;
+        return {
+          id: teacher.id,
+          name: teacher.name,
+          username: teacher.username,
+          completedCount,
+          totalItems: postedItems.length,
+          percentage: postedItems.length > 0 ? Math.round((completedCount / postedItems.length) * 100) : 0,
+          completions: teacherCompletions.map(p => ({
+            itemId: p.itemId,
+            completedAt: p.completedAt,
+          })),
+        };
+      });
+
+      res.json(teacherProgress);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

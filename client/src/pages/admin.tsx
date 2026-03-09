@@ -4,10 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, Brain, FileText, LogOut, BarChart3, Settings, Newspaper, GraduationCap } from "lucide-react";
+import { Users, Brain, FileText, LogOut, BarChart3, Settings, Newspaper, GraduationCap, ClipboardCheck } from "lucide-react";
 import StudentManagement from "@/components/admin/student-management";
 import ContentManagement from "@/components/admin/content-management";
 import AdminAnalytics from "@/components/admin/admin-analytics";
+import TeacherProgress from "@/components/admin/teacher-progress";
 import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
 
 export default function AdminDashboard() {
@@ -139,6 +140,10 @@ export default function AdminDashboard() {
                   <BarChart3 className="h-4 w-4" />
                   Analytics
                 </TabsTrigger>
+                <TabsTrigger value="teacher-progress" className="gap-2 data-[state=active]:bg-card" data-testid="tab-teacher-progress">
+                  <ClipboardCheck className="h-4 w-4" />
+                  Teacher Progress
+                </TabsTrigger>
                 <TabsTrigger value="classes" className="gap-2 data-[state=active]:bg-card" data-testid="tab-classes" onClick={() => setLocation("/classes")}>
                   <GraduationCap className="h-4 w-4" />
                   Classes & Training
@@ -164,6 +169,10 @@ export default function AdminDashboard() {
               
               <TabsContent value="analytics" className="mt-0">
                 <AdminAnalytics />
+              </TabsContent>
+
+              <TabsContent value="teacher-progress" className="mt-0">
+                <TeacherProgress adminUserId={user.id} />
               </TabsContent>
             </Tabs>
           </CardContent>

@@ -12,19 +12,31 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 - **Charts**: Chart.js with react-chartjs-2
 
 ## Recent Changes (March 09, 2026)
+- **COMPLETED**: Teacher Progress Tracking
+  - Admin can track which training items each teacher has completed
+  - New "Teacher Progress" tab on admin dashboard with summary stats (Total Teachers, Avg Completion %, Fully Completed count)
+  - Teacher list with progress bars, completion counts, and click-to-view details
+  - Detail dialog shows each posted training item with checkmark/circle for completion status
+  - Teachers see "Mark as Complete" button in training item detail dialogs
+  - Completed items show green checkmark on card grid and green ring border
+  - Toggle completion on/off for each training item
+  - New table: `training_progress` (userId, itemId, completed, completedAt)
+  - New storage method: `getTeachers()` returns all users with role "teacher"
+  - API endpoints: `/api/training/progress` (GET), `/api/training/progress/toggle` (POST), `/api/training/progress/all-teachers` (GET, admin-only)
+  - Component: `client/src/components/admin/teacher-progress.tsx`
+
 - **COMPLETED**: Training Hub (Google Classroom-style)
   - Visible to both teachers and admins on the Classes page
   - Only admins can create, edit, and delete content — teachers view/attend only
+  - Compact card grid layout (3 columns on desktop, 2 on tablet, 1 on mobile)
+  - YouTube video thumbnails on cards, full embed in detail dialog
+  - Click cards to open detail dialog (not inline expansion)
   - Create Modules, Quizzes, and Assignments organized by Topics
   - Collapsible topic sections with item count badges
-  - "No topic" section for ungrouped items
   - Draft/Posted status tracking with visual indicators
-  - Clickable items that expand to show full content
-  - Video embedding: YouTube/Vimeo URLs render as embedded players in expanded view
+  - Video embedding: YouTube/Vimeo URLs render as embedded players
   - File uploads: Upload PDFs, Word docs, PowerPoints, images via Object Storage
   - External links: Link to Google Docs, Slides, or any URL
-  - Type-specific icons (BookOpen for modules, Brain for quizzes, ClipboardList for assignments)
-  - Three-dot menu on each item (admin only) with Edit/Delete options
   - New tables: `training_topics`, `training_items` (with videoUrl, attachmentPath columns)
   - API endpoints: `/api/training/topics`, `/api/training/items` (GET/POST/PATCH/DELETE, admin-only mutations)
   - Component: `client/src/components/training/training-hub.tsx`

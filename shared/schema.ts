@@ -585,3 +585,17 @@ export const insertTrainingItemSchema = createInsertSchema(trainingItems).omit({
 });
 export type InsertTrainingItem = z.infer<typeof insertTrainingItemSchema>;
 export type TrainingItem = typeof trainingItems.$inferSelect;
+
+export const trainingProgress = pgTable("training_progress", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: text("user_id").notNull(),
+  itemId: text("item_id").notNull(),
+  completed: boolean("completed").notNull().default(false),
+  completedAt: timestamp("completed_at"),
+});
+
+export const insertTrainingProgressSchema = createInsertSchema(trainingProgress).omit({
+  id: true,
+});
+export type InsertTrainingProgress = z.infer<typeof insertTrainingProgressSchema>;
+export type TrainingProgress = typeof trainingProgress.$inferSelect;

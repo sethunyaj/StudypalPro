@@ -62,9 +62,11 @@ import {
   ExternalLink,
   X,
   Play,
+  CheckCircle2,
+  Circle,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import type { TrainingTopic, TrainingItem } from "@shared/schema";
+import type { TrainingTopic, TrainingItem, TrainingProgress } from "@shared/schema";
 
 function extractVideoId(url: string): { provider: string; id: string } | null {
   const youtubeRegex =
@@ -157,12 +159,37 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
     position: 0,
   });
 
+  const isTeacher = userRole === "teacher";
+
   const { data: topics = [], isLoading: topicsLoading } = useQuery<TrainingTopic[]>({
     queryKey: ["/api/training/topics"],
   });
 
   const { data: items = [], isLoading: itemsLoading } = useQuery<TrainingItem[]>({
     queryKey: ["/api/training/items"],
+  });
+
+  const { data: myProgress = [] } = useQuery<TrainingProgress[]>({
+    queryKey: ["/api/training/progress", userId],
+    queryFn: async () => {
+      const res = await fetch(`/api/training/progress?userId=${userId}`);
+      if (!res.ok) throw new Error("Failed to load progress");
+      return res.json();
+    },
+    enabled: isTeacher,
+  });
+
+  const completedItemIds = new Set(
+    myProgress.filter(p => p.completed).map(p => p.itemId)
+  );
+
+  const toggleProgressMutation = useMutation({
+    mutationFn: async (itemId: string) => {
+      return await apiRequest("POST", "/api/training/progress/toggle", { userId, itemId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/training/progress", userId] });
+    },
   });
 
   const createTopicMutation = useMutation({
@@ -472,6 +499,9 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
                 setShowDeleteDialog(true);
               }}
               isAdmin={isAdmin}
+              isTeacher={isTeacher}
+              completedItemIds={completedItemIds}
+              onToggleComplete={(itemId) => toggleProgressMutation.mutate(itemId)}
               expandedItem={expandedItem}
               onToggleExpand={(id) => setExpandedItem(expandedItem === id ? null : id)}
             />
@@ -493,6 +523,9 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
                       setShowDeleteDialog(true);
                     }}
                     isAdmin={isAdmin}
+                    isTeacher={isTeacher}
+                    isCompleted={completedItemIds.has(item.id)}
+                    onToggleComplete={() => toggleProgressMutation.mutate(item.id)}
                     isExpanded={expandedItem === item.id}
                     onToggleExpand={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
                   />
@@ -755,6 +788,9 @@ function TopicSection({
   onEditItem,
   onDeleteItem,
   isAdmin,
+  isTeacher,
+  completedItemIds,
+  onToggleComplete,
   expandedItem,
   onToggleExpand,
 }: {
@@ -767,6 +803,9 @@ function TopicSection({
   onEditItem: (item: TrainingItem) => void;
   onDeleteItem: (item: TrainingItem) => void;
   isAdmin: boolean;
+  isTeacher: boolean;
+  completedItemIds: Set<string>;
+  onToggleComplete: (itemId: string) => void;
   expandedItem: string | null;
   onToggleExpand: (id: string) => void;
 }) {
@@ -822,6 +861,9 @@ function TopicSection({
                   onEdit={() => onEditItem(item)}
                   onDelete={() => onDeleteItem(item)}
                   isAdmin={isAdmin}
+                  isTeacher={isTeacher}
+                  isCompleted={completedItemIds.has(item.id)}
+                  onToggleComplete={() => onToggleComplete(item.id)}
                   isExpanded={expandedItem === item.id}
                   onToggleExpand={() => onToggleExpand(item.id)}
                 />
@@ -839,6 +881,9 @@ function TrainingItemRow({
   onEdit,
   onDelete,
   isAdmin,
+  isTeacher,
+  isCompleted,
+  onToggleComplete,
   isExpanded,
   onToggleExpand,
 }: {
@@ -846,6 +891,9 @@ function TrainingItemRow({
   onEdit: () => void;
   onDelete: () => void;
   isAdmin: boolean;
+  isTeacher: boolean;
+  isCompleted: boolean;
+  onToggleComplete: () => void;
   isExpanded: boolean;
   onToggleExpand: () => void;
 }) {
@@ -858,7 +906,7 @@ function TrainingItemRow({
 
   return (
     <>
-      <Card className="border hover-elevate cursor-pointer flex flex-col" data-testid={`card-training-item-${item.id}`} onClick={onToggleExpand}>
+      <Card className={`border hover-elevate cursor-pointer flex flex-col ${isCompleted ? 'ring-1 ring-chart-2/50' : ''}`} data-testid={`card-training-item-${item.id}`} onClick={onToggleExpand}>
         {thumbnailUrl && (
           <div className="relative w-full overflow-hidden rounded-t-md" style={{ aspectRatio: "16/9" }}>
             <img
@@ -878,6 +926,11 @@ function TrainingItemRow({
             >
               {item.status === "posted" ? "Posted" : "Draft"}
             </Badge>
+            {isCompleted && (
+              <div className="absolute top-2 right-2">
+                <CheckCircle2 className="h-5 w-5 text-chart-2 drop-shadow-md" />
+              </div>
+            )}
           </div>
         )}
         <CardContent className={`p-3 flex-1 flex flex-col ${!thumbnailUrl ? 'justify-center' : ''}`}>
@@ -920,6 +973,9 @@ function TrainingItemRow({
               >
                 {item.status === "posted" ? "Posted" : "Draft"}
               </Badge>
+            )}
+            {isCompleted && !thumbnailUrl && (
+              <CheckCircle2 className="h-4 w-4 text-chart-2 shrink-0" />
             )}
             <span className="text-xs text-muted-foreground">{TYPE_LABELS[item.type]}</span>
             {item.videoUrl && !thumbnailUrl && (
@@ -1008,6 +1064,22 @@ function TrainingItemRow({
             )}
             {!item.description && !item.content && !item.videoUrl && !item.attachmentUrl && !item.attachmentPath && (
               <p className="text-sm text-muted-foreground">No additional content available.</p>
+            )}
+            {isTeacher && item.status === "posted" && (
+              <div className="border-t pt-3">
+                <Button
+                  variant={isCompleted ? "secondary" : "default"}
+                  className="w-full gap-2"
+                  onClick={(e) => { e.stopPropagation(); onToggleComplete(); }}
+                  data-testid={`button-toggle-complete-${item.id}`}
+                >
+                  {isCompleted ? (
+                    <><CheckCircle2 className="h-4 w-4" /> Completed</>
+                  ) : (
+                    <><Circle className="h-4 w-4" /> Mark as Complete</>
+                  )}
+                </Button>
+              </div>
             )}
           </div>
         </DialogContent>
