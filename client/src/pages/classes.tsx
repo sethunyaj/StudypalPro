@@ -117,7 +117,7 @@ export default function ClassesPage() {
                 <div>
                   <CardTitle className="text-lg">My Classes</CardTitle>
                   <CardDescription className="text-sm">
-                    {isTeacher ? "Manage your classes and students" : "View your enrolled classes"}
+                    {isTeacherOrAdmin ? "Manage your classes and students" : "View your enrolled classes"}
                   </CardDescription>
                 </div>
               </div>
@@ -125,7 +125,7 @@ export default function ClassesPage() {
               <div className="flex items-center gap-3 flex-wrap">
                 <Badge variant="secondary" className="gap-1">
                   <GraduationCap className="h-3 w-3" />
-                  {isTeacher ? "Teacher" : "Student"}
+                  {isAdmin ? "Admin" : isTeacher ? "Teacher" : "Student"}
                 </Badge>
                 <Button variant="outline" size="sm" onClick={() => setLocation("/dashboard")} data-testid="button-back-dashboard">
                   <ArrowLeft className="h-4 w-4 mr-1" />
@@ -145,7 +145,7 @@ export default function ClassesPage() {
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold">Your Classes</h2>
                   <div className="flex gap-2">
-                    {isTeacher ? (
+                    {isTeacherOrAdmin ? (
                       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
                         <DialogTrigger asChild>
                           <Button size="sm" data-testid="button-create-class">
@@ -223,7 +223,7 @@ export default function ClassesPage() {
                       <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                       <h3 className="text-lg font-semibold mb-2">No Classes Yet</h3>
                       <p className="text-muted-foreground mb-4">
-                        {isTeacher 
+                        {isTeacherOrAdmin 
                           ? "Create your first class to get started" 
                           : "Join a class using the code from your teacher"}
                       </p>
@@ -236,14 +236,14 @@ export default function ClassesPage() {
                         key={cls.id} 
                         classData={cls} 
                         onClick={() => setSelectedClass(cls)}
-                        isTeacher={isTeacher}
+                        isTeacher={isTeacherOrAdmin}
                       />
                     ))}
                   </div>
                 )}
               </div>
 
-              {!isTeacher && (
+              {!isTeacherOrAdmin && (
                 <div className="space-y-6">
                   <Card className="border">
                     <CardHeader className="pb-3">
