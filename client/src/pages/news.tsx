@@ -230,16 +230,7 @@ function CommentSection({
   );
 }
 
-function PostCard({
-  post,
-  user,
-  onEdit,
-}: {
-  post: NewsPostWithMeta;
-  user: any;
-  onEdit: (post: NewsPostWithMeta) => void;
-}) {
-  const [showComments, setShowComments] = useState(false);
+function usePostActions(post: NewsPostWithMeta, user: any) {
   const { toast } = useToast();
 
   const likeMutation = useMutation({
@@ -266,6 +257,177 @@ function PostCard({
     },
   });
 
+  return { likeMutation, deleteMutation, toast };
+}
+
+function VideoPostCard({
+  post,
+  user,
+  onEdit,
+}: {
+  post: NewsPostWithMeta;
+  user: any;
+  onEdit: (post: NewsPostWithMeta) => void;
+}) {
+  const [showComments, setShowComments] = useState(false);
+  const { likeMutation, deleteMutation } = usePostActions(post, user);
+
+  const info = post.videoUrl ? extractVideoId(post.videoUrl) : null;
+  const thumbnailUrl = info?.provider === "youtube"
+    ? `https://img.youtube.com/vi/${info.id}/mqdefault.jpg`
+    : null;
+
+  const embedUrl = info
+    ? info.provider === "youtube"
+      ? `https://www.youtube-nocookie.com/embed/${info.id}`
+      : `https://player.vimeo.com/video/${info.id}`
+    : null;
+
+  const [playing, setPlaying] = useState(false);
+
+  return (
+    <Card className="flex flex-col" data-testid={`card-post-${post.id}`}>
+      {post.videoUrl && (
+        embedUrl ? (
+          <div
+            className="relative w-full cursor-pointer group"
+            style={{ aspectRatio: "16/9" }}
+            onClick={() => setPlaying(true)}
+            data-testid={`video-thumbnail-${post.id}`}
+          >
+            {playing ? (
+              <iframe
+                className="absolute inset-0 w-full h-full rounded-t-md"
+                src={`${embedUrl}?autoplay=1`}
+                title={post.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <>
+                {thumbnailUrl ? (
+                  <img
+                    src={thumbnailUrl}
+                    alt={post.title}
+                    className="absolute inset-0 w-full h-full object-cover rounded-t-md"
+                  />
+                ) : (
+                  <div className="absolute inset-0 w-full h-full bg-muted rounded-t-md flex items-center justify-center">
+                    <Video className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-black/20 rounded-t-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+                    <div className="w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[10px] border-l-black ml-0.5" />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <a
+            href={post.videoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative w-full bg-muted rounded-t-md flex items-center justify-center"
+            style={{ aspectRatio: "16/9" }}
+            data-testid={`video-thumbnail-${post.id}`}
+          >
+            <ExternalLink className="h-6 w-6 text-muted-foreground" />
+          </a>
+        )
+      )}
+      <div className="p-3 flex flex-col flex-1">
+        {(post.status === "scheduled" || post.status === "draft") && (
+          <div className="mb-1.5">
+            {post.status === "scheduled" && post.scheduledAt && new Date(post.scheduledAt) > new Date() && (
+              <Badge variant="outline" className="text-[10px]" data-testid={`badge-scheduled-${post.id}`}>
+                <Clock className="h-2.5 w-2.5 mr-0.5" />
+                Scheduled
+              </Badge>
+            )}
+            {post.status === "draft" && (
+              <Badge variant="outline" className="text-[10px]" data-testid={`badge-draft-${post.id}`}>
+                Draft
+              </Badge>
+            )}
+          </div>
+        )}
+        <div className="flex items-start justify-between gap-1">
+          <h3
+            className="font-medium text-sm line-clamp-2 flex-1"
+            data-testid={`text-post-title-${post.id}`}
+          >
+            {post.title}
+          </h3>
+          {user.role === "admin" && (
+            <div className="flex items-center shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onEdit(post)}
+                data-testid={`button-edit-post-${post.id}`}
+              >
+                <Edit2 className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => deleteMutation.mutate()}
+                data-testid={`button-delete-post-${post.id}`}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground mt-1" data-testid={`text-post-author-${post.id}`}>
+          {post.authorName} &middot; {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+        </p>
+        {post.body && (
+          <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2" data-testid={`text-post-body-${post.id}`}>
+            {post.body}
+          </p>
+        )}
+        <div className="flex items-center gap-3 mt-auto pt-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => likeMutation.mutate()}
+            className={post.isLikedByUser ? "text-red-500" : ""}
+            data-testid={`button-like-${post.id}`}
+          >
+            <Heart className={`h-3.5 w-3.5 mr-1 ${post.isLikedByUser ? "fill-current" : ""}`} />
+            <span className="text-xs" data-testid={`text-like-count-${post.id}`}>{post.likeCount}</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowComments(!showComments)}
+            data-testid={`button-toggle-comments-${post.id}`}
+          >
+            <MessageCircle className="h-3.5 w-3.5 mr-1" />
+            <span className="text-xs" data-testid={`text-comment-count-${post.id}`}>{post.commentCount}</span>
+          </Button>
+        </div>
+        {showComments && <CommentSection postId={post.id} user={user} />}
+      </div>
+    </Card>
+  );
+}
+
+function PostCard({
+  post,
+  user,
+  onEdit,
+}: {
+  post: NewsPostWithMeta;
+  user: any;
+  onEdit: (post: NewsPostWithMeta) => void;
+}) {
+  const [showComments, setShowComments] = useState(false);
+  const { likeMutation, deleteMutation } = usePostActions(post, user);
+
   const isScheduled =
     post.status === "scheduled" &&
     post.scheduledAt &&
@@ -277,15 +439,11 @@ function PostCard({
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2 flex-wrap">
             <Badge
-              variant={post.type === "video" ? "default" : "secondary"}
+              variant="secondary"
               data-testid={`badge-post-type-${post.id}`}
             >
-              {post.type === "video" ? (
-                <Video className="h-3 w-3 mr-1" />
-              ) : (
-                <Newspaper className="h-3 w-3 mr-1" />
-              )}
-              {post.type === "video" ? "Video" : "Newsletter"}
+              <Newspaper className="h-3 w-3 mr-1" />
+              Newsletter
             </Badge>
             {isScheduled && (
               <Badge variant="outline" data-testid={`badge-scheduled-${post.id}`}>
@@ -337,10 +495,6 @@ function PostCard({
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        {post.type === "video" && post.videoUrl && (
-          <VideoEmbed url={post.videoUrl} orientation={post.videoOrientation || "landscape"} />
-        )}
-
         {post.imageUrl && (
           <img
             src={post.imageUrl}
@@ -822,18 +976,57 @@ export default function NewsPage() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {posts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    post={post}
-                    user={user}
-                    onEdit={(p) => {
-                      setEditingPost(p);
-                      setShowCreateDialog(true);
-                    }}
-                  />
-                ))}
+              <div className="space-y-6">
+                {(() => {
+                  const videoPosts = posts.filter((p) => p.type === "video");
+                  const newsletterPosts = posts.filter((p) => p.type !== "video");
+                  const editHandler = (p: NewsPostWithMeta) => {
+                    setEditingPost(p);
+                    setShowCreateDialog(true);
+                  };
+                  return (
+                    <>
+                      {videoPosts.length > 0 && (
+                        <div>
+                          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <Video className="h-4 w-4" />
+                            Videos
+                          </h2>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            {videoPosts.map((post) => (
+                              <VideoPostCard
+                                key={post.id}
+                                post={post}
+                                user={user}
+                                onEdit={editHandler}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {newsletterPosts.length > 0 && (
+                        <div>
+                          {videoPosts.length > 0 && (
+                            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                              <Newspaper className="h-4 w-4" />
+                              Newsletters
+                            </h2>
+                          )}
+                          <div className="space-y-4">
+                            {newsletterPosts.map((post) => (
+                              <PostCard
+                                key={post.id}
+                                post={post}
+                                user={user}
+                                onEdit={editHandler}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             )}
           </CardContent>
