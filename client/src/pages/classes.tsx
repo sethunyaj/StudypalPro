@@ -22,6 +22,7 @@ import {
 import { ObjectUploader } from "@/components/ObjectUploader";
 import { format, formatDistanceToNow, isPast, isToday, isTomorrow } from "date-fns";
 import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
+import { TrainingHub } from "@/components/training/training-hub";
 import type { Class, Todo, Exam, ClassResource, TeacherQuiz, TeacherQuizQuestion, QuestionType } from "@shared/schema";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -296,6 +297,12 @@ export default function ClassesPage() {
                 </div>
               )}
             </div>
+
+            {isTeacher && (
+              <div className="mt-6">
+                <TrainingHub userId={user.id} />
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

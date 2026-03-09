@@ -39,6 +39,8 @@ import {
   insertMindMapSchema,
   insertNewsPostSchema,
   insertNewsCommentSchema,
+  insertTrainingTopicSchema,
+  insertTrainingItemSchema,
   type QuizQuestion,
   type QuizAnswer,
 } from "@shared/schema";
@@ -1988,6 +1990,142 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       await storage.deleteNewsComment(req.params.commentId);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== TRAINING HUB - TOPICS ====================
+
+  app.get("/api/training/topics", async (req, res) => {
+    try {
+      const topics = await storage.getAllTrainingTopics();
+      res.json(topics);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/training/topics", async (req, res) => {
+    try {
+      const userId = req.body.createdBy;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
+        return res.status(403).json({ error: "Only teachers or admins can create topics" });
+      }
+
+      const data = insertTrainingTopicSchema.parse(req.body);
+      const topic = await storage.createTrainingTopic(data);
+      res.status(201).json(topic);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/training/topics/:id", async (req, res) => {
+    try {
+      const userId = req.body.userId || req.query.userId as string;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
+        return res.status(403).json({ error: "Only teachers or admins can update topics" });
+      }
+
+      const { title, position } = req.body;
+      const updates: Record<string, any> = {};
+      if (title !== undefined) updates.title = title;
+      if (position !== undefined) updates.position = position;
+      const topic = await storage.updateTrainingTopic(req.params.id, updates);
+      if (!topic) return res.status(404).json({ error: "Topic not found" });
+      res.json(topic);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/training/topics/:id", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
+        return res.status(403).json({ error: "Only teachers or admins can delete topics" });
+      }
+
+      await storage.deleteTrainingTopic(req.params.id);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== TRAINING HUB - ITEMS ====================
+
+  app.get("/api/training/items", async (req, res) => {
+    try {
+      const items = await storage.getAllTrainingItems();
+      res.json(items);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/training/items", async (req, res) => {
+    try {
+      const userId = req.body.createdBy;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
+        return res.status(403).json({ error: "Only teachers or admins can create items" });
+      }
+
+      const data = insertTrainingItemSchema.parse(req.body);
+      const item = await storage.createTrainingItem(data);
+      res.status(201).json(item);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/training/items/:id", async (req, res) => {
+    try {
+      const userId = req.body.userId || req.query.userId as string;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
+        return res.status(403).json({ error: "Only teachers or admins can update items" });
+      }
+
+      const { title, description, content, topicId, status, attachmentUrl, attachmentName, type } = req.body;
+      const updates: Record<string, any> = {};
+      if (title !== undefined) updates.title = title;
+      if (description !== undefined) updates.description = description;
+      if (content !== undefined) updates.content = content;
+      if (topicId !== undefined) updates.topicId = topicId;
+      if (status !== undefined) updates.status = status;
+      if (attachmentUrl !== undefined) updates.attachmentUrl = attachmentUrl;
+      if (attachmentName !== undefined) updates.attachmentName = attachmentName;
+      if (type !== undefined) updates.type = type;
+      const item = await storage.updateTrainingItem(req.params.id, updates);
+      if (!item) return res.status(404).json({ error: "Item not found" });
+      res.json(item);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/training/items/:id", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
+        return res.status(403).json({ error: "Only teachers or admins can delete items" });
+      }
+
+      await storage.deleteTrainingItem(req.params.id);
       res.json({ success: true });
     } catch (error: any) {
       res.status(500).json({ error: error.message });

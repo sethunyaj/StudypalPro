@@ -543,3 +543,43 @@ export const insertNewsCommentSchema = createInsertSchema(newsComments).omit({
 });
 export type InsertNewsComment = z.infer<typeof insertNewsCommentSchema>;
 export type NewsComment = typeof newsComments.$inferSelect;
+
+// Training Hub - Topics
+export const trainingTopics = pgTable("training_topics", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  position: integer("position").notNull().default(0),
+  createdBy: text("created_by").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertTrainingTopicSchema = createInsertSchema(trainingTopics).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertTrainingTopic = z.infer<typeof insertTrainingTopicSchema>;
+export type TrainingTopic = typeof trainingTopics.$inferSelect;
+
+// Training Hub - Items
+export const trainingItems = pgTable("training_items", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  topicId: text("topic_id"),
+  type: text("type").notNull(), // "module", "quiz", "assignment"
+  title: text("title").notNull(),
+  description: text("description"),
+  content: text("content"),
+  attachmentUrl: text("attachment_url"),
+  attachmentName: text("attachment_name"),
+  status: text("status").notNull().default("draft"), // "draft", "posted"
+  createdBy: text("created_by").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertTrainingItemSchema = createInsertSchema(trainingItems).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type InsertTrainingItem = z.infer<typeof insertTrainingItemSchema>;
+export type TrainingItem = typeof trainingItems.$inferSelect;

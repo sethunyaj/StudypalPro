@@ -72,6 +72,12 @@ import {
   type InsertNewsLike,
   type NewsComment,
   type InsertNewsComment,
+  trainingTopics,
+  trainingItems,
+  type TrainingTopic,
+  type InsertTrainingTopic,
+  type TrainingItem,
+  type InsertTrainingItem,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -218,6 +224,19 @@ export interface IStorage {
   createNewsComment(comment: InsertNewsComment): Promise<NewsComment>;
   deleteNewsComment(id: string): Promise<void>;
   getPostCommentCount(postId: string): Promise<number>;
+
+  // TRAINING HUB - TOPICS
+  getAllTrainingTopics(): Promise<TrainingTopic[]>;
+  createTrainingTopic(topic: InsertTrainingTopic): Promise<TrainingTopic>;
+  updateTrainingTopic(id: string, updates: Partial<TrainingTopic>): Promise<TrainingTopic | undefined>;
+  deleteTrainingTopic(id: string): Promise<void>;
+
+  // TRAINING HUB - ITEMS
+  getAllTrainingItems(): Promise<TrainingItem[]>;
+  getTrainingItemsByTopic(topicId: string | null): Promise<TrainingItem[]>;
+  createTrainingItem(item: InsertTrainingItem): Promise<TrainingItem>;
+  updateTrainingItem(id: string, updates: Partial<TrainingItem>): Promise<TrainingItem | undefined>;
+  deleteTrainingItem(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -843,6 +862,52 @@ export class DatabaseStorage implements IStorage {
       .from(newsComments)
       .where(eq(newsComments.postId, postId));
     return result[0]?.count ?? 0;
+  }
+
+  // ==================== TRAINING HUB - TOPICS ====================
+  async getAllTrainingTopics(): Promise<TrainingTopic[]> {
+    return await db.select().from(trainingTopics).orderBy(trainingTopics.position);
+  }
+
+  async createTrainingTopic(topic: InsertTrainingTopic): Promise<TrainingTopic> {
+    const [newTopic] = await db.insert(trainingTopics).values(topic).returning();
+    return newTopic;
+  }
+
+  async updateTrainingTopic(id: string, updates: Partial<TrainingTopic>): Promise<TrainingTopic | undefined> {
+    const [topic] = await db.update(trainingTopics).set(updates).where(eq(trainingTopics.id, id)).returning();
+    return topic;
+  }
+
+  async deleteTrainingTopic(id: string): Promise<void> {
+    await db.update(trainingItems).set({ topicId: null }).where(eq(trainingItems.topicId, id));
+    await db.delete(trainingTopics).where(eq(trainingTopics.id, id));
+  }
+
+  // ==================== TRAINING HUB - ITEMS ====================
+  async getAllTrainingItems(): Promise<TrainingItem[]> {
+    return await db.select().from(trainingItems).orderBy(desc(trainingItems.createdAt));
+  }
+
+  async getTrainingItemsByTopic(topicId: string | null): Promise<TrainingItem[]> {
+    if (topicId === null) {
+      return await db.select().from(trainingItems).where(sql`${trainingItems.topicId} IS NULL`).orderBy(desc(trainingItems.createdAt));
+    }
+    return await db.select().from(trainingItems).where(eq(trainingItems.topicId, topicId)).orderBy(desc(trainingItems.createdAt));
+  }
+
+  async createTrainingItem(item: InsertTrainingItem): Promise<TrainingItem> {
+    const [newItem] = await db.insert(trainingItems).values(item).returning();
+    return newItem;
+  }
+
+  async updateTrainingItem(id: string, updates: Partial<TrainingItem>): Promise<TrainingItem | undefined> {
+    const [item] = await db.update(trainingItems).set({ ...updates, updatedAt: new Date() }).where(eq(trainingItems.id, id)).returning();
+    return item;
+  }
+
+  async deleteTrainingItem(id: string): Promise<void> {
+    await db.delete(trainingItems).where(eq(trainingItems.id, id));
   }
 }
 

@@ -11,7 +11,21 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 - **UI Components**: Shadcn/ui with custom Hibiscus theme
 - **Charts**: Chart.js with react-chartjs-2
 
-## Recent Changes (March 06, 2026)
+## Recent Changes (March 09, 2026)
+- **COMPLETED**: Training Hub (Google Classroom-style)
+  - Teachers-only section on the Classes page for organizing training content
+  - Create Modules, Quizzes, and Assignments organized by Topics
+  - Collapsible topic sections with item count badges
+  - "No topic" section for ungrouped items
+  - Draft/Posted status tracking with visual indicators
+  - Full CRUD: create, edit, delete topics and items
+  - Type-specific icons (BookOpen for modules, Brain for quizzes, ClipboardList for assignments)
+  - Three-dot menu on each item with Edit/Delete options
+  - New tables: `training_topics`, `training_items`
+  - API endpoints: `/api/training/topics`, `/api/training/items` (GET/POST/PATCH/DELETE)
+  - Component: `client/src/components/training/training-hub.tsx`
+
+## Previous Changes (March 06, 2026)
 - **COMPLETED**: Video Orientation Support
   - Video embeds now support landscape (16:9), portrait (9:16), and square (1:1) orientations
   - Orientation selector in video post create/edit dialog with live preview
