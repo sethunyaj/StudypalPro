@@ -2012,8 +2012,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.body.createdBy;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
       const user = await storage.getUser(userId);
-      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
-        return res.status(403).json({ error: "Only teachers or admins can create topics" });
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Only admins can create topics" });
       }
 
       const data = insertTrainingTopicSchema.parse(req.body);
@@ -2029,8 +2029,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.body.userId || req.query.userId as string;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
       const user = await storage.getUser(userId);
-      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
-        return res.status(403).json({ error: "Only teachers or admins can update topics" });
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Only admins can update topics" });
       }
 
       const { title, position } = req.body;
@@ -2050,8 +2050,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.query.userId as string;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
       const user = await storage.getUser(userId);
-      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
-        return res.status(403).json({ error: "Only teachers or admins can delete topics" });
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Only admins can delete topics" });
       }
 
       await storage.deleteTrainingTopic(req.params.id);
@@ -2077,8 +2077,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.body.createdBy;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
       const user = await storage.getUser(userId);
-      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
-        return res.status(403).json({ error: "Only teachers or admins can create items" });
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Only admins can create items" });
       }
 
       const data = insertTrainingItemSchema.parse(req.body);
@@ -2094,8 +2094,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.body.userId || req.query.userId as string;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
       const user = await storage.getUser(userId);
-      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
-        return res.status(403).json({ error: "Only teachers or admins can update items" });
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Only admins can update items" });
       }
 
       const { title, description, content, topicId, status, attachmentUrl, attachmentName, type } = req.body;
@@ -2121,8 +2121,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.query.userId as string;
       if (!userId) return res.status(401).json({ error: "Unauthorized" });
       const user = await storage.getUser(userId);
-      if (!user || (user.role !== "teacher" && user.role !== "admin")) {
-        return res.status(403).json({ error: "Only teachers or admins can delete items" });
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Only admins can delete items" });
       }
 
       await storage.deleteTrainingItem(req.params.id);

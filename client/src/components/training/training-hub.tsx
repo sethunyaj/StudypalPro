@@ -61,6 +61,7 @@ import type { TrainingTopic, TrainingItem } from "@shared/schema";
 
 interface TrainingHubProps {
   userId: string;
+  userRole: string;
 }
 
 const TYPE_ICONS: Record<string, typeof BookOpen> = {
@@ -81,9 +82,11 @@ const TYPE_LABELS: Record<string, string> = {
   assignment: "Assignment",
 };
 
-export function TrainingHub({ userId }: TrainingHubProps) {
+export function TrainingHub({ userId, userRole }: TrainingHubProps) {
   const { toast } = useToast();
+  const isAdmin = userRole === "admin";
   const [collapsedTopics, setCollapsedTopics] = useState<Set<string>>(new Set());
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [showCreateMenu, setShowCreateMenu] = useState(false);
   const [showItemDialog, setShowItemDialog] = useState(false);
   const [showTopicDialog, setShowTopicDialog] = useState(false);
@@ -354,33 +357,35 @@ export function TrainingHub({ userId }: TrainingHubProps) {
           <h2 className="text-xl font-semibold" data-testid="text-training-hub-title">Training Hub</h2>
         </div>
 
-        <DropdownMenu open={showCreateMenu} onOpenChange={setShowCreateMenu}>
-          <DropdownMenuTrigger asChild>
-            <Button data-testid="button-create-training">
-              <Plus className="h-4 w-4 mr-1" />
-              Create
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => openCreateItem("module")} data-testid="menu-create-module">
-              <BookOpen className="h-4 w-4 mr-2 text-chart-2" />
-              Module
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => openCreateItem("quiz")} data-testid="menu-create-quiz">
-              <Brain className="h-4 w-4 mr-2 text-chart-3" />
-              Quiz
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => openCreateItem("assignment")} data-testid="menu-create-assignment">
-              <ClipboardList className="h-4 w-4 mr-2 text-primary" />
-              Assignment
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={openCreateTopic} data-testid="menu-create-topic">
-              <FolderOpen className="h-4 w-4 mr-2" />
-              Topic
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {isAdmin && (
+          <DropdownMenu open={showCreateMenu} onOpenChange={setShowCreateMenu}>
+            <DropdownMenuTrigger asChild>
+              <Button data-testid="button-create-training">
+                <Plus className="h-4 w-4 mr-1" />
+                Create
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => openCreateItem("module")} data-testid="menu-create-module">
+                <BookOpen className="h-4 w-4 mr-2 text-chart-2" />
+                Module
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => openCreateItem("quiz")} data-testid="menu-create-quiz">
+                <Brain className="h-4 w-4 mr-2 text-chart-3" />
+                Quiz
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => openCreateItem("assignment")} data-testid="menu-create-assignment">
+                <ClipboardList className="h-4 w-4 mr-2 text-primary" />
+                Assignment
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={openCreateTopic} data-testid="menu-create-topic">
+                <FolderOpen className="h-4 w-4 mr-2" />
+                Topic
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       {items.length === 0 && topics.length === 0 ? (
@@ -389,7 +394,9 @@ export function TrainingHub({ userId }: TrainingHubProps) {
             <GraduationCap className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No Training Content Yet</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Create modules, quizzes, and assignments to build your training hub.
+              {isAdmin
+                ? "Create modules, quizzes, and assignments to build your training hub."
+                : "No training content has been posted yet. Check back soon."}
             </p>
           </CardContent>
         </Card>
@@ -412,6 +419,9 @@ export function TrainingHub({ userId }: TrainingHubProps) {
                 setDeleteTarget({ type: "item", id: item.id, title: item.title });
                 setShowDeleteDialog(true);
               }}
+              isAdmin={isAdmin}
+              expandedItem={expandedItem}
+              onToggleExpand={(id) => setExpandedItem(expandedItem === id ? null : id)}
             />
           ))}
 
@@ -429,6 +439,9 @@ export function TrainingHub({ userId }: TrainingHubProps) {
                     setDeleteTarget({ type: "item", id: item.id, title: item.title });
                     setShowDeleteDialog(true);
                   }}
+                  isAdmin={isAdmin}
+                  isExpanded={expandedItem === item.id}
+                  onToggleExpand={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
                 />
               ))}
             </div>
@@ -643,6 +656,9 @@ function TopicSection({
   onDeleteTopic,
   onEditItem,
   onDeleteItem,
+  isAdmin,
+  expandedItem,
+  onToggleExpand,
 }: {
   topic: TrainingTopic;
   items: TrainingItem[];
@@ -652,6 +668,9 @@ function TopicSection({
   onDeleteTopic: () => void;
   onEditItem: (item: TrainingItem) => void;
   onDeleteItem: (item: TrainingItem) => void;
+  isAdmin: boolean;
+  expandedItem: string | null;
+  onToggleExpand: (id: string) => void;
 }) {
   return (
     <div className="space-y-1">
@@ -671,23 +690,25 @@ function TopicSection({
           <Badge variant="secondary" className="ml-1">{items.length}</Badge>
         </button>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button size="icon" variant="ghost" className="opacity-0 group-hover:opacity-100 transition-opacity" style={{ visibility: "visible" }} data-testid={`button-topic-menu-${topic.id}`}>
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onEditTopic} data-testid={`menu-edit-topic-${topic.id}`}>
-              <Edit2 className="h-4 w-4 mr-2" />
-              Edit Topic
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onDeleteTopic} className="text-destructive" data-testid={`menu-delete-topic-${topic.id}`}>
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete Topic
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {isAdmin && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" variant="ghost" className="opacity-0 group-hover:opacity-100 transition-opacity" style={{ visibility: "visible" }} data-testid={`button-topic-menu-${topic.id}`}>
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={onEditTopic} data-testid={`menu-edit-topic-${topic.id}`}>
+                <Edit2 className="h-4 w-4 mr-2" />
+                Edit Topic
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onDeleteTopic} className="text-destructive" data-testid={`menu-delete-topic-${topic.id}`}>
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Topic
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       {!collapsed && (
@@ -701,6 +722,9 @@ function TopicSection({
                 item={item}
                 onEdit={() => onEditItem(item)}
                 onDelete={() => onDeleteItem(item)}
+                isAdmin={isAdmin}
+                isExpanded={expandedItem === item.id}
+                onToggleExpand={() => onToggleExpand(item.id)}
               />
             ))
           )}
@@ -714,65 +738,118 @@ function TrainingItemRow({
   item,
   onEdit,
   onDelete,
+  isAdmin,
+  isExpanded,
+  onToggleExpand,
 }: {
   item: TrainingItem;
   onEdit: () => void;
   onDelete: () => void;
+  isAdmin: boolean;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
 }) {
   const Icon = TYPE_ICONS[item.type] || BookOpen;
   const iconColor = TYPE_COLORS[item.type] || "text-muted-foreground";
 
   return (
-    <Card className="border hover-elevate" data-testid={`card-training-item-${item.id}`}>
-      <CardContent className="p-3 flex items-center gap-3">
-        <div className={`shrink-0 ${iconColor}`}>
-          <Icon className="h-5 w-5" />
-        </div>
+    <Card className="border hover-elevate cursor-pointer" data-testid={`card-training-item-${item.id}`} onClick={onToggleExpand}>
+      <CardContent className="p-3">
+        <div className="flex items-center gap-3">
+          <div className={`shrink-0 ${iconColor}`}>
+            <Icon className="h-5 w-5" />
+          </div>
 
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-medium text-sm truncate">{item.title}</span>
-            <Badge
-              variant={item.status === "posted" ? "default" : "secondary"}
-              className="text-xs"
-              data-testid={`badge-status-${item.id}`}
-            >
-              {item.status === "posted" ? (
-                <><Eye className="h-3 w-3 mr-1" /> Posted</>
-              ) : (
-                <><EyeOff className="h-3 w-3 mr-1" /> Draft</>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-medium text-sm truncate">{item.title}</span>
+              <Badge
+                variant={item.status === "posted" ? "default" : "secondary"}
+                className="text-xs"
+                data-testid={`badge-status-${item.id}`}
+              >
+                {item.status === "posted" ? (
+                  <><Eye className="h-3 w-3 mr-1" /> Posted</>
+                ) : (
+                  <><EyeOff className="h-3 w-3 mr-1" /> Draft</>
+                )}
+              </Badge>
+              {item.attachmentUrl && (
+                <Paperclip className="h-3 w-3 text-muted-foreground shrink-0" />
               )}
-            </Badge>
-            {item.attachmentUrl && (
-              <Paperclip className="h-3 w-3 text-muted-foreground shrink-0" />
+            </div>
+            {!isExpanded && item.description && (
+              <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{item.description}</p>
+            )}
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {TYPE_LABELS[item.type]}
+              {item.updatedAt && ` · Edited ${formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true })}`}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1 shrink-0">
+            {isExpanded ? (
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            )}
+            {isAdmin && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="icon" variant="ghost" onClick={(e) => e.stopPropagation()} data-testid={`button-item-menu-${item.id}`}>
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(); }} data-testid={`menu-edit-item-${item.id}`}>
+                    <Edit2 className="h-4 w-4 mr-2" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(); }} className="text-destructive" data-testid={`menu-delete-item-${item.id}`}>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
-          {item.description && (
-            <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{item.description}</p>
-          )}
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {TYPE_LABELS[item.type]}
-            {item.updatedAt && ` · Edited ${formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true })}`}
-          </p>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button size="icon" variant="ghost" data-testid={`button-item-menu-${item.id}`}>
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onEdit} data-testid={`menu-edit-item-${item.id}`}>
-              <Edit2 className="h-4 w-4 mr-2" />
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onDelete} className="text-destructive" data-testid={`menu-delete-item-${item.id}`}>
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {isExpanded && (
+          <div className="mt-3 ml-8 space-y-2 border-t pt-3" data-testid={`expanded-content-${item.id}`}>
+            {item.description && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Description</p>
+                <p className="text-sm">{item.description}</p>
+              </div>
+            )}
+            {item.content && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Content</p>
+                <p className="text-sm whitespace-pre-wrap">{item.content}</p>
+              </div>
+            )}
+            {item.attachmentUrl && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Attachment</p>
+                <a
+                  href={item.attachmentUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-primary underline flex items-center gap-1"
+                  onClick={(e) => e.stopPropagation()}
+                  data-testid={`link-attachment-${item.id}`}
+                >
+                  <Paperclip className="h-3 w-3" />
+                  {item.attachmentName || "View Attachment"}
+                </a>
+              </div>
+            )}
+            {!item.description && !item.content && !item.attachmentUrl && (
+              <p className="text-sm text-muted-foreground">No additional content available.</p>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

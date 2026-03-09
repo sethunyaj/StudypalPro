@@ -90,6 +90,8 @@ export default function ClassesPage() {
   if (!user) return null;
 
   const isTeacher = user.role === "teacher";
+  const isAdmin = user.role === "admin";
+  const isTeacherOrAdmin = isTeacher || isAdmin;
   const upcomingExams = allExams.filter(e => new Date(e.date) >= new Date()).slice(0, 5);
   const dueSoonTodos = allTodos.filter(t => t.dueDate && new Date(t.dueDate) >= new Date()).slice(0, 5);
 
@@ -298,9 +300,9 @@ export default function ClassesPage() {
               )}
             </div>
 
-            {isTeacher && (
+            {isTeacherOrAdmin && (
               <div className="mt-6">
-                <TrainingHub userId={user.id} />
+                <TrainingHub userId={user.id} userRole={user.role} />
               </div>
             )}
           </CardContent>
