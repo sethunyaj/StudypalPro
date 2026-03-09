@@ -979,7 +979,7 @@ function TrainingItemRow({
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">Attached File</p>
                 <a
-                  href={`/api/files/${item.attachmentPath}`}
+                  href={item.attachmentPath}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-primary flex items-center gap-2 p-2 border rounded-md hover-elevate"
