@@ -57,16 +57,19 @@ Return ONLY a valid JSON array with this exact structure:
 
   try {
     console.log("Calling OpenAI for quiz generation...");
+    const startTime = Date.now();
     const completion = await openai.chat.completions.create({
-      model: "gpt-5",
+      model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "You are an expert educator who creates challenging, context-aware quiz questions. Always respond with valid JSON only." },
+        { role: "system", content: "You are an expert educator who creates challenging, context-aware quiz questions. Always respond with valid JSON only. Do not wrap JSON in markdown code fences." },
         { role: "user", content: prompt }
       ],
       max_completion_tokens: 4096,
+      temperature: 0.7,
     });
 
-    console.log("OpenAI response received:", {
+    const elapsed = Date.now() - startTime;
+    console.log(`OpenAI response received in ${elapsed}ms:`, {
       hasChoices: !!completion.choices,
       choicesLength: completion.choices?.length,
       hasContent: !!completion.choices?.[0]?.message?.content
@@ -79,11 +82,10 @@ Return ONLY a valid JSON array with this exact structure:
     }
 
     console.log("Parsing OpenAI JSON response...");
-    // Parse the JSON response
-    const questions = JSON.parse(content) as QuizQuestion[];
+    const cleanedContent = content.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?\s*```$/i, '').trim();
+    const questions = JSON.parse(cleanedContent) as QuizQuestion[];
     console.log("Successfully generated", questions.length, "questions");
     
-    // Add unique IDs to each question
     return questions.map((q, idx) => ({
       ...q,
       id: `q_${Date.now()}_${idx}`,
