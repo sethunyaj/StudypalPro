@@ -127,7 +127,7 @@ export default function ClassesPage() {
                   <GraduationCap className="h-3 w-3" />
                   {isAdmin ? "Admin" : isTeacher ? "Teacher" : "Student"}
                 </Badge>
-                <Button variant="outline" size="sm" onClick={() => setLocation("/dashboard")} data-testid="button-back-dashboard">
+                <Button variant="outline" size="sm" onClick={() => setLocation(isAdmin ? "/admin" : "/dashboard")} data-testid="button-back-dashboard">
                   <ArrowLeft className="h-4 w-4 mr-1" />
                   Dashboard
                 </Button>
