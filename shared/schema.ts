@@ -568,8 +568,10 @@ export const trainingItems = pgTable("training_items", {
   title: text("title").notNull(),
   description: text("description"),
   content: text("content"),
+  videoUrl: text("video_url"),
   attachmentUrl: text("attachment_url"),
   attachmentName: text("attachment_name"),
+  attachmentPath: text("attachment_path"),
   status: text("status").notNull().default("draft"), // "draft", "posted"
   createdBy: text("created_by").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),

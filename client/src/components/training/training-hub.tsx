@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
+import { ObjectUploader } from "@/components/ObjectUploader";
 import {
   Plus,
   BookOpen,
@@ -55,9 +56,51 @@ import {
   FolderOpen,
   Paperclip,
   GraduationCap,
+  Video,
+  FileText,
+  Download,
+  ExternalLink,
+  X,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import type { TrainingTopic, TrainingItem } from "@shared/schema";
+
+function extractVideoId(url: string): { provider: string; id: string } | null {
+  const youtubeRegex =
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const vimeoRegex = /(?:vimeo\.com\/)(\d+)/;
+  const ytMatch = url.match(youtubeRegex);
+  if (ytMatch) return { provider: "youtube", id: ytMatch[1] };
+  const vimeoMatch = url.match(vimeoRegex);
+  if (vimeoMatch) return { provider: "vimeo", id: vimeoMatch[1] };
+  return null;
+}
+
+function TrainingVideoEmbed({ url }: { url: string }) {
+  const info = extractVideoId(url);
+  if (!info) {
+    return (
+      <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline flex items-center gap-1 text-sm" data-testid="link-video-external">
+        <ExternalLink className="h-4 w-4" />
+        Watch Video
+      </a>
+    );
+  }
+  const embedUrl = info.provider === "youtube"
+    ? `https://www.youtube-nocookie.com/embed/${info.id}`
+    : `https://player.vimeo.com/video/${info.id}`;
+  return (
+    <div className="relative w-full" style={{ aspectRatio: "16/9" }} data-testid="training-video-embed">
+      <iframe
+        src={embedUrl}
+        className="absolute inset-0 w-full h-full rounded-md"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        title="Training video"
+      />
+    </div>
+  );
+}
 
 interface TrainingHubProps {
   userId: string;
@@ -102,8 +145,10 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
     content: "",
     topicId: "__none__",
     status: "draft",
+    videoUrl: "",
     attachmentUrl: "",
     attachmentName: "",
+    attachmentPath: "",
   });
 
   const [topicForm, setTopicForm] = useState({
@@ -231,8 +276,10 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
       content: "",
       topicId: "__none__",
       status: "draft",
+      videoUrl: "",
       attachmentUrl: "",
       attachmentName: "",
+      attachmentPath: "",
     });
     setNewItemType("module");
   }
@@ -265,8 +312,10 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
       content: item.content || "",
       topicId: item.topicId || "__none__",
       status: item.status,
+      videoUrl: item.videoUrl || "",
       attachmentUrl: item.attachmentUrl || "",
       attachmentName: item.attachmentName || "",
+      attachmentPath: item.attachmentPath || "",
     });
     setShowItemDialog(true);
   }
@@ -285,8 +334,10 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
       content: itemForm.content || null,
       topicId: itemForm.topicId === "__none__" ? null : itemForm.topicId,
       status: itemForm.status,
+      videoUrl: itemForm.videoUrl || null,
       attachmentUrl: itemForm.attachmentUrl || null,
       attachmentName: itemForm.attachmentName || null,
+      attachmentPath: itemForm.attachmentPath || null,
     };
 
     if (editingItem) {
@@ -533,24 +584,68 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="item-attachment-url">Attachment URL</Label>
-              <Input
-                id="item-attachment-url"
-                placeholder="https://..."
-                value={itemForm.attachmentUrl}
-                onChange={(e) => setItemForm({ ...itemForm, attachmentUrl: e.target.value })}
-                data-testid="input-item-attachment-url"
-              />
+              <Label htmlFor="item-video-url">Video URL (YouTube or Vimeo)</Label>
+              <div className="flex items-center gap-2">
+                <Video className="h-4 w-4 text-muted-foreground shrink-0" />
+                <Input
+                  id="item-video-url"
+                  placeholder="https://youtube.com/watch?v=... or https://vimeo.com/..."
+                  value={itemForm.videoUrl}
+                  onChange={(e) => setItemForm({ ...itemForm, videoUrl: e.target.value })}
+                  data-testid="input-item-video-url"
+                />
+              </div>
+              {itemForm.videoUrl && extractVideoId(itemForm.videoUrl) && (
+                <p className="text-xs text-chart-2">Video will be embedded when viewed</p>
+              )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="item-attachment-name">Attachment Name</Label>
+              <Label>File Attachment (PDF, Docs, Images)</Label>
+              {itemForm.attachmentPath ? (
+                <div className="flex items-center gap-2 p-2 border rounded-md bg-muted/30">
+                  <FileText className="h-4 w-4 text-primary shrink-0" />
+                  <span className="text-sm flex-1 truncate">{itemForm.attachmentName || "Uploaded file"}</span>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => setItemForm({ ...itemForm, attachmentPath: "", attachmentName: "", attachmentUrl: "" })}
+                    data-testid="button-remove-attachment"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <ObjectUploader
+                  allowedFileTypes={[".pdf", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".png", ".jpg", ".jpeg", ".gif", ".webp"]}
+                  onUploadComplete={(file) => {
+                    setItemForm({
+                      ...itemForm,
+                      attachmentPath: file.path,
+                      attachmentName: file.name,
+                      attachmentUrl: `/api/files/${file.path}`,
+                    });
+                  }}
+                  buttonVariant="outline"
+                  buttonSize="sm"
+                >
+                  <Paperclip className="h-4 w-4 mr-1" />
+                  Upload File
+                </ObjectUploader>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="item-link-url">External Link (optional)</Label>
               <Input
-                id="item-attachment-name"
-                placeholder="Document.pdf"
-                value={itemForm.attachmentName}
-                onChange={(e) => setItemForm({ ...itemForm, attachmentName: e.target.value })}
-                data-testid="input-item-attachment-name"
+                id="item-link-url"
+                placeholder="https://docs.google.com/..."
+                value={!itemForm.attachmentPath ? itemForm.attachmentUrl : ""}
+                onChange={(e) => setItemForm({ ...itemForm, attachmentUrl: e.target.value, attachmentName: "" })}
+                disabled={!!itemForm.attachmentPath}
+                data-testid="input-item-link-url"
               />
+              {!itemForm.attachmentPath && (
+                <p className="text-xs text-muted-foreground">Add a link to external resources (Google Docs, Slides, etc.)</p>
+              )}
             </div>
           </div>
           <DialogFooter>
@@ -774,7 +869,10 @@ function TrainingItemRow({
                   <><EyeOff className="h-3 w-3 mr-1" /> Draft</>
                 )}
               </Badge>
-              {item.attachmentUrl && (
+              {item.videoUrl && (
+                <Video className="h-3 w-3 text-muted-foreground shrink-0" />
+              )}
+              {(item.attachmentPath || item.attachmentUrl) && (
                 <Paperclip className="h-3 w-3 text-muted-foreground shrink-0" />
               )}
             </div>
@@ -816,7 +914,7 @@ function TrainingItemRow({
         </div>
 
         {isExpanded && (
-          <div className="mt-3 ml-8 space-y-2 border-t pt-3" data-testid={`expanded-content-${item.id}`}>
+          <div className="mt-3 ml-8 space-y-3 border-t pt-3" data-testid={`expanded-content-${item.id}`}>
             {item.description && (
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">Description</p>
@@ -829,9 +927,32 @@ function TrainingItemRow({
                 <p className="text-sm whitespace-pre-wrap">{item.content}</p>
               </div>
             )}
-            {item.attachmentUrl && (
+            {item.videoUrl && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Video</p>
+                <TrainingVideoEmbed url={item.videoUrl} />
+              </div>
+            )}
+            {item.attachmentPath && (
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Attachment</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Attached File</p>
+                <a
+                  href={`/api/files/${item.attachmentPath}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-primary flex items-center gap-2 p-2 border rounded-md hover-elevate"
+                  onClick={(e) => e.stopPropagation()}
+                  data-testid={`link-file-${item.id}`}
+                >
+                  <FileText className="h-4 w-4 shrink-0" />
+                  <span className="flex-1 truncate">{item.attachmentName || "Download File"}</span>
+                  <Download className="h-4 w-4 shrink-0 text-muted-foreground" />
+                </a>
+              </div>
+            )}
+            {item.attachmentUrl && !item.attachmentPath && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">External Link</p>
                 <a
                   href={item.attachmentUrl}
                   target="_blank"
@@ -840,12 +961,12 @@ function TrainingItemRow({
                   onClick={(e) => e.stopPropagation()}
                   data-testid={`link-attachment-${item.id}`}
                 >
-                  <Paperclip className="h-3 w-3" />
-                  {item.attachmentName || "View Attachment"}
+                  <ExternalLink className="h-3 w-3" />
+                  {item.attachmentName || "Open Link"}
                 </a>
               </div>
             )}
-            {!item.description && !item.content && !item.attachmentUrl && (
+            {!item.description && !item.content && !item.videoUrl && !item.attachmentUrl && !item.attachmentPath && (
               <p className="text-sm text-muted-foreground">No additional content available.</p>
             )}
           </div>

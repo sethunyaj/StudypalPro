@@ -2098,15 +2098,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ error: "Only admins can update items" });
       }
 
-      const { title, description, content, topicId, status, attachmentUrl, attachmentName, type } = req.body;
+      const { title, description, content, topicId, status, attachmentUrl, attachmentName, attachmentPath, videoUrl, type } = req.body;
       const updates: Record<string, any> = {};
       if (title !== undefined) updates.title = title;
       if (description !== undefined) updates.description = description;
       if (content !== undefined) updates.content = content;
       if (topicId !== undefined) updates.topicId = topicId;
       if (status !== undefined) updates.status = status;
+      if (videoUrl !== undefined) updates.videoUrl = videoUrl;
       if (attachmentUrl !== undefined) updates.attachmentUrl = attachmentUrl;
       if (attachmentName !== undefined) updates.attachmentName = attachmentName;
+      if (attachmentPath !== undefined) updates.attachmentPath = attachmentPath;
       if (type !== undefined) updates.type = type;
       const item = await storage.updateTrainingItem(req.params.id, updates);
       if (!item) return res.status(404).json({ error: "Item not found" });

@@ -13,16 +13,20 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 
 ## Recent Changes (March 09, 2026)
 - **COMPLETED**: Training Hub (Google Classroom-style)
-  - Teachers-only section on the Classes page for organizing training content
+  - Visible to both teachers and admins on the Classes page
+  - Only admins can create, edit, and delete content — teachers view/attend only
   - Create Modules, Quizzes, and Assignments organized by Topics
   - Collapsible topic sections with item count badges
   - "No topic" section for ungrouped items
   - Draft/Posted status tracking with visual indicators
-  - Full CRUD: create, edit, delete topics and items
+  - Clickable items that expand to show full content
+  - Video embedding: YouTube/Vimeo URLs render as embedded players in expanded view
+  - File uploads: Upload PDFs, Word docs, PowerPoints, images via Object Storage
+  - External links: Link to Google Docs, Slides, or any URL
   - Type-specific icons (BookOpen for modules, Brain for quizzes, ClipboardList for assignments)
-  - Three-dot menu on each item with Edit/Delete options
-  - New tables: `training_topics`, `training_items`
-  - API endpoints: `/api/training/topics`, `/api/training/items` (GET/POST/PATCH/DELETE)
+  - Three-dot menu on each item (admin only) with Edit/Delete options
+  - New tables: `training_topics`, `training_items` (with videoUrl, attachmentPath columns)
+  - API endpoints: `/api/training/topics`, `/api/training/items` (GET/POST/PATCH/DELETE, admin-only mutations)
   - Component: `client/src/components/training/training-hub.tsx`
 
 ## Previous Changes (March 06, 2026)
