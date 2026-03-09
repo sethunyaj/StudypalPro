@@ -30,9 +30,10 @@ ChartJS.register(
 
 interface DashboardOverviewProps {
   user: any;
+  onTabChange?: (tab: string) => void;
 }
 
-export default function DashboardOverview({ user }: DashboardOverviewProps) {
+export default function DashboardOverview({ user, onTabChange }: DashboardOverviewProps) {
   const { data: stats } = useQuery({
     queryKey: ['/api/stats', user.id],
   });
@@ -245,6 +246,7 @@ export default function DashboardOverview({ user }: DashboardOverviewProps) {
             <button
               className="flex flex-col items-center gap-2 p-4 rounded-lg hover-elevate active-elevate-2 bg-card border transition-all"
               data-testid="button-quick-quiz"
+              onClick={() => onTabChange?.("quiz")}
             >
               <Brain className="h-8 w-8 text-chart-1" />
               <span className="text-sm font-medium">Start Quiz</span>
@@ -252,6 +254,7 @@ export default function DashboardOverview({ user }: DashboardOverviewProps) {
             <button
               className="flex flex-col items-center gap-2 p-4 rounded-lg hover-elevate active-elevate-2 bg-card border transition-all"
               data-testid="button-quick-flashcards"
+              onClick={() => onTabChange?.("flashcards")}
             >
               <BookOpen className="h-8 w-8 text-chart-2" />
               <span className="text-sm font-medium">Review Cards</span>
@@ -259,6 +262,7 @@ export default function DashboardOverview({ user }: DashboardOverviewProps) {
             <button
               className="flex flex-col items-center gap-2 p-4 rounded-lg hover-elevate active-elevate-2 bg-card border transition-all"
               data-testid="button-quick-pomodoro"
+              onClick={() => onTabChange?.("pomodoro")}
             >
               <Target className="h-8 w-8 text-chart-3" />
               <span className="text-sm font-medium">Focus Time</span>
@@ -266,6 +270,7 @@ export default function DashboardOverview({ user }: DashboardOverviewProps) {
             <button
               className="flex flex-col items-center gap-2 p-4 rounded-lg hover-elevate active-elevate-2 bg-card border transition-all"
               data-testid="button-quick-notes"
+              onClick={() => onTabChange?.("notes")}
             >
               <BookOpen className="h-8 w-8 text-chart-4" />
               <span className="text-sm font-medium">Take Notes</span>

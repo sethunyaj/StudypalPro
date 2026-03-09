@@ -137,7 +137,7 @@ export default function Dashboard() {
           <CardContent className="p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsContent value="overview" className="mt-0">
-                <DashboardOverview user={user} />
+                <DashboardOverview user={user} onTabChange={setActiveTab} />
               </TabsContent>
               
               <TabsContent value="notes" className="mt-0">
