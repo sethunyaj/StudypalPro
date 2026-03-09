@@ -501,8 +501,8 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
       )}
 
       <Dialog open={showItemDialog} onOpenChange={setShowItemDialog}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
+        <DialogContent className="max-w-lg max-h-[90vh] flex flex-col">
+          <DialogHeader className="shrink-0">
             <DialogTitle>
               {editingItem ? "Edit" : "Create"} {TYPE_LABELS[newItemType]}
             </DialogTitle>
@@ -512,7 +512,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
                 : `Add a new ${TYPE_LABELS[newItemType].toLowerCase()} to your training hub`}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-2 overflow-y-auto flex-1 pr-1">
             <div className="space-y-2">
               <Label htmlFor="item-title">Title</Label>
               <Input
@@ -648,7 +648,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
               )}
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="shrink-0 border-t pt-3">
             <Button variant="outline" onClick={() => setShowItemDialog(false)} data-testid="button-cancel-item">
               Cancel
             </Button>
