@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy, Flame, FileText, LogOut, Brain, Timer, Users, Target, BookOpen, Lightbulb, GraduationCap, Newspaper } from "lucide-react";
+import { Trophy, Flame, FileText, LogOut, Brain, Timer, Users, Target, BookOpen, Lightbulb, GraduationCap, Newspaper, ArrowLeft } from "lucide-react";
 import DashboardOverview from "@/components/dashboard/overview";
 import Notes from "@/components/dashboard/notes";
 import Flashcards from "@/components/dashboard/flashcards";
@@ -135,6 +135,18 @@ export default function Dashboard() {
 
           {/* Content Area */}
           <CardContent className="p-6">
+            {activeTab !== "overview" && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mb-4 gap-1.5"
+                onClick={() => setActiveTab("overview")}
+                data-testid="button-back-overview"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Dashboard
+              </Button>
+            )}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsContent value="overview" className="mt-0">
                 <DashboardOverview user={user} onTabChange={setActiveTab} />
