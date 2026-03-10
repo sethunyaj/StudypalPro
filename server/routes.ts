@@ -2105,7 +2105,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ error: "Only admins can update items" });
       }
 
-      const { title, description, content, topicId, status, attachmentUrl, attachmentName, attachmentPath, videoUrl, type } = req.body;
+      const { title, description, content, topicId, status, attachmentUrl, attachmentName, attachmentPath, videoUrl, type, questions } = req.body;
       const updates: Record<string, any> = {};
       if (title !== undefined) updates.title = title;
       if (description !== undefined) updates.description = description;
@@ -2117,6 +2117,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (attachmentName !== undefined) updates.attachmentName = attachmentName;
       if (attachmentPath !== undefined) updates.attachmentPath = attachmentPath;
       if (type !== undefined) updates.type = type;
+      if (questions !== undefined) updates.questions = questions;
       const item = await storage.updateTrainingItem(req.params.id, updates);
       if (!item) return res.status(404).json({ error: "Item not found" });
       res.json(item);
@@ -2198,6 +2199,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       res.json(teacherProgress);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ==================== TRAINING QUIZ ROUTES ====================
+
+  app.post("/api/training/quiz/:itemId/attempt", async (req, res) => {
+    try {
+      const { userId, answers } = req.body;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+      const allItems = await storage.getAllTrainingItems();
+      const item = allItems.find(i => i.id === req.params.itemId);
+      if (!item) return res.status(404).json({ error: "Quiz not found" });
+
+      const questions = (item.questions as any[]) || [];
+      if (questions.length === 0) {
+        return res.status(400).json({ error: "This quiz has no questions" });
+      }
+
+      let score = 0;
+      const gradedAnswers = answers.map((a: { questionId: string; selectedAnswer: number }) => {
+        const question = questions.find((q: any) => q.id === a.questionId);
+        const isCorrect = question && a.selectedAnswer === question.correctAnswer;
+        if (isCorrect) score++;
+        return { ...a, isCorrect };
+      });
+
+      const attempt = await storage.createTrainingQuizAttempt({
+        userId,
+        itemId: req.params.itemId,
+        answers: gradedAnswers,
+        score,
+        totalQuestions: questions.length,
+      });
+
+      const percentage = Math.round((score / questions.length) * 100);
+      if (percentage >= 70) {
+        const existingProgress = await storage.getTrainingProgressByUser(userId);
+        const itemProgress = existingProgress.find(p => p.itemId === req.params.itemId);
+        if (!itemProgress || !itemProgress.completed) {
+          await storage.toggleTrainingProgress(userId, req.params.itemId);
+        }
+      }
+
+      res.status(201).json(attempt);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/training/quiz/:itemId/attempts", async (req, res) => {
+    try {
+      const attempts = await storage.getTrainingQuizAttemptsByItem(req.params.itemId);
+      const users = await Promise.all(
+        [...new Set(attempts.map(a => a.userId))].map(id => storage.getUser(id))
+      );
+      const userMap = Object.fromEntries(users.filter(Boolean).map(u => [u!.id, u!]));
+
+      const enriched = attempts.map(a => ({
+        ...a,
+        userName: userMap[a.userId]?.name || "Unknown",
+      }));
+      res.json(enriched);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/training/quiz/:itemId/my-attempt", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const attempt = await storage.getTrainingQuizAttemptByUser(userId, req.params.itemId);
+      res.json(attempt || null);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/training/quiz/ai-generate", async (req, res) => {
+    try {
+      const { userId, topic, numQuestions, difficulty } = req.body;
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const user = await storage.getUser(userId);
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Admin only" });
+      }
+
+      const { generateTrainingQuiz } = await import("./openai");
+      const questions = await generateTrainingQuiz({
+        topic,
+        numQuestions: numQuestions || 5,
+        difficulty: difficulty || "medium",
+      });
+      res.json(questions);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import type { QuizQuestion } from "@shared/schema";
+import type { QuizQuestion, TrainingQuizQuestion } from "@shared/schema";
 
 // Initialize OpenAI client using Replit AI Integrations
 const openai = new OpenAI({
@@ -96,6 +96,57 @@ Return ONLY a valid JSON array with this exact structure:
       console.error("Error details:", { name: error.name, message: error.message, stack: error.stack });
     }
     throw new Error("Failed to generate quiz. Please try again.");
+  }
+}
+
+// Generate training quiz questions (MCQ format for Training Hub)
+export async function generateTrainingQuiz(params: {
+  topic: string;
+  numQuestions: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+}): Promise<TrainingQuizQuestion[]> {
+  const { topic, numQuestions, difficulty } = params;
+
+  const prompt = `Generate ${numQuestions} multiple-choice quiz questions about "${topic}" at ${difficulty} difficulty level.
+
+Each question must have exactly 4 options and one correct answer.
+
+Return ONLY a valid JSON array with this exact structure:
+[
+  {
+    "question": "The question text",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correctAnswer": 0,
+    "explanation": "Why this answer is correct"
+  }
+]
+
+Where correctAnswer is the zero-based index of the correct option (0-3).`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are an expert educator creating quiz questions. Always respond with valid JSON only. Do not wrap JSON in markdown code fences." },
+        { role: "user", content: prompt }
+      ],
+      max_completion_tokens: 4096,
+      temperature: 0.7,
+    });
+
+    const content = completion.choices[0]?.message?.content;
+    if (!content) throw new Error("No response from AI");
+
+    const cleanedContent = content.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?\s*```$/i, '').trim();
+    const questions = JSON.parse(cleanedContent) as Omit<TrainingQuizQuestion, 'id'>[];
+
+    return questions.map((q, idx) => ({
+      ...q,
+      id: `tq_${Date.now()}_${idx}`,
+    }));
+  } catch (error) {
+    console.error("Training quiz generation error:", error);
+    throw new Error("Failed to generate quiz questions. Please try again.");
   }
 }
 

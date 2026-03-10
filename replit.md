@@ -11,7 +11,26 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 - **UI Components**: Shadcn/ui with custom Hibiscus theme
 - **Charts**: Chart.js with react-chartjs-2
 
-## Recent Changes (March 09, 2026)
+## Recent Changes (March 10, 2026)
+- **COMPLETED**: Online Quiz System for Training Hub
+  - Three quiz creation methods for admins:
+    1. **Upload PDF** - Upload quiz as PDF attachment (existing upload system)
+    2. **Manual Entry** - Type MCQ questions with 4 options, correct answer, and explanation
+    3. **AI Generate** - Enter a topic, difficulty, and number of questions → AI generates MCQ questions → admin approves/declines individual questions before adding
+  - Teachers can take quizzes online: see questions, select answers, submit, see score with correct/incorrect highlights
+  - Quiz retake support: teachers can retake quizzes and see their previous results
+  - Admin quiz results view: see how many teachers took each quiz, their scores, and average score
+  - New `questions` jsonb column on `training_items` table for type="quiz"
+  - New `training_quiz_attempts` table (userId, itemId, answers, score, totalQuestions, completedAt)
+  - New API endpoints: `/api/training/quiz/:itemId/attempt` (POST), `/api/training/quiz/:itemId/attempts` (GET), `/api/training/quiz/:itemId/my-attempt` (GET), `/api/training/quiz/ai-generate` (POST)
+  - New `generateTrainingQuiz()` function in `server/openai.ts`
+  - Components: `client/src/components/training/quiz-builder.tsx`, `client/src/components/training/quiz-taker.tsx`
+
+- **FIXED**: File Upload/Download (Object Storage)
+  - Fixed 1-byte file corruption bug by switching from `uploadFromBytes`/`downloadAsBytes` to base64-encoded `uploadFromText`/`downloadAsText`
+  - Previously uploaded files (before this fix) are still corrupted and need re-uploading
+
+## Previous Changes (March 09, 2026)
 - **COMPLETED**: Teacher Progress Tracking
   - Admin can track which training items each teacher has completed
   - New "Teacher Progress" tab on admin dashboard with summary stats (Total Teachers, Avg Completion %, Fully Completed count)

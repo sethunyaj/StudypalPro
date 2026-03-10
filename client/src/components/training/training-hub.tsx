@@ -64,9 +64,55 @@ import {
   Play,
   CheckCircle2,
   Circle,
+  Users,
+  BarChart3,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import type { TrainingTopic, TrainingItem, TrainingProgress } from "@shared/schema";
+import type { TrainingTopic, TrainingItem, TrainingProgress, TrainingQuizQuestion, TrainingQuizAttempt } from "@shared/schema";
+import { QuizBuilder } from "./quiz-builder";
+import { QuizTaker } from "./quiz-taker";
+
+function QuizResultsSummary({ itemId, totalQuestions }: { itemId: string; totalQuestions: number }) {
+  const { data: attempts = [], isLoading } = useQuery<(TrainingQuizAttempt & { userName: string })[]>({
+    queryKey: ["/api/training/quiz", itemId, "attempts"],
+    queryFn: async () => {
+      const res = await fetch(`/api/training/quiz/${itemId}/attempts`);
+      if (!res.ok) throw new Error("Failed to load attempts");
+      return res.json();
+    },
+  });
+
+  if (isLoading) return <p className="text-xs text-muted-foreground">Loading results...</p>;
+  if (attempts.length === 0) return <p className="text-xs text-muted-foreground mt-2">No attempts yet</p>;
+
+  const avgScore = Math.round(attempts.reduce((sum, a) => sum + (a.score / a.totalQuestions) * 100, 0) / attempts.length);
+
+  return (
+    <div className="space-y-2 mt-2">
+      <div className="flex items-center gap-3 text-sm">
+        <span className="flex items-center gap-1 text-muted-foreground">
+          <Users className="h-3.5 w-3.5" /> {attempts.length} attempt{attempts.length !== 1 ? "s" : ""}
+        </span>
+        <span className="flex items-center gap-1 text-muted-foreground">
+          <BarChart3 className="h-3.5 w-3.5" /> Avg: {avgScore}%
+        </span>
+      </div>
+      <div className="space-y-1">
+        {attempts.map((a) => {
+          const pct = Math.round((a.score / a.totalQuestions) * 100);
+          return (
+            <div key={a.id} className="flex items-center justify-between text-xs p-1.5 rounded border" data-testid={`quiz-result-${a.id}`}>
+              <span className="font-medium">{a.userName}</span>
+              <span className={pct >= 70 ? "text-chart-2" : "text-destructive"}>
+                {a.score}/{a.totalQuestions} ({pct}%)
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function extractVideoId(url: string): { provider: string; id: string } | null {
   const youtubeRegex =
@@ -153,6 +199,8 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
     attachmentName: "",
     attachmentPath: "",
   });
+
+  const [quizQuestions, setQuizQuestions] = useState<TrainingQuizQuestion[]>([]);
 
   const [topicForm, setTopicForm] = useState({
     title: "",
@@ -309,6 +357,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
       attachmentName: "",
       attachmentPath: "",
     });
+    setQuizQuestions([]);
     setNewItemType("module");
   }
 
@@ -345,6 +394,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
       attachmentName: item.attachmentName || "",
       attachmentPath: item.attachmentPath || "",
     });
+    setQuizQuestions((item.questions as TrainingQuizQuestion[]) || []);
     setShowItemDialog(true);
   }
 
@@ -366,6 +416,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
       attachmentUrl: itemForm.attachmentUrl || null,
       attachmentName: itemForm.attachmentName || null,
       attachmentPath: itemForm.attachmentPath || null,
+      questions: newItemType === "quiz" && quizQuestions.length > 0 ? quizQuestions : null,
     };
 
     if (editingItem) {
@@ -504,6 +555,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
               onToggleComplete={(itemId) => toggleProgressMutation.mutate(itemId)}
               expandedItem={expandedItem}
               onToggleExpand={(id) => setExpandedItem(expandedItem === id ? null : id)}
+              userId={userId}
             />
           ))}
 
@@ -528,6 +580,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
                     onToggleComplete={() => toggleProgressMutation.mutate(item.id)}
                     isExpanded={expandedItem === item.id}
                     onToggleExpand={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
+                    userId={userId}
                   />
                 ))}
               </div>
@@ -683,6 +736,19 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
                 <p className="text-xs text-muted-foreground">Add a link to external resources (Google Docs, Slides, etc.)</p>
               )}
             </div>
+            {newItemType === "quiz" && (
+              <div className="space-y-2 border-t pt-3">
+                <Label>Interactive Quiz Questions</Label>
+                <p className="text-xs text-muted-foreground">
+                  Add questions that teachers can answer online. You can type them manually, generate with AI, or just upload a PDF above.
+                </p>
+                <QuizBuilder
+                  userId={userId}
+                  questions={quizQuestions}
+                  onQuestionsChange={setQuizQuestions}
+                />
+              </div>
+            )}
           </div>
           <DialogFooter className="shrink-0 border-t pt-3">
             <Button variant="outline" onClick={() => setShowItemDialog(false)} data-testid="button-cancel-item">
@@ -793,6 +859,7 @@ function TopicSection({
   onToggleComplete,
   expandedItem,
   onToggleExpand,
+  userId,
 }: {
   topic: TrainingTopic;
   items: TrainingItem[];
@@ -808,6 +875,7 @@ function TopicSection({
   onToggleComplete: (itemId: string) => void;
   expandedItem: string | null;
   onToggleExpand: (id: string) => void;
+  userId: string;
 }) {
   return (
     <div className="space-y-1">
@@ -866,6 +934,7 @@ function TopicSection({
                   onToggleComplete={() => onToggleComplete(item.id)}
                   isExpanded={expandedItem === item.id}
                   onToggleExpand={() => onToggleExpand(item.id)}
+                  userId={userId}
                 />
               ))}
             </div>
@@ -886,6 +955,7 @@ function TrainingItemRow({
   onToggleComplete,
   isExpanded,
   onToggleExpand,
+  userId,
 }: {
   item: TrainingItem;
   onEdit: () => void;
@@ -896,7 +966,9 @@ function TrainingItemRow({
   onToggleComplete: () => void;
   isExpanded: boolean;
   onToggleExpand: () => void;
+  userId: string;
 }) {
+  const [showQuizTaker, setShowQuizTaker] = useState(false);
   const Icon = TYPE_ICONS[item.type] || BookOpen;
   const iconColor = TYPE_COLORS[item.type] || "text-muted-foreground";
   const videoInfo = item.videoUrl ? extractVideoId(item.videoUrl) : null;
@@ -1062,10 +1134,52 @@ function TrainingItemRow({
                 </a>
               </div>
             )}
-            {!item.description && !item.content && !item.videoUrl && !item.attachmentUrl && !item.attachmentPath && (
+            {!item.description && !item.content && !item.videoUrl && !item.attachmentUrl && !item.attachmentPath && !(item.questions as any[])?.length && (
               <p className="text-sm text-muted-foreground">No additional content available.</p>
             )}
-            {isTeacher && item.status === "posted" && (
+            {item.type === "quiz" && (item.questions as TrainingQuizQuestion[])?.length > 0 && (
+              <div className="border-t pt-3">
+                {isTeacher && item.status === "posted" && (
+                  showQuizTaker ? (
+                    <QuizTaker
+                      itemId={item.id}
+                      userId={userId}
+                      questions={item.questions as TrainingQuizQuestion[]}
+                      onClose={() => setShowQuizTaker(false)}
+                    />
+                  ) : (
+                    <Button
+                      className="w-full gap-2"
+                      onClick={(e) => { e.stopPropagation(); setShowQuizTaker(true); }}
+                      data-testid={`button-take-quiz-${item.id}`}
+                    >
+                      <Brain className="h-4 w-4" />
+                      Take Quiz ({(item.questions as any[]).length} questions)
+                    </Button>
+                  )
+                )}
+                {isAdmin && (
+                  <QuizResultsSummary itemId={item.id} totalQuestions={(item.questions as any[]).length} />
+                )}
+              </div>
+            )}
+            {isTeacher && item.status === "posted" && item.type !== "quiz" && (
+              <div className="border-t pt-3">
+                <Button
+                  variant={isCompleted ? "secondary" : "default"}
+                  className="w-full gap-2"
+                  onClick={(e) => { e.stopPropagation(); onToggleComplete(); }}
+                  data-testid={`button-toggle-complete-${item.id}`}
+                >
+                  {isCompleted ? (
+                    <><CheckCircle2 className="h-4 w-4" /> Completed</>
+                  ) : (
+                    <><Circle className="h-4 w-4" /> Mark as Complete</>
+                  )}
+                </Button>
+              </div>
+            )}
+            {isTeacher && item.status === "posted" && item.type === "quiz" && !(item.questions as any[])?.length && (
               <div className="border-t pt-3">
                 <Button
                   variant={isCompleted ? "secondary" : "default"}

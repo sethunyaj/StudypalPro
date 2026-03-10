@@ -75,12 +75,15 @@ import {
   trainingTopics,
   trainingItems,
   trainingProgress,
+  trainingQuizAttempts,
   type TrainingTopic,
   type InsertTrainingTopic,
   type TrainingItem,
   type InsertTrainingItem,
   type TrainingProgress,
   type InsertTrainingProgress,
+  type TrainingQuizAttempt,
+  type InsertTrainingQuizAttempt,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -245,6 +248,11 @@ export interface IStorage {
   getTrainingProgressByUser(userId: string): Promise<TrainingProgress[]>;
   getAllTrainingProgress(): Promise<TrainingProgress[]>;
   toggleTrainingProgress(userId: string, itemId: string): Promise<TrainingProgress>;
+
+  // TRAINING QUIZ ATTEMPTS
+  getTrainingQuizAttemptsByItem(itemId: string): Promise<TrainingQuizAttempt[]>;
+  getTrainingQuizAttemptByUser(userId: string, itemId: string): Promise<TrainingQuizAttempt | undefined>;
+  createTrainingQuizAttempt(attempt: InsertTrainingQuizAttempt): Promise<TrainingQuizAttempt>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -944,6 +952,25 @@ export class DatabaseStorage implements IStorage {
     const [created] = await db.insert(trainingProgress)
       .values({ userId, itemId, completed: true, completedAt: new Date() })
       .returning();
+    return created;
+  }
+
+  // ==================== TRAINING QUIZ ATTEMPTS ====================
+  async getTrainingQuizAttemptsByItem(itemId: string): Promise<TrainingQuizAttempt[]> {
+    return await db.select().from(trainingQuizAttempts)
+      .where(eq(trainingQuizAttempts.itemId, itemId))
+      .orderBy(desc(trainingQuizAttempts.completedAt));
+  }
+
+  async getTrainingQuizAttemptByUser(userId: string, itemId: string): Promise<TrainingQuizAttempt | undefined> {
+    const [attempt] = await db.select().from(trainingQuizAttempts)
+      .where(and(eq(trainingQuizAttempts.userId, userId), eq(trainingQuizAttempts.itemId, itemId)))
+      .orderBy(desc(trainingQuizAttempts.completedAt));
+    return attempt;
+  }
+
+  async createTrainingQuizAttempt(attempt: InsertTrainingQuizAttempt): Promise<TrainingQuizAttempt> {
+    const [created] = await db.insert(trainingQuizAttempts).values(attempt).returning();
     return created;
   }
 }

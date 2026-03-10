@@ -560,6 +560,15 @@ export const insertTrainingTopicSchema = createInsertSchema(trainingTopics).omit
 export type InsertTrainingTopic = z.infer<typeof insertTrainingTopicSchema>;
 export type TrainingTopic = typeof trainingTopics.$inferSelect;
 
+// Training quiz question type for Training Hub quizzes
+export interface TrainingQuizQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation?: string;
+}
+
 // Training Hub - Items
 export const trainingItems = pgTable("training_items", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -572,6 +581,7 @@ export const trainingItems = pgTable("training_items", {
   attachmentUrl: text("attachment_url"),
   attachmentName: text("attachment_name"),
   attachmentPath: text("attachment_path"),
+  questions: jsonb("questions"), // TrainingQuizQuestion[] for type="quiz"
   status: text("status").notNull().default("draft"), // "draft", "posted"
   createdBy: text("created_by").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -585,6 +595,24 @@ export const insertTrainingItemSchema = createInsertSchema(trainingItems).omit({
 });
 export type InsertTrainingItem = z.infer<typeof insertTrainingItemSchema>;
 export type TrainingItem = typeof trainingItems.$inferSelect;
+
+// Training Quiz Attempts
+export const trainingQuizAttempts = pgTable("training_quiz_attempts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: text("user_id").notNull(),
+  itemId: text("item_id").notNull(),
+  answers: jsonb("answers").notNull(),
+  score: integer("score").notNull(),
+  totalQuestions: integer("total_questions").notNull(),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+});
+
+export const insertTrainingQuizAttemptSchema = createInsertSchema(trainingQuizAttempts).omit({
+  id: true,
+  completedAt: true,
+});
+export type InsertTrainingQuizAttempt = z.infer<typeof insertTrainingQuizAttemptSchema>;
+export type TrainingQuizAttempt = typeof trainingQuizAttempts.$inferSelect;
 
 export const trainingProgress = pgTable("training_progress", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
