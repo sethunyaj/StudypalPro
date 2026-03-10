@@ -289,9 +289,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const extension = req.file.originalname.split('.').pop() || '';
       const fileName = `uploads/${fileId}${extension ? '.' + extension : ''}`;
       
-      const { ok, error } = await objectStorageClient.uploadFromBytes(
+      const fileBuffer = req.file.buffer;
+      if (!fileBuffer || fileBuffer.length === 0) {
+        return res.status(400).json({ error: "Empty file buffer" });
+      }
+
+      const base64Data = fileBuffer.toString('base64');
+      const { ok, error } = await objectStorageClient.uploadFromText(
         fileName,
-        req.file.buffer
+        base64Data
       );
       
       if (!ok) {
@@ -325,14 +331,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Construct the safe path - always in uploads/ directory
       const filePath = `uploads/${filename}`;
       
-      const { ok, value, error } = await objectStorageClient.downloadAsBytes(filePath);
+      const { ok, value, error } = await objectStorageClient.downloadAsText(filePath);
       
       if (!ok || !value) {
         console.error("Download error:", error);
         return res.status(404).json({ error: "File not found" });
       }
       
-      // Determine content type from extension
       const ext = filename.split('.').pop()?.toLowerCase();
       const contentTypes: Record<string, string> = {
         pdf: 'application/pdf',
@@ -348,9 +353,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         gif: 'image/gif',
       };
       
+      const buffer = Buffer.from(value, 'base64');
       res.setHeader('Content-Type', contentTypes[ext || ''] || 'application/octet-stream');
+      res.setHeader('Content-Length', buffer.length.toString());
       res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-      res.send(Buffer.from(value));
+      res.end(buffer);
     } catch (error: any) {
       console.error("Error serving file:", error);
       res.status(500).json({ error: "Error serving file" });
