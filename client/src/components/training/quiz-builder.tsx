@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,11 +31,12 @@ interface QuizBuilderProps {
   userId: string;
   questions: TrainingQuizQuestion[];
   onQuestionsChange: (questions: TrainingQuizQuestion[]) => void;
+  onPendingCountChange?: (count: number) => void;
 }
 
 type TabType = "upload" | "manual" | "ai";
 
-export function QuizBuilder({ userId, questions, onQuestionsChange }: QuizBuilderProps) {
+export function QuizBuilder({ userId, questions, onQuestionsChange, onPendingCountChange }: QuizBuilderProps) {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<TabType>("manual");
   const [editingQuestion, setEditingQuestion] = useState<TrainingQuizQuestion | null>(null);
@@ -51,6 +52,10 @@ export function QuizBuilder({ userId, questions, onQuestionsChange }: QuizBuilde
   const [aiDifficulty, setAiDifficulty] = useState<string>("medium");
   const [aiGeneratedQuestions, setAiGeneratedQuestions] = useState<TrainingQuizQuestion[]>([]);
   const [aiApproved, setAiApproved] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    onPendingCountChange?.(aiGeneratedQuestions.length);
+  }, [aiGeneratedQuestions.length, onPendingCountChange]);
 
   const aiGenerateMutation = useMutation({
     mutationFn: async () => {

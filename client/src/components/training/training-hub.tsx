@@ -201,6 +201,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
   });
 
   const [quizQuestions, setQuizQuestions] = useState<TrainingQuizQuestion[]>([]);
+  const [pendingAiCount, setPendingAiCount] = useState(0);
 
   const [topicForm, setTopicForm] = useState({
     title: "",
@@ -358,6 +359,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
       attachmentPath: "",
     });
     setQuizQuestions([]);
+    setPendingAiCount(0);
     setNewItemType("module");
   }
 
@@ -405,6 +407,15 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
   }
 
   function handleSaveItem() {
+    if (newItemType === "quiz" && quizQuestions.length === 0 && pendingAiCount > 0) {
+      toast({
+        title: "Unsaved AI Questions",
+        description: "You have AI-generated questions that haven't been added to the quiz yet. Please approve and add them before saving.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const payload: any = {
       type: newItemType,
       title: itemForm.title,
@@ -746,6 +757,7 @@ export function TrainingHub({ userId, userRole }: TrainingHubProps) {
                   userId={userId}
                   questions={quizQuestions}
                   onQuestionsChange={setQuizQuestions}
+                  onPendingCountChange={setPendingAiCount}
                 />
               </div>
             )}
@@ -1181,18 +1193,9 @@ function TrainingItemRow({
             )}
             {isTeacher && item.status === "posted" && item.type === "quiz" && !(item.questions as any[])?.length && (
               <div className="border-t pt-3">
-                <Button
-                  variant={isCompleted ? "secondary" : "default"}
-                  className="w-full gap-2"
-                  onClick={(e) => { e.stopPropagation(); onToggleComplete(); }}
-                  data-testid={`button-toggle-complete-${item.id}`}
-                >
-                  {isCompleted ? (
-                    <><CheckCircle2 className="h-4 w-4" /> Completed</>
-                  ) : (
-                    <><Circle className="h-4 w-4" /> Mark as Complete</>
-                  )}
-                </Button>
+                <p className="text-sm text-muted-foreground text-center py-2" data-testid={`text-quiz-unavailable-${item.id}`}>
+                  This quiz is not available yet. Questions are being prepared by your administrator.
+                </p>
               </div>
             )}
           </div>
