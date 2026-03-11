@@ -627,3 +627,21 @@ export const insertTrainingProgressSchema = createInsertSchema(trainingProgress)
 });
 export type InsertTrainingProgress = z.infer<typeof insertTrainingProgressSchema>;
 export type TrainingProgress = typeof trainingProgress.$inferSelect;
+
+// Support Messages
+export const supportMessages = pgTable("support_messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: text("user_id").notNull(),
+  senderId: text("sender_id").notNull(),
+  senderRole: text("sender_role").notNull(),
+  message: text("message").notNull(),
+  read: boolean("read").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertSupportMessageSchema = createInsertSchema(supportMessages).omit({
+  id: true,
+  createdAt: true,
+});
+export type InsertSupportMessage = z.infer<typeof insertSupportMessageSchema>;
+export type SupportMessage = typeof supportMessages.$inferSelect;

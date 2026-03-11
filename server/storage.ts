@@ -84,6 +84,9 @@ import {
   type InsertTrainingProgress,
   type TrainingQuizAttempt,
   type InsertTrainingQuizAttempt,
+  supportMessages,
+  type SupportMessage,
+  type InsertSupportMessage,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -253,6 +256,13 @@ export interface IStorage {
   getTrainingQuizAttemptsByItem(itemId: string): Promise<TrainingQuizAttempt[]>;
   getTrainingQuizAttemptByUser(userId: string, itemId: string): Promise<TrainingQuizAttempt | undefined>;
   createTrainingQuizAttempt(attempt: InsertTrainingQuizAttempt): Promise<TrainingQuizAttempt>;
+
+  // SUPPORT MESSAGES
+  getSupportConversations(): Promise<{ userId: string; userName: string; userRole: string; lastMessage: string; lastMessageAt: Date; unreadCount: number }[]>;
+  getSupportMessages(userId: string): Promise<SupportMessage[]>;
+  createSupportMessage(msg: InsertSupportMessage): Promise<SupportMessage>;
+  markSupportMessagesRead(userId: string, readerRole: string): Promise<void>;
+  getSupportUnreadCount(userId: string): Promise<number>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -972,6 +982,69 @@ export class DatabaseStorage implements IStorage {
   async createTrainingQuizAttempt(attempt: InsertTrainingQuizAttempt): Promise<TrainingQuizAttempt> {
     const [created] = await db.insert(trainingQuizAttempts).values(attempt).returning();
     return created;
+  }
+
+  // ==================== SUPPORT MESSAGES ====================
+  async getSupportConversations(): Promise<{ userId: string; userName: string; userRole: string; lastMessage: string; lastMessageAt: Date; unreadCount: number }[]> {
+    const allMessages = await db.select().from(supportMessages).orderBy(desc(supportMessages.createdAt));
+    const conversationMap = new Map<string, { userId: string; lastMessage: string; lastMessageAt: Date; unreadCount: number }>();
+
+    for (const msg of allMessages) {
+      if (!conversationMap.has(msg.userId)) {
+        conversationMap.set(msg.userId, {
+          userId: msg.userId,
+          lastMessage: msg.message,
+          lastMessageAt: msg.createdAt,
+          unreadCount: 0,
+        });
+      }
+      if (!msg.read && msg.senderRole !== "admin") {
+        const conv = conversationMap.get(msg.userId)!;
+        conv.unreadCount++;
+      }
+    }
+
+    const result: { userId: string; userName: string; userRole: string; lastMessage: string; lastMessageAt: Date; unreadCount: number }[] = [];
+    for (const [userId, conv] of conversationMap) {
+      const user = await this.getUser(userId);
+      result.push({
+        ...conv,
+        userName: user?.name || user?.username || "Unknown",
+        userRole: user?.role || "student",
+      });
+    }
+
+    result.sort((a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime());
+    return result;
+  }
+
+  async getSupportMessages(userId: string): Promise<SupportMessage[]> {
+    return await db.select().from(supportMessages)
+      .where(eq(supportMessages.userId, userId))
+      .orderBy(supportMessages.createdAt);
+  }
+
+  async createSupportMessage(msg: InsertSupportMessage): Promise<SupportMessage> {
+    const [created] = await db.insert(supportMessages).values(msg).returning();
+    return created;
+  }
+
+  async markSupportMessagesRead(userId: string, readerRole: string): Promise<void> {
+    if (readerRole === "admin") {
+      await db.update(supportMessages)
+        .set({ read: true })
+        .where(and(eq(supportMessages.userId, userId), eq(supportMessages.read, false), sql`${supportMessages.senderRole} != 'admin'`));
+    } else {
+      await db.update(supportMessages)
+        .set({ read: true })
+        .where(and(eq(supportMessages.userId, userId), eq(supportMessages.read, false), eq(supportMessages.senderRole, "admin")));
+    }
+  }
+
+  async getSupportUnreadCount(userId: string): Promise<number> {
+    const unread = await db.select().from(supportMessages)
+      .where(and(eq(supportMessages.userId, userId), eq(supportMessages.read, false), eq(supportMessages.senderRole, "admin")));
+    return unread.length;
   }
 }
 

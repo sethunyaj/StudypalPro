@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { ObjectUploader } from "@/components/ObjectUploader";
 import { format, formatDistanceToNow, isPast, isToday, isTomorrow } from "date-fns";
+import { ContactAdminChat } from "@/components/support/contact-admin-chat";
 import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
 import { TrainingHub } from "@/components/training/training-hub";
 import type { Class, Todo, Exam, ClassResource, TeacherQuiz, TeacherQuizQuestion, QuestionType } from "@shared/schema";
@@ -308,6 +309,10 @@ export default function ClassesPage() {
           </CardContent>
         </Card>
       </div>
+
+      {!isAdmin && (
+        <ContactAdminChat userId={user.id} userRole={user.role} userName={user.name} />
+      )}
     </div>
   );
 }

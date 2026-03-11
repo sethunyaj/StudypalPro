@@ -11,7 +11,20 @@ Hibiscus StudyPal is a comprehensive, AI-powered learning platform designed to h
 - **UI Components**: Shadcn/ui with custom Hibiscus theme
 - **Charts**: Chart.js with react-chartjs-2
 
-## Recent Changes (March 10, 2026)
+## Recent Changes (March 11, 2026)
+- **COMPLETED**: Contact Admin Support Chat
+  - Teachers and students can contact admin via floating "Contact Admin" chat button
+  - Chat opens a panel with message history and real-time send capability
+  - Admin has a "Support" tab in the dashboard showing all conversations with unread badges
+  - Admin can click a conversation to view full message history and reply
+  - Unread message indicators on both sides (student/teacher sees unread admin replies, admin sees unread incoming)
+  - Messages auto-refresh every 5-10 seconds when chat is open
+  - New `support_messages` table (userId, senderId, senderRole, message, read, createdAt)
+  - API routes: GET /api/support/conversations, GET /api/support/messages/:userId, POST /api/support/messages, PATCH /api/support/messages/read, GET /api/support/unread/:userId
+  - Components: `client/src/components/support/contact-admin-chat.tsx`, `client/src/components/admin/support-inbox.tsx`
+  - Integrated into: dashboard.tsx (students), classes.tsx (teachers/students), admin.tsx (Support tab)
+
+## Previous Changes (March 10, 2026)
 - **COMPLETED**: Online Quiz System for Training Hub
   - Three quiz creation methods for admins:
     1. **Upload PDF** - Upload quiz as PDF attachment (existing upload system)

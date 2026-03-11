@@ -4,11 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, Brain, FileText, LogOut, BarChart3, Settings, Newspaper, GraduationCap, ClipboardCheck } from "lucide-react";
+import { Users, Brain, FileText, LogOut, BarChart3, Settings, Newspaper, GraduationCap, ClipboardCheck, MessageCircle } from "lucide-react";
 import StudentManagement from "@/components/admin/student-management";
 import ContentManagement from "@/components/admin/content-management";
 import AdminAnalytics from "@/components/admin/admin-analytics";
 import TeacherProgress from "@/components/admin/teacher-progress";
+import SupportInbox from "@/components/admin/support-inbox";
 import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
 
 export default function AdminDashboard() {
@@ -144,6 +145,10 @@ export default function AdminDashboard() {
                   <ClipboardCheck className="h-4 w-4" />
                   Teacher Progress
                 </TabsTrigger>
+                <TabsTrigger value="support" className="gap-2 data-[state=active]:bg-card" data-testid="tab-support">
+                  <MessageCircle className="h-4 w-4" />
+                  Support
+                </TabsTrigger>
                 <TabsTrigger value="classes" className="gap-2 data-[state=active]:bg-card" data-testid="tab-classes" onClick={() => setLocation("/classes")}>
                   <GraduationCap className="h-4 w-4" />
                   Classes & Training
@@ -173,6 +178,10 @@ export default function AdminDashboard() {
 
               <TabsContent value="teacher-progress" className="mt-0">
                 <TeacherProgress adminUserId={user.id} />
+              </TabsContent>
+
+              <TabsContent value="support" className="mt-0">
+                <SupportInbox adminUserId={user.id} />
               </TabsContent>
             </Tabs>
           </CardContent>

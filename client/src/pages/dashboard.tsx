@@ -17,6 +17,7 @@ import Achievements from "@/components/dashboard/achievements";
 import StudyGroups from "@/components/dashboard/study-groups";
 import MindMap from "@/components/dashboard/mind-map";
 import FastBotsWidget from "@/components/chatbot/fastbots-widget";
+import { ContactAdminChat } from "@/components/support/contact-admin-chat";
 import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
 
 export default function Dashboard() {
@@ -184,6 +185,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
+      <ContactAdminChat userId={user.id} userRole={user.role} userName={user.name} />
     </div>
   );
 }

@@ -2301,6 +2301,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ==================== SUPPORT MESSAGES ====================
+  app.get("/api/support/conversations", async (req, res) => {
+    try {
+      const conversations = await storage.getSupportConversations();
+      res.json(conversations);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/support/messages/:userId", async (req, res) => {
+    try {
+      const messages = await storage.getSupportMessages(req.params.userId);
+      res.json(messages);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/support/messages", async (req, res) => {
+    try {
+      const { userId, senderId, senderRole, message } = req.body;
+      if (!userId || !senderId || !senderRole || !message) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+      const created = await storage.createSupportMessage({ userId, senderId, senderRole, message, read: false });
+      res.status(201).json(created);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/support/messages/read", async (req, res) => {
+    try {
+      const { userId, readerRole } = req.body;
+      if (!userId || !readerRole) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+      await storage.markSupportMessagesRead(userId, readerRole);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/support/unread/:userId", async (req, res) => {
+    try {
+      const count = await storage.getSupportUnreadCount(req.params.userId);
+      res.json({ count });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
