@@ -256,22 +256,6 @@ export async function generateIllustrationPrompt(content: string, title: string)
   }
 }
 
-// Text-to-Speech using OpenAI TTS
-export async function generateSpeech(text: string): Promise<Buffer> {
-  try {
-    const response = await openai.audio.speech.create({
-      model: "tts-1",
-      voice: "nova",
-      input: text,
-      response_format: "mp3",
-    });
-    const arrayBuffer = await response.arrayBuffer();
-    return Buffer.from(arrayBuffer);
-  } catch (error) {
-    console.error("TTS error:", error);
-    throw new Error("Failed to generate audio. Please try again.");
-  }
-}
 
 // AI Tutor chat completion
 export async function getTutorResponse(params: {
