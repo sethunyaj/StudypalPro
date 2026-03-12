@@ -24,6 +24,7 @@ export default function Dashboard() {
   const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
   const [user, setUser] = useState<any>(null);
+  const [quizNoteId, setQuizNoteId] = useState<string | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -88,7 +89,10 @@ export default function Dashboard() {
 
           {/* Navigation Tabs */}
           <div className="bg-card/30 border-b overflow-x-auto">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs value={activeTab} onValueChange={(tab) => {
+              setActiveTab(tab);
+              if (tab !== "quiz") setQuizNoteId(null);
+            }} className="w-full">
               <TabsList className="w-full justify-start rounded-none h-auto p-2 bg-transparent gap-1">
                 <TabsTrigger value="overview" className="gap-2 data-[state=active]:bg-card" data-testid="tab-overview">
                   <Trophy className="h-4 w-4" />
@@ -154,7 +158,14 @@ export default function Dashboard() {
               </TabsContent>
               
               <TabsContent value="notes" className="mt-0">
-                <Notes userId={user.id} />
+                <Notes
+                  userId={user.id}
+                  onNavigateToQuiz={(noteId) => {
+                    setQuizNoteId(noteId);
+                    setActiveTab("quiz");
+                  }}
+                  onNavigateToFlashcards={() => setActiveTab("flashcards")}
+                />
               </TabsContent>
               
               <TabsContent value="flashcards" className="mt-0">
@@ -162,7 +173,7 @@ export default function Dashboard() {
               </TabsContent>
               
               <TabsContent value="quiz" className="mt-0">
-                <Quiz userId={user.id} />
+                <Quiz userId={user.id} preSelectedNoteId={quizNoteId} />
               </TabsContent>
               
               <TabsContent value="pomodoro" className="mt-0">

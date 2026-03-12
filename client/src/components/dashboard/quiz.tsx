@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,9 +15,10 @@ import { useToast } from "@/hooks/use-toast";
 
 interface QuizProps {
   userId: string;
+  preSelectedNoteId?: string | null;
 }
 
-export default function Quiz({ userId }: QuizProps) {
+export default function Quiz({ userId, preSelectedNoteId }: QuizProps) {
   const { toast } = useToast();
   const [quizMode, setQuizMode] = useState<'select' | 'generate' | 'taking' | 'results'>('select');
   const [currentQuiz, setCurrentQuiz] = useState<any>(null);
@@ -39,6 +40,19 @@ export default function Quiz({ userId }: QuizProps) {
   const { data: notes } = useQuery({
     queryKey: ['/api/notes', userId],
   });
+
+  useEffect(() => {
+    if (preSelectedNoteId && notes) {
+      setSourceNoteId(preSelectedNoteId);
+      const selectedNote = notes.find((n: any) => n.id === preSelectedNoteId);
+      if (selectedNote?.subject) {
+        setSubject(selectedNote.subject);
+      } else if (selectedNote?.title) {
+        setSubject(selectedNote.title);
+      }
+      setQuizMode('generate');
+    }
+  }, [preSelectedNoteId, notes]);
 
   const { data: quizHistory } = useQuery({
     queryKey: ['/api/quiz-attempts', userId],

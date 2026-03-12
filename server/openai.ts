@@ -150,6 +150,129 @@ Where correctAnswer is the zero-based index of the correct option (0-3).`;
   }
 }
 
+// Summarize notes content
+export async function summarizeNotes(content: string, title: string): Promise<string> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are an expert educator who creates clear, concise summaries. Use bullet points and highlight key concepts. Format with markdown." },
+        { role: "user", content: `Summarize the following study notes titled "${title}":\n\n${content}` }
+      ],
+      max_completion_tokens: 2048,
+      temperature: 0.5,
+    });
+    const response = completion.choices[0]?.message?.content;
+    if (!response) throw new Error("No response from AI");
+    return response;
+  } catch (error) {
+    console.error("Summarize error:", error);
+    throw new Error("Failed to summarize notes. Please try again.");
+  }
+}
+
+// Generate study guide from notes
+export async function generateStudyGuide(content: string, title: string): Promise<string> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are an expert educator who creates comprehensive study guides. Include key concepts, definitions, important relationships, practice questions, and memory aids. Format with markdown headings and bullet points." },
+        { role: "user", content: `Create a detailed study guide from these notes titled "${title}":\n\n${content}\n\nInclude:\n1. Key Concepts & Definitions\n2. Important Relationships & Connections\n3. Quick Review Points\n4. Practice Questions (with answers)\n5. Memory Tips & Mnemonics` }
+      ],
+      max_completion_tokens: 4096,
+      temperature: 0.6,
+    });
+    const response = completion.choices[0]?.message?.content;
+    if (!response) throw new Error("No response from AI");
+    return response;
+  } catch (error) {
+    console.error("Study guide error:", error);
+    throw new Error("Failed to generate study guide. Please try again.");
+  }
+}
+
+// Generate flashcards from notes
+export async function generateFlashcardsFromNotes(content: string, title: string): Promise<{ front: string; back: string }[]> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are an expert educator creating flashcards for spaced repetition study. Create clear question/answer pairs that test key concepts. Always respond with valid JSON only. Do not wrap JSON in markdown code fences." },
+        { role: "user", content: `Create flashcards from these study notes titled "${title}":\n\n${content}\n\nGenerate 8-15 flashcards covering the most important concepts. Each flashcard should have a clear question on the front and a concise answer on the back.\n\nReturn ONLY a valid JSON array:\n[\n  { "front": "Question text", "back": "Answer text" }\n]` }
+      ],
+      max_completion_tokens: 4096,
+      temperature: 0.6,
+    });
+    const response = completion.choices[0]?.message?.content;
+    if (!response) throw new Error("No response from AI");
+    const cleaned = response.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?\s*```$/i, '').trim();
+    return JSON.parse(cleaned);
+  } catch (error) {
+    console.error("Flashcard generation error:", error);
+    throw new Error("Failed to generate flashcards. Please try again.");
+  }
+}
+
+// Generate podcast script from notes
+export async function generatePodcastScript(content: string, title: string): Promise<string> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are a friendly, engaging podcast host who explains educational topics clearly. Create a natural, conversational script that a student would enjoy listening to. Keep it informative but casual." },
+        { role: "user", content: `Convert these study notes titled "${title}" into an engaging podcast-style script that explains the material clearly:\n\n${content}\n\nMake it sound natural, like a knowledgeable friend explaining the topic. Include:\n- A brief intro\n- Main concepts explained conversationally\n- Key takeaways at the end\n\nKeep it concise (2-3 minutes when read aloud). Do not include stage directions or speaker labels - just the spoken text.` }
+      ],
+      max_completion_tokens: 2048,
+      temperature: 0.7,
+    });
+    const response = completion.choices[0]?.message?.content;
+    if (!response) throw new Error("No response from AI");
+    return response;
+  } catch (error) {
+    console.error("Podcast script error:", error);
+    throw new Error("Failed to generate podcast script. Please try again.");
+  }
+}
+
+// Generate illustration prompt from notes
+export async function generateIllustrationPrompt(content: string, title: string): Promise<string> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You create detailed image generation prompts for educational illustrations. Create a prompt that would produce a clear, informative visual aid for studying." },
+        { role: "user", content: `Create a detailed image generation prompt for an educational illustration based on these study notes titled "${title}":\n\n${content}\n\nThe illustration should visually represent the key concepts in a clear, educational infographic style. Return ONLY the image prompt text, nothing else. Make it detailed enough for an AI image generator.` }
+      ],
+      max_completion_tokens: 500,
+      temperature: 0.7,
+    });
+    const response = completion.choices[0]?.message?.content;
+    if (!response) throw new Error("No response from AI");
+    return response;
+  } catch (error) {
+    console.error("Illustration prompt error:", error);
+    throw new Error("Failed to generate illustration. Please try again.");
+  }
+}
+
+// Text-to-Speech using OpenAI TTS
+export async function generateSpeech(text: string): Promise<Buffer> {
+  try {
+    const response = await openai.audio.speech.create({
+      model: "tts-1",
+      voice: "nova",
+      input: text,
+      response_format: "mp3",
+    });
+    const arrayBuffer = await response.arrayBuffer();
+    return Buffer.from(arrayBuffer);
+  } catch (error) {
+    console.error("TTS error:", error);
+    throw new Error("Failed to generate audio. Please try again.");
+  }
+}
+
 // AI Tutor chat completion
 export async function getTutorResponse(params: {
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;

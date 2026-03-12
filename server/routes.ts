@@ -2355,6 +2355,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ==================== AI NOTE TOOLS ====================
+  app.post("/api/notes/:id/summarize", async (req, res) => {
+    try {
+      const note = await storage.getNote(req.params.id);
+      if (!note) return res.status(404).json({ error: "Note not found" });
+      if (!note.content) return res.status(400).json({ error: "Note has no content to summarize" });
+      const { summarizeNotes } = await import("./openai");
+      const summary = await summarizeNotes(note.content, note.title);
+      res.json({ summary });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/notes/:id/study-guide", async (req, res) => {
+    try {
+      const note = await storage.getNote(req.params.id);
+      if (!note) return res.status(404).json({ error: "Note not found" });
+      if (!note.content) return res.status(400).json({ error: "Note has no content" });
+      const { generateStudyGuide } = await import("./openai");
+      const guide = await generateStudyGuide(note.content, note.title);
+      res.json({ guide });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/notes/:id/generate-flashcards", async (req, res) => {
+    try {
+      const note = await storage.getNote(req.params.id);
+      if (!note) return res.status(404).json({ error: "Note not found" });
+      if (!note.content) return res.status(400).json({ error: "Note has no content" });
+      const { generateFlashcardsFromNotes } = await import("./openai");
+      const cards = await generateFlashcardsFromNotes(note.content, note.title);
+      const created = [];
+      for (const card of cards) {
+        const flashcard = await storage.createFlashcard({
+          userId: note.userId,
+          front: card.front,
+          back: card.back,
+          subject: note.subject || "General",
+          tags: note.tags || [],
+        });
+        created.push(flashcard);
+      }
+      res.json({ count: created.length, flashcards: created });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/notes/:id/generate-podcast", async (req, res) => {
+    try {
+      const note = await storage.getNote(req.params.id);
+      if (!note) return res.status(404).json({ error: "Note not found" });
+      if (!note.content) return res.status(400).json({ error: "Note has no content" });
+      const { generatePodcastScript, generateSpeech } = await import("./openai");
+      const script = await generatePodcastScript(note.content, note.title);
+      const audioBuffer = await generateSpeech(script);
+      const base64Audio = audioBuffer.toString("base64");
+      res.json({ script, audio: base64Audio });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/notes/:id/generate-illustration", async (req, res) => {
+    try {
+      const note = await storage.getNote(req.params.id);
+      if (!note) return res.status(404).json({ error: "Note not found" });
+      if (!note.content) return res.status(400).json({ error: "Note has no content" });
+      const { generateIllustrationPrompt } = await import("./openai");
+      const prompt = await generateIllustrationPrompt(note.content, note.title);
+      res.json({ prompt, noteTitle: note.title });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
