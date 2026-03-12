@@ -439,7 +439,7 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
                 )}
               </CardHeader>
               <CardContent className="flex-1 flex flex-col">
-                <p className="text-sm text-muted-foreground line-clamp-4 flex-1">{note.content}</p>
+                <p className="text-sm text-muted-foreground line-clamp-2">{note.content}</p>
                 {note.tags && note.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-3">
                     {note.tags.map((tag: string, idx: number) => (
