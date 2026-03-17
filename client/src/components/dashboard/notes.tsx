@@ -13,7 +13,7 @@ import {
   Plus, Edit, Trash2, Search, BookOpen,
   Sparkles, FileText, Headphones, Image,
   Brain, Layers, Loader2, Play, Pause,
-  Volume2, Presentation
+  Volume2
 } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -185,89 +185,6 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
     },
     onError: (err: any) => {
       toast({ title: "Failed to generate illustration", description: err.message, variant: "destructive" });
-      setActiveAiAction(null);
-    },
-  });
-
-  const slidesMutation = useMutation({
-    mutationFn: async (noteId: string) => {
-      setActiveAiAction({ noteId, action: "slides" });
-      const res = await apiRequest("POST", `/api/notes/${noteId}/generate-slides`, {});
-      return res.json();
-    },
-    onSuccess: async (data, noteId) => {
-      const note = notes?.find((n: any) => n.id === noteId);
-      try {
-        const pptxgen = (await import("pptxgenjs")).default;
-        const prs = new pptxgen();
-        prs.layout = "LAYOUT_WIDE";
-        prs.defineLayout({ name: "LAYOUT_WIDE", width: 13.33, height: 7.5 });
-
-        const COLORS = { primary: "1a6b3c", accent: "e63946", white: "FFFFFF", light: "f0f7f3", text: "222222", sub: "555555" };
-
-        data.slides.forEach((slide: any, idx: number) => {
-          const s = prs.addSlide();
-          const isTitle = idx === 0;
-
-          s.background = { color: isTitle ? COLORS.primary : COLORS.white };
-
-          s.addShape(prs.ShapeType.rect, {
-            x: 0, y: isTitle ? 5.8 : 5.8, w: 13.33, h: 0.1,
-            fill: { color: isTitle ? COLORS.accent : COLORS.primary }, line: { color: isTitle ? COLORS.accent : COLORS.primary }
-          });
-
-          s.addText(slide.title, {
-            x: 0.5, y: isTitle ? 2.2 : 0.25,
-            w: 12.3, h: isTitle ? 1.5 : 0.9,
-            fontSize: isTitle ? 36 : 28,
-            bold: true,
-            color: isTitle ? COLORS.white : COLORS.primary,
-            fontFace: "Calibri",
-            align: isTitle ? "center" : "left",
-          });
-
-          if (isTitle && note?.subject) {
-            s.addText(note.subject, {
-              x: 0.5, y: 3.8, w: 12.3, h: 0.6,
-              fontSize: 20, color: COLORS.light, fontFace: "Calibri", align: "center",
-            });
-          }
-
-          if (!isTitle && slide.bullets?.length) {
-            const bulletText = slide.bullets.map((b: string) => ({ text: `  ${b}`, options: { bullet: { type: "bullet" }, breakLine: true } }));
-            s.addText(bulletText, {
-              x: 0.5, y: 1.3, w: 12.3, h: 4.2,
-              fontSize: 18, color: COLORS.text, fontFace: "Calibri",
-              valign: "top", lineSpacingMultiple: 1.3,
-            });
-          }
-
-          s.addText(`${idx + 1} / ${data.slides.length}`, {
-            x: 0, y: 6.9, w: 13.33, h: 0.4,
-            fontSize: 10, color: isTitle ? COLORS.light : COLORS.sub,
-            fontFace: "Calibri", align: "right",
-          });
-
-          if (slide.notes) {
-            s.addNotes(slide.notes);
-          }
-        });
-
-        const filename = (data.presentationTitle || note?.title || "Presentation")
-          .replace(/[^a-zA-Z0-9 _]/g, "")
-          .replace(/\s+/g, "_")
-          .slice(0, 60);
-        await prs.writeFile({ fileName: `${filename}.pptx` });
-
-        toast({ title: `Presentation created!`, description: `${data.slides.length} slides downloaded as ${filename}.pptx` });
-      } catch (pptxError) {
-        console.error("PPTX generation error:", pptxError);
-        toast({ title: "Slide content generated", description: "Could not create PPTX file. Please try again.", variant: "destructive" });
-      }
-      setActiveAiAction(null);
-    },
-    onError: (err: any) => {
-      toast({ title: "Failed to generate slides", description: err.message, variant: "destructive" });
       setActiveAiAction(null);
     },
   });
@@ -542,7 +459,6 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
                       {activeAiAction?.action === "flashcards" && "Generating flashcards..."}
                       {activeAiAction?.action === "podcast" && "Creating podcast..."}
                       {activeAiAction?.action === "illustration" && "Generating illustration prompt..."}
-                      {activeAiAction?.action === "slides" && "Creating PowerPoint slides..."}
                     </span>
                   </div>
                 )}
@@ -618,16 +534,6 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
                     >
                       <Image className="h-3 w-3 mr-1" />
                       Illustrate
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={isAnyAiLoading(note.id)}
-                      onClick={() => slidesMutation.mutate(note.id)}
-                      data-testid={`button-gen-slides-${note.id}`}
-                    >
-                      <Presentation className="h-3 w-3 mr-1" />
-                      Slides
                     </Button>
                   </div>
                 </div>

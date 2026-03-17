@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Sparkles, Printer, BookOpen, ClipboardList,
   Loader2, GraduationCap, Clock, ChevronRight, FileText, RotateCcw, FileType,
-  Pencil, Check, X
+  Pencil, Check, X, Presentation
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -76,6 +76,88 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
   const cancelEditing = () => {
     setIsEditing(false);
     setEditedContent("");
+  };
+
+  const [isMakingSlides, setIsMakingSlides] = useState(false);
+
+  const handleMakeSlides = async () => {
+    if (!generated) return;
+    setIsMakingSlides(true);
+    try {
+      const res = await apiRequest("POST", "/api/ai/generate-slides", {
+        content: generated.content,
+        title: generated.topic,
+      });
+      const data = await res.json();
+
+      const pptxgen = (await import("pptxgenjs")).default;
+      const prs = new pptxgen();
+      prs.layout = "LAYOUT_WIDE";
+      prs.defineLayout({ name: "LAYOUT_WIDE", width: 13.33, height: 7.5 });
+
+      const COLORS = { primary: "1a6b3c", accent: "e63946", white: "FFFFFF", light: "f0f7f3", text: "222222", sub: "555555" };
+
+      data.slides.forEach((slide: any, idx: number) => {
+        const s = prs.addSlide();
+        const isTitle = idx === 0;
+
+        s.background = { color: isTitle ? COLORS.primary : COLORS.white };
+
+        s.addShape(prs.ShapeType.rect, {
+          x: 0, y: 5.8, w: 13.33, h: 0.1,
+          fill: { color: isTitle ? COLORS.accent : COLORS.primary },
+          line: { color: isTitle ? COLORS.accent : COLORS.primary },
+        });
+
+        s.addText(slide.title, {
+          x: 0.5, y: isTitle ? 2.2 : 0.25,
+          w: 12.3, h: isTitle ? 1.5 : 0.9,
+          fontSize: isTitle ? 36 : 28,
+          bold: true,
+          color: isTitle ? COLORS.white : COLORS.primary,
+          fontFace: "Calibri",
+          align: isTitle ? "center" : "left",
+        });
+
+        if (isTitle) {
+          s.addText(`${generated.subject} — ${generated.grade}`, {
+            x: 0.5, y: 3.8, w: 12.3, h: 0.6,
+            fontSize: 20, color: COLORS.light, fontFace: "Calibri", align: "center",
+          });
+        }
+
+        if (!isTitle && slide.bullets?.length) {
+          const bulletText = slide.bullets.map((b: string) => ({
+            text: `  ${b}`,
+            options: { bullet: { type: "bullet" }, breakLine: true },
+          }));
+          s.addText(bulletText, {
+            x: 0.5, y: 1.3, w: 12.3, h: 4.2,
+            fontSize: 18, color: COLORS.text, fontFace: "Calibri",
+            valign: "top", lineSpacingMultiple: 1.3,
+          });
+        }
+
+        s.addText(`${idx + 1} / ${data.slides.length}`, {
+          x: 0, y: 6.9, w: 13.33, h: 0.4,
+          fontSize: 10, color: isTitle ? COLORS.light : COLORS.sub,
+          fontFace: "Calibri", align: "right",
+        });
+
+        if (slide.notes) s.addNotes(slide.notes);
+      });
+
+      const filename = (generated.topic || "Lesson")
+        .replace(/[^a-zA-Z0-9 _]/g, "")
+        .replace(/\s+/g, "_")
+        .slice(0, 60);
+      await prs.writeFile({ fileName: `${filename}_Slides.pptx` });
+      toast({ title: "Slides created!", description: `${data.slides.length} slides downloaded as ${filename}_Slides.pptx` });
+    } catch (err: any) {
+      toast({ title: "Failed to create slides", description: err.message, variant: "destructive" });
+    } finally {
+      setIsMakingSlides(false);
+    }
   };
 
   const generateMutation = useMutation({
@@ -354,7 +436,7 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
                     size="sm"
                     className="flex-1"
                     onClick={handleDownloadWord}
-                    disabled={isEditing}
+                    disabled={isEditing || isMakingSlides}
                     data-testid="button-download-word"
                   >
                     <FileType className="h-4 w-4 mr-2" />
@@ -365,13 +447,27 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
                     size="sm"
                     className="flex-1"
                     onClick={handlePrint}
-                    disabled={isEditing}
+                    disabled={isEditing || isMakingSlides}
                     data-testid="button-download-pdf"
                   >
                     <Printer className="h-4 w-4 mr-2" />
                     PDF
                   </Button>
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={handleMakeSlides}
+                  disabled={isEditing || isMakingSlides}
+                  data-testid="button-make-slides"
+                >
+                  {isMakingSlides ? (
+                    <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Creating slides...</>
+                  ) : (
+                    <><Presentation className="h-4 w-4 mr-2" />PowerPoint Slides</>
+                  )}
+                </Button>
                 {isEditing && (
                   <p className="text-xs text-muted-foreground text-center">Save your edits first to enable downloads</p>
                 )}
@@ -449,6 +545,9 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
                         </Button>
                         <Button size="icon" variant="ghost" onClick={handlePrint} title="Download as PDF" data-testid="button-download-pdf-header">
                           <Printer className="h-4 w-4" />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={handleMakeSlides} title="Download as PowerPoint" disabled={isMakingSlides} data-testid="button-make-slides-header">
+                          {isMakingSlides ? <Loader2 className="h-4 w-4 animate-spin" /> : <Presentation className="h-4 w-4" />}
                         </Button>
                       </>
                     )}
