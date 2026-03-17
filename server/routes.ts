@@ -2411,9 +2411,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const note = await storage.getNote(req.params.id);
       if (!note) return res.status(404).json({ error: "Note not found" });
       if (!note.content) return res.status(400).json({ error: "Note has no content" });
-      const { generatePodcastScript } = await import("./openai");
+      const { generatePodcastScript, generateSpeech } = await import("./openai");
       const script = await generatePodcastScript(note.content, note.title);
-      res.json({ script });
+      const audioBuffer = await generateSpeech(script);
+      const base64Audio = audioBuffer.toString("base64");
+      res.json({ script, audio: base64Audio });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

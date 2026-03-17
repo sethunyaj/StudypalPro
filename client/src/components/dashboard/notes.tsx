@@ -8,10 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   Plus, Edit, Trash2, Search, BookOpen,
   Sparkles, FileText, Headphones, Image,
-  Brain, Layers, Loader2
+  Brain, Layers, Wand2, Loader2, X, Play, Pause,
+  Volume2
 } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -28,7 +30,9 @@ interface AIResult {
   type: AIResultType;
   content: string;
   noteTitle: string;
+  audio?: string;
   illustrationPrompt?: string;
+  illustrationUrl?: string;
 }
 
 export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards }: NotesProps) {
@@ -40,6 +44,8 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
   const [aiResult, setAiResult] = useState<AIResult | null>(null);
   const [aiResultOpen, setAiResultOpen] = useState(false);
   const [activeAiAction, setActiveAiAction] = useState<{ noteId: string; action: string } | null>(null);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -149,6 +155,7 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
         type: "podcast",
         content: data.script,
         noteTitle: note?.title || "Note",
+        audio: data.audio,
       });
       setAiResultOpen(true);
       setActiveAiAction(null);
@@ -216,8 +223,34 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
     setIsDialogOpen(true);
   };
 
+  const isAiLoading = (noteId: string, action: string) =>
+    activeAiAction?.noteId === noteId && activeAiAction?.action === action;
+
   const isAnyAiLoading = (noteId: string) =>
     activeAiAction?.noteId === noteId;
+
+  const playAudio = (base64Audio: string) => {
+    if (audioElement) {
+      audioElement.pause();
+      setAudioPlaying(false);
+    }
+    const audio = new Audio(`data:audio/mp3;base64,${base64Audio}`);
+    audio.onended = () => setAudioPlaying(false);
+    audio.play();
+    setAudioElement(audio);
+    setAudioPlaying(true);
+  };
+
+  const toggleAudio = () => {
+    if (!audioElement) return;
+    if (audioPlaying) {
+      audioElement.pause();
+      setAudioPlaying(false);
+    } else {
+      audioElement.play();
+      setAudioPlaying(true);
+    }
+  };
 
   const filteredNotes = notes?.filter((note: any) => {
     const matchesSearch = note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -406,7 +439,7 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
                 )}
               </CardHeader>
               <CardContent className="flex-1 flex flex-col">
-                <p className="text-sm text-muted-foreground line-clamp-2">{note.content}</p>
+                <p className="text-sm text-muted-foreground line-clamp-4 flex-1">{note.content}</p>
                 {note.tags && note.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-3">
                     {note.tags.map((tag: string, idx: number) => (
@@ -512,7 +545,13 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
 
       <Dialog open={aiResultOpen} onOpenChange={(open) => {
         setAiResultOpen(open);
-        if (!open) setAiResult(null);
+        if (!open) {
+          if (audioElement) {
+            audioElement.pause();
+            setAudioPlaying(false);
+          }
+          setAiResult(null);
+        }
       }}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           {aiResult && (
@@ -529,13 +568,26 @@ export default function Notes({ userId, onNavigateToQuiz, onNavigateToFlashcards
                 </DialogDescription>
               </DialogHeader>
 
-              {aiResult.type === "podcast" && (
+              {aiResult.type === "podcast" && aiResult.audio && (
                 <Card className="bg-gradient-to-r from-primary/5 to-chart-2/5">
                   <CardContent className="p-4">
-                    <p className="text-sm font-medium">Podcast Script</p>
-                    <p className="text-xs text-muted-foreground">
-                      Read this conversational script aloud or use it as a study guide
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <Button
+                        size="icon"
+                        variant="default"
+                        onClick={() => audioPlaying ? toggleAudio() : playAudio(aiResult.audio!)}
+                        data-testid="button-play-podcast"
+                      >
+                        {audioPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                      </Button>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">Audio Podcast</p>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Volume2 className="h-3 w-3" />
+                          {audioPlaying ? "Playing..." : "Click play to listen"}
+                        </p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               )}
