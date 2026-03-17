@@ -2384,6 +2384,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/notes/:id/generate-slides", async (req, res) => {
+    try {
+      const note = await storage.getNote(req.params.id);
+      if (!note) return res.status(404).json({ error: "Note not found" });
+      if (!note.content) return res.status(400).json({ error: "Note has no content" });
+      const { generateSlideContent } = await import("./openai");
+      const result = await generateSlideContent(note.content, note.title);
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // ==================== AI NOTE TOOLS ====================
   app.post("/api/notes/:id/summarize", async (req, res) => {
     try {

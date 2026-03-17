@@ -150,6 +150,63 @@ Where correctAnswer is the zero-based index of the correct option (0-3).`;
   }
 }
 
+// Generate structured slide content from notes
+export async function generateSlideContent(content: string, title: string): Promise<{
+  slides: Array<{
+    title: string;
+    bullets: string[];
+    notes?: string;
+  }>;
+  presentationTitle: string;
+}> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert educator who creates engaging PowerPoint presentations from study notes. Create clear, concise slides with bullet points. Always respond with valid JSON only. Do not wrap JSON in markdown code fences."
+        },
+        {
+          role: "user",
+          content: `Convert these study notes into a PowerPoint presentation:
+
+Title: ${title}
+
+Content:
+${content}
+
+Create 6-10 slides. Each slide should have:
+- A clear, concise title
+- 3-5 bullet points (keep each bullet short, under 10 words)
+- Optional speaker notes for the teacher
+
+Return ONLY a valid JSON object:
+{
+  "presentationTitle": "Full presentation title",
+  "slides": [
+    {
+      "title": "Slide title",
+      "bullets": ["Point 1", "Point 2", "Point 3"],
+      "notes": "Optional speaker notes for this slide"
+    }
+  ]
+}`
+        }
+      ],
+      max_completion_tokens: 4096,
+      temperature: 0.6,
+    });
+    const response = completion.choices[0]?.message?.content;
+    if (!response) throw new Error("No response from AI");
+    const cleaned = response.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?\s*```$/i, '').trim();
+    return JSON.parse(cleaned);
+  } catch (error) {
+    console.error("Slide generation error:", error);
+    throw new Error("Failed to generate slide content. Please try again.");
+  }
+}
+
 // Generate a teacher lesson plan
 export async function generateLessonPlan(params: {
   grade: string;

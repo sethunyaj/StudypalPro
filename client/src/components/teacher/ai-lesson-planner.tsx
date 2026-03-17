@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Sparkles, Download, Printer, BookOpen, ClipboardList,
-  Loader2, GraduationCap, Clock, ChevronRight, FileText, RotateCcw
+  Loader2, GraduationCap, Clock, ChevronRight, FileText, RotateCcw, FileType
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -82,18 +82,50 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
     generateMutation.mutate();
   };
 
-  const handleDownloadTxt = () => {
-    if (!generated) return;
-    const blob = new Blob([generated.content], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    const typeName = generated.type === "lesson-plan" ? "Lesson_Plan" : "Study_Notes";
-    const filename = `${typeName}_${generated.grade}_${generated.subject}_${generated.topic}`
+  const buildFilename = () => {
+    const typeName = generated?.type === "lesson-plan" ? "Lesson_Plan" : "Study_Notes";
+    return `${typeName}_${generated?.grade}_${generated?.subject}_${generated?.topic}`
       .replace(/[^a-zA-Z0-9_]/g, "_")
       .replace(/_+/g, "_")
       .slice(0, 80);
+  };
+
+  const handleDownloadWord = () => {
+    if (!generated) return;
+    const typeName = generated.type === "lesson-plan" ? "Lesson Plan" : "Study Notes";
+    const wordHtml = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+  <meta charset='UTF-8'>
+  <title>${typeName}: ${generated.topic}</title>
+  <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>90</w:Zoom></w:WordDocument></xml><![endif]-->
+  <style>
+    body { font-family: Calibri, sans-serif; font-size: 11pt; line-height: 1.5; color: #222; margin: 2cm; }
+    h1 { font-size: 18pt; color: #1a6b3c; border-bottom: 2px solid #1a6b3c; padding-bottom: 4pt; margin-top: 0; }
+    h2 { font-size: 14pt; color: #1a6b3c; margin-top: 18pt; border-bottom: 1px solid #c8e6d4; padding-bottom: 2pt; }
+    h3 { font-size: 12pt; color: #2d7a50; font-style: italic; margin-top: 12pt; }
+    h4 { font-size: 11pt; margin-top: 10pt; }
+    p { margin-bottom: 6pt; }
+    ul, ol { margin: 4pt 0 4pt 18pt; }
+    li { margin-bottom: 3pt; }
+    strong { font-weight: bold; }
+    .meta { background: #f0f7f3; border: 1pt solid #c8e6d4; padding: 8pt 12pt; margin-bottom: 16pt; font-size: 10pt; color: #444; }
+  </style>
+</head>
+<body>
+  <div class="meta">
+    <strong>Type:</strong> ${typeName} &nbsp;&nbsp;
+    <strong>Grade/Level:</strong> ${generated.grade} &nbsp;&nbsp;
+    <strong>Subject:</strong> ${generated.subject} &nbsp;&nbsp;
+    <strong>Generated:</strong> ${new Date().toLocaleDateString()}
+  </div>
+  ${markdownToHtml(generated.content)}
+</body>
+</html>`;
+    const blob = new Blob([wordHtml], { type: "application/msword;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `${filename}.txt`;
+    a.download = `${buildFilename()}.doc`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -284,21 +316,21 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
                     variant="outline"
                     size="sm"
                     className="flex-1"
-                    onClick={handleDownloadTxt}
-                    data-testid="button-download-txt"
+                    onClick={handleDownloadWord}
+                    data-testid="button-download-word"
                   >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download .txt
+                    <FileType className="h-4 w-4 mr-2" />
+                    Word (.doc)
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     className="flex-1"
                     onClick={handlePrint}
-                    data-testid="button-print-pdf"
+                    data-testid="button-download-pdf"
                   >
                     <Printer className="h-4 w-4 mr-2" />
-                    Print / PDF
+                    PDF
                   </Button>
                 </div>
                 <Button
@@ -354,10 +386,10 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
                     </div>
                   </div>
                   <div className="flex gap-1.5">
-                    <Button size="icon" variant="ghost" onClick={handleDownloadTxt} title="Download as .txt" data-testid="button-download-header">
-                      <Download className="h-4 w-4" />
+                    <Button size="icon" variant="ghost" onClick={handleDownloadWord} title="Download as Word (.doc)" data-testid="button-download-word-header">
+                      <FileType className="h-4 w-4" />
                     </Button>
-                    <Button size="icon" variant="ghost" onClick={handlePrint} title="Print or save as PDF" data-testid="button-print-header">
+                    <Button size="icon" variant="ghost" onClick={handlePrint} title="Download as PDF" data-testid="button-download-pdf-header">
                       <Printer className="h-4 w-4" />
                     </Button>
                   </div>
