@@ -7,9 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import {
-  Sparkles, Download, Printer, BookOpen, ClipboardList,
-  Loader2, GraduationCap, Clock, ChevronRight, FileText, RotateCcw, FileType
+  Sparkles, Printer, BookOpen, ClipboardList,
+  Loader2, GraduationCap, Clock, ChevronRight, FileText, RotateCcw, FileType,
+  Pencil, Check, X
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -55,6 +57,26 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
   const [topic, setTopic] = useState("");
   const [duration, setDuration] = useState("60 minutes");
   const [generated, setGenerated] = useState<GeneratedDoc | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState("");
+
+  const startEditing = () => {
+    if (!generated) return;
+    setEditedContent(generated.content);
+    setIsEditing(true);
+  };
+
+  const saveEdits = () => {
+    if (!generated) return;
+    setGenerated({ ...generated, content: editedContent });
+    setIsEditing(false);
+    toast({ title: "Changes saved", description: "Your edits will be included in all downloads." });
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+    setEditedContent("");
+  };
 
   const generateMutation = useMutation({
     mutationFn: async () => {
@@ -67,6 +89,8 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
     },
     onSuccess: (data) => {
       setGenerated({ type: docType, content: data.content, grade, subject, topic });
+      setIsEditing(false);
+      setEditedContent("");
     },
     onError: (err: any) => {
       toast({ title: "Generation failed", description: err.message, variant: "destructive" });
@@ -310,13 +334,27 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
 
             {generated && (
               <div className="mt-4 pt-4 border-t space-y-2">
-                <p className="text-xs font-medium text-muted-foreground mb-3">Download Options</p>
+                <p className="text-xs font-medium text-muted-foreground mb-3">Edit &amp; Export</p>
+                <Button
+                  variant={isEditing ? "default" : "outline"}
+                  size="sm"
+                  className="w-full"
+                  onClick={isEditing ? saveEdits : startEditing}
+                  data-testid="button-toggle-edit"
+                >
+                  {isEditing ? (
+                    <><Check className="h-4 w-4 mr-2" />Save Changes</>
+                  ) : (
+                    <><Pencil className="h-4 w-4 mr-2" />Edit Content</>
+                  )}
+                </Button>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="sm"
                     className="flex-1"
                     onClick={handleDownloadWord}
+                    disabled={isEditing}
                     data-testid="button-download-word"
                   >
                     <FileType className="h-4 w-4 mr-2" />
@@ -327,17 +365,21 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
                     size="sm"
                     className="flex-1"
                     onClick={handlePrint}
+                    disabled={isEditing}
                     data-testid="button-download-pdf"
                   >
                     <Printer className="h-4 w-4 mr-2" />
                     PDF
                   </Button>
                 </div>
+                {isEditing && (
+                  <p className="text-xs text-muted-foreground text-center">Save your edits first to enable downloads</p>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
                   className="w-full text-muted-foreground"
-                  onClick={() => setGenerated(null)}
+                  onClick={() => { setGenerated(null); setIsEditing(false); setEditedContent(""); }}
                   data-testid="button-reset-planner"
                 >
                   <RotateCcw className="h-3 w-3 mr-2" />
@@ -386,17 +428,60 @@ export function AILessonPlanner({ defaultSubject }: AILessonPlannerProps) {
                     </div>
                   </div>
                   <div className="flex gap-1.5">
-                    <Button size="icon" variant="ghost" onClick={handleDownloadWord} title="Download as Word (.doc)" data-testid="button-download-word-header">
-                      <FileType className="h-4 w-4" />
-                    </Button>
-                    <Button size="icon" variant="ghost" onClick={handlePrint} title="Download as PDF" data-testid="button-download-pdf-header">
-                      <Printer className="h-4 w-4" />
-                    </Button>
+                    {isEditing ? (
+                      <>
+                        <Button size="sm" variant="default" onClick={saveEdits} data-testid="button-save-edits">
+                          <Check className="h-3.5 w-3.5 mr-1.5" />
+                          Save
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={cancelEditing} data-testid="button-cancel-editing">
+                          <X className="h-3.5 w-3.5 mr-1.5" />
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button size="icon" variant="ghost" onClick={startEditing} title="Edit content" data-testid="button-edit-content">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={handleDownloadWord} title="Download as Word (.doc)" data-testid="button-download-word-header">
+                          <FileType className="h-4 w-4" />
+                        </Button>
+                        <Button size="icon" variant="ghost" onClick={handlePrint} title="Download as PDF" data-testid="button-download-pdf-header">
+                          <Printer className="h-4 w-4" />
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-4">
-                <DocumentRenderer content={generated.content} />
+                {isEditing ? (
+                  <div className="space-y-3">
+                    <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <Pencil className="h-3 w-3" />
+                      Editing in Markdown — your changes will apply to all downloads
+                    </p>
+                    <Textarea
+                      value={editedContent}
+                      onChange={(e) => setEditedContent(e.target.value)}
+                      className="min-h-[480px] font-mono text-sm leading-relaxed resize-y"
+                      data-testid="textarea-edit-content"
+                    />
+                    <div className="flex gap-2 pt-1">
+                      <Button size="sm" variant="default" onClick={saveEdits} data-testid="button-save-edits-bottom">
+                        <Check className="h-3.5 w-3.5 mr-1.5" />
+                        Save Changes
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={cancelEditing} data-testid="button-cancel-editing-bottom">
+                        <X className="h-3.5 w-3.5 mr-1.5" />
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <DocumentRenderer content={generated.content} />
+                )}
               </CardContent>
             </Card>
           ) : (
