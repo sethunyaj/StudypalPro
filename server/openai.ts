@@ -150,6 +150,157 @@ Where correctAnswer is the zero-based index of the correct option (0-3).`;
   }
 }
 
+// Generate a teacher lesson plan
+export async function generateLessonPlan(params: {
+  grade: string;
+  subject: string;
+  topic: string;
+  duration?: string;
+}): Promise<string> {
+  const { grade, subject, topic, duration = "60 minutes" } = params;
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert curriculum designer and experienced teacher. Create detailed, practical lesson plans that are engaging and pedagogically sound. Format with clear markdown sections."
+        },
+        {
+          role: "user",
+          content: `Create a comprehensive lesson plan for the following:
+
+Grade/Level: ${grade}
+Subject: ${subject}
+Topic: ${topic}
+Duration: ${duration}
+
+Include all of these sections:
+# Lesson Plan: ${topic}
+
+## Overview
+- Grade/Level, Subject, Topic, Duration
+
+## Learning Objectives
+(3-5 specific, measurable objectives using action verbs)
+
+## Materials & Resources
+(List all required materials)
+
+## Lesson Structure
+
+### Introduction / Hook (10-15% of time)
+(Engaging activity to capture attention and activate prior knowledge)
+
+### Main Instruction (40-50% of time)
+(Step-by-step teaching content with teacher actions and student activities)
+
+### Guided Practice (20-25% of time)
+(Activities where teacher supports students applying new knowledge)
+
+### Independent Practice (15-20% of time)
+(Student work to demonstrate understanding)
+
+### Closure / Summary (5-10% of time)
+(How to wrap up and assess understanding)
+
+## Assessment
+(Formative and summative assessment strategies)
+
+## Differentiation
+- Support for struggling learners
+- Extension for advanced learners
+
+## Homework / Extension Activity
+(Optional take-home work)
+
+## Teacher Notes
+(Tips, common misconceptions, and suggestions)
+
+Make it practical, age-appropriate for ${grade}, and aligned with good pedagogical practice.`
+        }
+      ],
+      max_completion_tokens: 4096,
+      temperature: 0.6,
+    });
+    const response = completion.choices[0]?.message?.content;
+    if (!response) throw new Error("No response from AI");
+    return response;
+  } catch (error) {
+    console.error("Lesson plan error:", error);
+    throw new Error("Failed to generate lesson plan. Please try again.");
+  }
+}
+
+// Generate teacher study notes / handout
+export async function generateTeacherNotes(params: {
+  grade: string;
+  subject: string;
+  topic: string;
+}): Promise<string> {
+  const { grade, subject, topic } = params;
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert educator creating comprehensive study notes and handouts. Write clear, accurate, well-organized notes suitable for the specified grade level. Format with clear markdown."
+        },
+        {
+          role: "user",
+          content: `Create comprehensive study notes/handout for the following:
+
+Grade/Level: ${grade}
+Subject: ${subject}
+Topic: ${topic}
+
+Include all of these sections:
+# Study Notes: ${topic}
+### ${subject} | ${grade}
+
+## Key Concepts & Definitions
+(All important terms and concepts clearly defined)
+
+## Core Content
+(Main subject matter explained clearly and thoroughly, with examples)
+
+## Important Facts & Rules
+(Key facts, formulas, rules, or principles to remember)
+
+## Examples & Worked Solutions
+(2-3 detailed, step-by-step examples appropriate for ${grade})
+
+## Visual Aids / Diagrams
+(Describe or outline any diagrams that would be helpful, using text/ASCII if needed)
+
+## Common Mistakes to Avoid
+(3-5 frequent errors students make and how to avoid them)
+
+## Practice Questions
+(5-8 questions of varying difficulty with answers)
+
+## Summary
+(Brief recap of the most important points)
+
+## Further Reading / Resources
+(Suggestions for additional study)
+
+Make the language and complexity appropriate for ${grade} students.`
+        }
+      ],
+      max_completion_tokens: 4096,
+      temperature: 0.6,
+    });
+    const response = completion.choices[0]?.message?.content;
+    if (!response) throw new Error("No response from AI");
+    return response;
+  } catch (error) {
+    console.error("Teacher notes error:", error);
+    throw new Error("Failed to generate study notes. Please try again.");
+  }
+}
+
 // Summarize notes content
 export async function summarizeNotes(content: string, title: string): Promise<string> {
   try {

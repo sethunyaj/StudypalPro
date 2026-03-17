@@ -17,13 +17,14 @@ import {
   CheckSquare, Clock, ArrowLeft, GraduationCap, ClipboardList,
   Trophy, Flame, Target, BookMarked, Trash2, ExternalLink, Upload,
   Download, File, Paperclip, Brain, Edit2, Eye, Grip, 
-  Check, X, List, AlignLeft, CircleDot, ChevronRight
+  Check, X, List, AlignLeft, CircleDot, ChevronRight, Sparkles
 } from "lucide-react";
 import { ObjectUploader } from "@/components/ObjectUploader";
 import { format, formatDistanceToNow, isPast, isToday, isTomorrow } from "date-fns";
 import { ContactAdminChat } from "@/components/support/contact-admin-chat";
 import logoPath from "@assets/Hibiscus StudyPal logo_1762337029890.png";
 import { TrainingHub } from "@/components/training/training-hub";
+import { AILessonPlanner } from "@/components/teacher/ai-lesson-planner";
 import type { Class, Todo, Exam, ClassResource, TeacherQuiz, TeacherQuizQuestion, QuestionType } from "@shared/schema";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -302,7 +303,12 @@ export default function ClassesPage() {
             </div>
 
             {isTeacherOrAdmin && (
-              <div className="mt-6">
+              <div className="mt-6 space-y-6">
+                <Card className="border">
+                  <CardContent className="p-6">
+                    <AILessonPlanner />
+                  </CardContent>
+                </Card>
                 <TrainingHub userId={user.id} userRole={user.role} />
               </div>
             )}
@@ -449,10 +455,16 @@ function ClassDashboard({ classData, user, onBack, onLogout }: {
                   Quizzes
                 </TabsTrigger>
                 {isTeacher && (
-                  <TabsTrigger value="students" className="gap-2 data-[state=active]:bg-card" data-testid="tab-students">
-                    <Users className="h-4 w-4" />
-                    Students
-                  </TabsTrigger>
+                  <>
+                    <TabsTrigger value="ai-planner" className="gap-2 data-[state=active]:bg-card" data-testid="tab-ai-planner">
+                      <Sparkles className="h-4 w-4" />
+                      AI Planner
+                    </TabsTrigger>
+                    <TabsTrigger value="students" className="gap-2 data-[state=active]:bg-card" data-testid="tab-students">
+                      <Users className="h-4 w-4" />
+                      Students
+                    </TabsTrigger>
+                  </>
                 )}
               </TabsList>
             </Tabs>
@@ -501,13 +513,18 @@ function ClassDashboard({ classData, user, onBack, onLogout }: {
               </TabsContent>
 
               {isTeacher && (
-                <TabsContent value="students" className="mt-0">
-                  <StudentsTab 
-                    students={students as any[]} 
-                    classId={classData.id} 
-                    onRefresh={refetchStudents}
-                  />
-                </TabsContent>
+                <>
+                  <TabsContent value="ai-planner" className="mt-0">
+                    <AILessonPlanner defaultSubject={classData.subject} />
+                  </TabsContent>
+                  <TabsContent value="students" className="mt-0">
+                    <StudentsTab 
+                      students={students as any[]} 
+                      classId={classData.id} 
+                      onRefresh={refetchStudents}
+                    />
+                  </TabsContent>
+                </>
               )}
             </Tabs>
           </CardContent>

@@ -2355,6 +2355,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ==================== AI TEACHER TOOLS ====================
+  app.post("/api/ai/lesson-plan", async (req, res) => {
+    try {
+      const { grade, subject, topic, duration } = req.body;
+      if (!grade || !subject || !topic) {
+        return res.status(400).json({ error: "grade, subject, and topic are required" });
+      }
+      const { generateLessonPlan } = await import("./openai");
+      const content = await generateLessonPlan({ grade, subject, topic, duration });
+      res.json({ content });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/ai/study-notes", async (req, res) => {
+    try {
+      const { grade, subject, topic } = req.body;
+      if (!grade || !subject || !topic) {
+        return res.status(400).json({ error: "grade, subject, and topic are required" });
+      }
+      const { generateTeacherNotes } = await import("./openai");
+      const content = await generateTeacherNotes({ grade, subject, topic });
+      res.json({ content });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // ==================== AI NOTE TOOLS ====================
   app.post("/api/notes/:id/summarize", async (req, res) => {
     try {
