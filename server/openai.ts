@@ -1,11 +1,21 @@
 import OpenAI from "openai";
 import type { QuizQuestion, TrainingQuizQuestion } from "@shared/schema";
 
-// Initialize OpenAI client using Replit AI Integrations
-const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-});
+// Initialize OpenAI client lazily to avoid crashing on startup if env vars aren't set
+let _openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({
+      apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY || process.env.OPENAI_API_KEY,
+      baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+    });
+  }
+  return _openai;
+}
+const openai = { 
+  chat: { completions: { create: (...args: Parameters<OpenAI['chat']['completions']['create']>) => getOpenAI().chat.completions.create(...args) } },
+  audio: { speech: { create: (...args: Parameters<OpenAI['audio']['speech']['create']>) => getOpenAI().audio.speech.create(...args) } }
+} as unknown as OpenAI;
 
 // Generate AI-powered quiz questions
 export async function generateQuiz(params: {
