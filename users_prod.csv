@@ -1,0 +1,490 @@
+id,username,password,name,role,grade,points,streak,level,xp,last_login_date,created_at
+474f715d-b06e-4424-ac9f-4281304c2748,KutlwanoS,$2b$10$o/Y1V8Gz3BqmwSnkJjeuM.pi6iyHhV6TQ5fkGfybLSkbO3le7eZAq,Kutlwano Simon,student,Pre-Reception ,0,1,1,0,2025-11-13 12:55:46.739,2025-11-05 11:45:54.6006
+ec1e790b-ffeb-46b5-9d86-fb623d247bd7,Kemo,$2b$10$kCwuKSO9R/OumB5LpuE.ne2xFv8k/C1oC2kTwmdWBqzj6jHt89rlO,Kemo,student,Pre kindergatern,0,0,1,0,,2025-11-05 13:37:46.489664
+15f73d01-3b4f-4abe-a9a6-487b06b694b9,BerryShaba,$2b$10$rQZCxd01c..svd9eSfaNYu52oB./HEyKoAyi0WNKR9M/AgUnJRTV.,Berry Shaba ,student,12,0,0,1,0,,2025-11-05 12:46:44.499238
+47a9175f-bf13-4a4a-95da-8da1e069df98,819421918,$2b$10$R4kPMYvMW9OjPOHU/VUd8OIHz4et4S.Zje16lw87dLTpnB0YDDO9O,Lebang Baipidi ,student,Student ,0,0,1,0,,2025-11-05 12:49:19.373645
+8f8be2b1-5036-4a73-86de-7ef36c345a6d,preciousmaotwe,$2b$10$XDStykxohNBk1fW8vklon.sdQZej5VtZRuW5eX/5t7khiggto0Rje,Golebaone Precious Maotwe,student,Grade 3,0,1,1,0,2025-11-11 05:55:08.042,2025-11-05 12:41:47.980128
+446840d9-2701-4da0-999a-4ec85950188a,Noks,$2b$10$SlGERNyd4dYqNQmg0BU2Xu6S9TFkiP7NbCxaSsJdzy/hiDu7rOoGW,Nokuthula,student,Grade 6,0,0,1,0,,2025-11-05 10:27:04.529762
+c184d0fb-8806-4684-9f26-034c9ff5150a,Gajama2025,$2b$10$q/kTtY1Iy2b7fPxL.zV8weJwHOGL48OHhpmc.z.p1SsoiSNo5TkYy,Gajama Chirac Pengedi,student,6,0,0,1,0,,2025-11-05 10:54:29.298331
+91503b40-b057-47af-b7f9-eb37050d47ba,R.Hawa,$2b$10$/AdqSOJT/QZpCneQIBPYn.or99xLozIx.TPL/Me96sKbN61nFUDL2,Ramiza Hawa,student,Grade 10,0,0,1,0,,2025-11-05 11:04:34.760661
+83b8474e-0e8f-440c-9a43-8de77a73af28,Mosetsana,$2b$10$xyBwdV8a9SgO5bUQ5RQPxOldnHgk394iCRDAwzAO/1fwpU3PG0ote,Mosetsana Magaga,student,Grade 1,0,0,1,0,,2025-11-05 11:45:05.255068
+4242a1c6-d09a-4544-9b83-d2c3166c3456,565121121,$2b$10$l5dI5A2RNx4dov33InujfO6ewSbaLkHvfO90/IACpUMj8K8M9ayAy,Wandipa,student,Reception class,0,0,1,0,,2025-11-05 11:45:58.164064
+99ddd10a-537c-4e28-8560-349dfbf874db,Ladygie@hibiscus,$2b$10$8QbTo9N0qYcRMo8itgFLdeQyD02NdZYO5X5k5BgpCR4Qe9UBlU5XC,Gaone Tsolope ,student,Kindergarten ,0,0,1,0,,2025-11-05 11:46:53.148187
+1a95dfa1-f4a7-458b-8471-cda0b1bcea92,Magaga,$2b$10$8mzVnlfUMUkqIFGGgiT4G.jXrVX3pxDQVAvRVZAmFvA4CT5LL779y,Mosetsana Magaga,student,Kindergarten ,0,0,1,0,,2025-11-05 11:48:41.220975
+333bc750-37b2-410a-98e5-95e85c643f49,Chane,$2b$10$13pIVlPSNTOHqUmwFMYU..q.LiDAjnYdowCpeHlZ361DMPamRH9g.,Chane Bruwer,student,Kindergarten ,0,1,1,0,2025-11-05 11:59:08.258,2025-11-05 11:50:56.765224
+2f4481e7-865a-4747-aacb-79e855f5c93c,Maseng ,$2b$10$hhC1dMBrNwGyLcsWoCW5WuPPvfk6IlLQ3qIKwVgsr/K/1i.gdsB/O,Ogomoditse ,student,Diploma Special Need ,0,0,1,0,,2025-11-05 12:00:40.420683
+0039f60c-8627-4eb0-b01e-bedb7815e4d8,sibonile,$2b$10$1NwIul8K673b4r4RsfvkFubC5f8DGtKW5x201TPOZoUDwzEdMm166,sibonile mokgopo,student,7,0,0,1,0,,2025-11-05 12:01:06.836598
+6a9a69df-023f-45aa-b70d-237e017a11fd,Hahnkef,$2b$10$Mv3Ko/MfKlKBzcxiR9PTwOcqwRuD6vulx3ip0I7MgDrqWj4Eq04QS,Kefilwe,student,1,0,0,1,0,,2025-11-05 12:22:55.615674
+e882888b-8967-429a-bf5c-16f81548fb3f,kkhector@gmail.com,$2b$10$w5AOW7z4LCQaoAEaPYtBHOcfUnbfMJe9ttFERGEkJQVOroy1LTV82,Hector Godwin Kawareware ,student,Stage 6,0,0,1,0,,2025-11-05 12:26:34.218605
+5445c926-09ee-4e3a-b8c1-0916f21ef046,Malebogo ,$2b$10$t3h9NS/GIwdMdUKeQYyNMe5aDgepJbjMNWMDan.sMZChaNlXJqAqO,Gofaone ,student,Pre Reception ,0,0,1,0,,2025-11-05 12:32:10.694164
+552ac030-9d78-4ebb-92b3-f755de0c75e6,ChanLott,$2b$10$0horgcESn1wqYDqjYXMSGu6uyhzwu.DwTr0jiCghZ4ONGedKdDPOe,Chanelle Lottering,student,HoS,0,0,1,0,,2025-11-05 12:34:42.336151
+c31391ce-e011-4170-892c-3a4827f89bb5,Julie,$2b$10$a0OyL/EBrFW6G9vywvEQMeM6BAq3A3QK0qcCOOtWjh.E6KoSwdvzO,Juliet Ganelang ,student,1,0,0,1,0,,2025-11-05 12:39:01.398532
+fed3cd47-f85d-4803-bd82-53f87d73c2dc,demo,$2b$10$0b8tA.pquha.2kBu0bi09eTJ47qpuOFZcw7DiHHdb6X6oT/n9g98W,Demo Student,student,Grade 10,0,1,1,0,2026-03-18 15:11:20.697,2025-11-05 06:57:33.626673
+49b7c29c-2441-4dad-a9e2-962a81e68e00,Pearl-Nk,$2b$10$ak5gytB/YhEnN3E/wZj9B.XP/vn198LLDTsjRxSnOMW2JCR48LQ7i,PONALO Pearl Nkane,student,1,0,1,1,0,2025-11-05 12:41:49.317,2025-11-05 12:41:00.964161
+54b8fbc0-9300-4ae8-834e-02d488794976,Nshindano ,$2b$10$DzJ2UJJvs.BFnd7Pr1zIi.oS3trVcqQg9IfIYjuCrCXAvFB7HI672,Jameson Nshindano ,student,Stage 3,0,0,1,0,,2025-11-05 13:49:45.466285
+072c34d0-6f0a-4d22-b75a-2b6f94cad933,Noma,$2b$10$C1hxo9Y8k44OBjhuW5V9E.y4G8JDioxt0LX4QO7JpvMS5s0F1QyKO,Nomalanga ,student,Grade 5,0,0,1,0,,2025-11-05 12:43:50.221953
+8a1912d6-2e35-4520-adc6-088e7bd8073e,Sophie,$2b$10$aM3v4mwcQKb2WMsanx6SweNcBx90SqQGml0gfZamKA5q7Lwbn84xO,Sophie Gaborone,student,Grade 11,0,0,1,0,,2025-11-05 12:44:24.597175
+5dfe2abf-2909-426e-8e40-92872a7be7bb,V4988358,$2b$10$c/9b5pNQTHgZ2VJIwasww.BzKH.rIbVof8RTug/J3PNT3dkMSFsxu,Diva Krupa Karri,student,Stage 3B,50,1,1,50,2025-11-05 12:50:22.466,2025-11-05 12:21:08.328376
+9ed7ec8b-4612-4a0f-b463-b0651576859f,KMhibiscus,$2b$10$b8McM5wWbRKnMSuRoj4lnOOPof85J1oWPbk.iFlczNp.tKu.6Jeze,Kedibonye Moyo,student,Reception ,0,0,1,0,,2025-11-05 12:51:19.868085
+4d3a093e-d0e5-4b82-974f-f6faaed03a7d,Miss K.,$2b$10$lYs8nyvEC2M2NtikflIcouoaUhQf0zSjeJUNxEch7ztE4rsiYN5Za,Keneilwe Koontse ,student,Stage 2,0,1,1,0,2026-03-10 07:34:30.315,2025-11-05 12:35:30.039584
+a04a3d2c-2f4f-4950-a5ce-cc60623a8280,dinha@hibiscus,$2b$10$8S7X6ldPNIF4vz3BUETtcOzrMtVCanaTacOgKrqUYaafD9uA0kXCa,Dinha,student,Grade 1,0,0,1,0,,2025-11-05 12:59:34.93448
+805dafcc-945e-4f9a-9469-69300ea0f97d,Phatshwana ,$2b$10$orB5TkSishBUAYX3pncLduG19y2jBhMPtOHfnRjlA/EHgNwmd0yUu,Refilwe ,student,Reception ,0,0,1,0,,2025-11-05 13:56:33.33097
+8b8cf932-93a4-4a59-92c1-d3ccb0c8bfb8,Csat,$2b$10$SeYVd27nLA/Ed9yIh4XNUe1EwBkiEaHSFta26RrLgAOeFWJo89as.,Choice M Satiyi,student,Pre reception ,0,0,1,0,,2025-11-05 14:42:26.423556
+3bd4d30f-d5dc-406e-95ec-edec91c278c3,NYAP,$2b$10$OBdiLyzMNMeWZrCmDVpzbeYo3WHVt8PlLBeezLzA07SErFj9SfqZS,Patience Nyathi ,student,Class 3,0,1,1,0,2025-12-08 11:25:43.193,2025-11-05 10:38:44.971507
+1ba38ebd-cf2b-4932-83fb-6aee5cf8ba32,31814683,$2b$10$XJNVm0lVeOW1JiMRfneMjegOnMMAYl1o6xnH3t8uT6IgeChuiyjWe,Emma Osumo,student,Form 2,0,2,1,0,2026-03-18 13:36:58.117,2025-11-05 13:01:49.284904
+0fb30ba0-ab93-4cf4-908e-82db64edaca6,Bernitta2025,$2b$10$cCRhCdggm6BnzrItTlaIwuLfcT3GXkWVwubIP//.k9PtdmWK7KJjG,Bernitta Leburu ,student,Stage 2,0,1,1,0,2026-03-19 09:10:13.036,2025-11-05 12:57:09.330664
+6d56bcd3-2544-4a39-868f-95c460886b5f,Jaden ,$2b$10$OLgsh970ExiJ/isYk425buScvTFDoFuf6c7v9XQc4/qDYFuhXCAJi,Jaden Qobo ,student,Kindergarten ,0,1,1,0,2026-03-11 05:34:13.048,2025-11-05 12:31:43.376961
+a279584b-cce7-4b06-9732-88142fb207e3,Gosego,$2b$10$lXk5juyqQLBUvCuAKD7QZe8Ub5FwjVV5d1kqSCXYE4Zj0JH.RtjIm,Gosego kenosi,student,Pre kindergarten ,0,1,1,0,2026-03-11 05:14:54.958,2025-11-05 12:32:34.318067
+b4f1740c-cd87-4d31-89b5-777bd9c5f682,ALL,$2b$10$NzAPQN..hSGD0h79n/mezOpcm8a57A4mNC2tNNDVQWc.l9SDAla86,Alleta Nkomo ,student,Grade 2,62,1,1,62,2026-03-11 06:48:35.092,2025-11-05 12:36:33.423579
+1056f782-7126-475e-81ad-a3fb5993d5d9,admin,$2b$10$ApuT8aZF.VDAPjM3WBSgoev9ciz3SqAoe5tprX6bi6ZAhvS2nkgXq,Administrator,admin,,0,1,1,0,2026-03-18 13:08:14.583,2025-11-05 07:05:40.142058
+5f269c1a-54fe-48be-990d-ab6913791c37,Emma,$2b$10$7YZA7mlsiNr.HOHHf40pa.5SRtyJWJp5yDUCTmb1Q0BQR9KIXqala,Emma Segaetsho ,student,Grade 1,0,0,1,0,,2025-11-05 16:18:12.686568
+328b3f62-7fca-4f57-8aba-ed4ced704635,bella,$2b$10$pwYFf86Ej5G9ruwHQi4bKewD825t2h1tpkh6nbPbBIl.rlg1MMxB2,bella  tumelo,student,stage  4,50,1,1,50,2026-03-13 14:41:39.2,2025-11-06 14:12:50.48426
+d191ee4c-1a1f-4d19-890d-7f429cc39309,MOAP,$2b$10$u2nhC3BBsHc7cy.UnkTueupuTJwaBlLDaA3ZZp7XzxhFdl6D2sdq.,Phatsimo Moatlhodi,student,Rec,0,0,1,0,,2025-11-05 18:41:14.530851
+1fa7a583-c9a1-4010-a72a-7287ed962feb,077928012,$2b$10$8A/y23BK69WleZdbBB6bVelYUToJNUnllIwV9YOoJr.I21WhxnYna,Mpho,student,Pre-kinder,0,0,1,0,,2025-11-05 18:52:35.878067
+043d7dce-ff70-4a37-b809-782403d215a6,GirlieMore,$2b$10$oSH9cjZO.B4M8noez/RxeOJr9np3a0b/iHiiAosss1SkalIAVbaSa,Ofentse Moroanare ,student,Reception ,0,0,1,0,,2025-11-05 18:56:56.24087
+efd5ad9d-a1ad-42cc-98f3-3ae4dd18b488,Lolo,$2b$10$2kmhPEvimNXRSDVpm1fIzu.zaUkxjyQdMhKPsSIwJxkvIM5Vrz2yK,Olerato Bogatsu ,student,Grade 9,0,0,1,0,,2025-11-05 18:57:32.911253
+7ae4aae2-a448-413c-aeac-57b6abe62f84,ZANC,$2b$10$3UYUsw0HhunI5HnVsqG8E.zrbnW927LiRQhoX8NJYK56yEB79er3e,Chenesai Zanga,student,Reception class,0,0,1,0,,2025-11-05 19:08:40.143985
+6eac016f-edfc-4ad2-a7db-1d06efb3e242,BE210413,$2b$10$j2nYzKgZ3jWmyNjy75SIn.2PTwrm.JfwN1cGaJlNyUfptSykjn0N.,Felix chimuti,student,LS1A,0,0,1,0,,2025-11-06 04:35:25.077318
+e52f6ac1-9e01-4401-8670-506de2943d5a,819421819,$2b$10$NaClE/FnCKrQnlU0u/wihOOhcNiKAhTzg9ZPONSPWKcSzjd2mD9iO,Lebang Baipidi ,student,Student ,0,1,1,0,2025-11-06 05:39:08.623,2025-11-06 05:37:30.548644
+f4ad8b4e-6008-4815-97ef-2f10e277254b,Tlhompho ,$2b$10$JW8hHUQDtTvKOFqr742oVOK15h8TtjhagcJYngiC.FWs/NiAYvjeC,Tlhompho Seitio ,student,Grade 5,0,0,1,0,,2025-11-06 05:39:44.942523
+90699532-67e3-4392-8fe6-83ee53d3a9c6,ThatoC,$2b$10$IH7eqOgGPHtlXUs8HU2vT.yE4bm.DpFHeyjxEB/uDFSy.aEOlh3yS,Thato,student,Grade 7,0,0,1,0,,2025-11-06 05:40:48.248556
+51329ed2-40fa-44ca-b3cd-17425ab2a84f,lily,$2b$10$qbEab497kR6m8ohsrOXgauqXsG16lAMEd8K0Q766VJbuZMPm2nrE6,Remotse Masike,student,grade4,0,0,1,0,,2025-11-06 05:58:32.211285
+fd54ad1e-d6b8-4986-bd7c-038306be05a8,Isabelle,$2b$10$NeI8UKoYlGhudx4iQ6bwoOjVfC15SsdoxGXZMMcB3.2ASwOOP.OTm,Isabelle Mosa Dube,student,stage 4,0,0,1,0,,2025-11-06 05:58:55.705462
+702e169b-a706-4687-9950-c98b437609e6,Reneilwe,$2b$10$FMTOLOKZlfx7O7fK1QhvIuZLvObrBaMWQA4laRezeCurU/zRVz3GK,Reneilwe Tapiwa Pusi,student,STAGE 4,0,0,1,0,,2025-11-06 05:58:57.070619
+ff4a914c-fb37-4d60-9bb3-82ebf4954e47,skylily,$2b$10$O9DEe3tW4v8PQCCAsP2dGeAtohR2LqTxwoQGJIepi548QODKoXdme,Luba Lenyatso,student,grade4,0,0,1,0,,2025-11-06 05:59:23.77175
+b201b16f-a5e4-4244-b055-7f894187ae08,ALIYAH,$2b$10$4LkPhdFMNZho727JouJpr.iiV10kP0VChp7rq3gAo0PTr4kqoOoIW,ALIYAH MMUTLE,student,stage 4,0,0,1,0,,2025-11-06 05:59:38.18082
+2c78678a-1c77-4e20-8a50-1a8f6366eebb,dydan,$2b$10$OichF9QbNO2YJmD4URSzg.7oZpLqoXC0j5.z2fbqXCfq4V4He0aXq,ditso ,student,stage 4,0,0,1,0,,2025-11-06 05:59:45.729073
+ac74faaf-9867-431b-91b5-a587179a9ef5,ZANC2025,$2b$10$e/ocfCIo66Scbijw4rhtxOvD66PUI1iBugzHAG6YiJGDHgCvQ2JB6,Chenesai Zanga,student,Reception,0,1,1,0,2025-11-10 10:18:12.746,2025-11-06 09:05:38.39695
+63ce0b96-e54e-4793-83c6-fdac6771c38b,faith,$2b$10$z11NZn0XUgOu8mSCdYTG2O7gofev8GsO5HFvjdONRjEjrdcFlDEB6,Reneilwe Tapiwa Pusi,student,STAGE 4,0,0,1,0,,2025-11-06 06:06:42.253502
+255a22c9-d03b-43d9-906a-f458ba3089eb,jr,$2b$10$Dy33oFiAt./JMJJ8qab.A.NQmcpKc.T.ggm9Yb.yN1QST8XFfnOsu,aneela kagiso,student,std 4,45,0,1,45,,2025-11-06 06:00:00.619109
+599e2a37-8fa5-41bf-8f98-53912cb1b09f,sky lily,$2b$10$O8af853v6W3QIz0yySwPj.cDxq/.7Eo.lHh.lA4Dq9ki6Y7nVjboi,Luba Lenyatso,student,grade4,65,1,1,65,2025-11-06 06:03:05.282,2025-11-06 05:57:01.770694
+e6820b4e-a083-4369-9899-9a09a5fd34b7,FIOWER,$2b$10$2d7jxU2DBk9yDSO0SlfaWeyuQKlMX0G/5VVrwtiopIhNy3THg8vDC,ALIYAH MMUTLE,student,stage 4,30,0,1,30,,2025-11-06 06:07:06.459317
+8b8ef1ac-90ee-474f-aae2-365b5e6f6e60,yadah,$2b$10$taAmo2l0B7fLZTipf71hf.ssTSqWHYbHNYKmcF21pJo6ssHNNPNra,yadah mmolawa,student,4,40,0,1,40,,2025-11-06 05:57:15.19795
+61aa1958-2f4d-4e74-a997-3876b9476362,Agang,$2b$10$17nPIR70TjVRmaFuqlh/geG5r39XkGiSZrQb4ThRcWcJOSQ5yXoTq,Agang omari nage motingwa,student,GRADE 4,55,0,1,55,,2025-11-06 06:11:21.18001
+ac2dbd58-1e47-4429-9925-827a237fd594,Jayden,$2b$10$Ravr0O3A5wqTr0P1waTUM.95VZ/qAdRzkPGX23avzpGryc7tYvHgu,Jayden Nyatsande,student,Stage 4,30,1,1,30,2026-03-10 09:37:27.411,2025-11-06 05:58:29.590055
+69cc647a-77c9-4376-b3bc-f2a160104dec,Laone,$2b$10$wDrEciLAMdtpFISBjIkBWu8Ho39HwEwHFCQ/Uyv2HCWU.uWlSjh6y,Laone Moatshe,student,Stage 4,30,0,1,30,,2025-11-06 05:59:38.65301
+402d3dbb-d28b-4728-aaa9-255d43f2c2cd,hibscus,$2b$10$eKofP1SgCGb2lPm9BNsd6uDHe0DJpMgrbwlF/PrR6R2BjOsNyiBVu,Xavier waigwa ,student,stage 4,28,0,1,28,,2025-11-06 06:01:31.024683
+a79afcac-aea6-4bae-9a80-fdb2738f7a44,ditso,$2b$10$DQYnkgxSDHYpSN9vVS.ofOMLpIwNf2XoGbD4BcDkmrm1z5I2ncX5u,ditso ,student,stage 4,100,1,2,100,2025-11-10 07:36:52.642,2025-11-06 06:11:02.921359
+2142b8ed-3a28-4a77-bfdf-2b66aafcd926,Mohammed,$2b$10$W2F6wOOOptaRhQly41D8BOk5tiUmeva9U101oslga6/CCqDtDF5ri,Mohammed Murtala,student,stage 4,261,1,3,261,2026-03-07 12:38:39.828,2025-11-06 05:57:35.458401
+60bd5f33-dc5c-4c4d-9202-ce52bef2d1f2,TSOTLHE/LERUO,$2b$10$yqCdlWAAIHR6.CxgQU/hkuWIdjBCVxY1YD1jV2pVwiDd3xkMA..Q.,Tsotlhe MAGOLA/LERUO MOKOTEDI,student,STD4,85,1,1,85,2025-11-06 06:17:13.405,2025-11-06 05:58:52.501466
+d45e3643-b17d-4a4d-b277-854db7157157,vanessa,$2b$10$BIvceuMxh1ZqHmmQrRYsMuo0ehWyQ3o0IDD3rPWYmtpwND7sXqfjO,Vanessa ismail,student,Kindergarten,50,1,1,50,2026-03-10 14:57:48.445,2025-11-05 18:56:59.574527
+924e2bce-af7e-4e7d-9ced-7823c40345f1,I LOVE HIBISCUS,$2b$10$F7ggb6Fri2iOOp/mfGi68uRYEVx7buwxg3reVslp9v4sOkTmDycYK,Kaesi Gruotwe,student,STAGE 4,35,1,1,35,2025-11-10 10:38:13.756,2025-11-06 06:00:43.095945
+05307ba6-8d9c-4075-a0cd-bef2463b6330,isabelle,$2b$10$C8Dh6fIBf8HdduUcikQSXuS4mkTVWIYnYgUFtLHkVFA.2p1DDfJu.,Isabelle Mosa Dube,student,stage 4,0,0,1,0,,2025-11-06 15:20:21.133696
+9ea5a8a0-4dae-413c-8a6a-ce5c18e46dae,Sethunya,$2b$10$9DFgws8x.4l5DYCys9Usb.eFKD8/N8nYtCI9i3QbsGdOH26QTnfyq,Sethunya Dema,student,Grade 5,0,2,1,0,2025-11-07 17:01:01.435,2025-11-05 06:58:13.295483
+13f64334-b200-47a3-a85a-4f833920c622,Rofhiwa,$2b$10$zFvPunBchw8DikjBWLrB9uy58rNc7LMZGcPetzpMuxTvaq/Po3hgO,Rofhiwa Isaac,student,stage 4,105,1,2,105,2026-03-15 14:33:57.874,2025-11-06 05:57:58.454745
+5976ee3c-d771-4726-a4d7-b78f57f950a6,Lebo26,$2b$10$PfUlqaVq6AEUGXbWJsoaC.XMXtyFo5rYVwiF5s5WaX/wpxTc0Nb5m,Lebogang ,student,Stage 6,0,1,1,0,2026-03-18 13:28:11.52,2025-11-06 03:56:41.816151
+6190ed27-680b-448a-b4b6-91acd7a33730,Lynne,$2b$10$fG602QzuqysictfLSYPuq.kYgh1Pc7BDTetZQw3xECVw0JysUP.nS,Lynne,student,Kindergarten ,0,1,1,0,2026-03-10 11:47:20.589,2025-11-05 18:34:37.964834
+5189c5e2-8100-4d25-a657-f99112676dba,Keabetswe ,$2b$10$7dxT8x8WU4o7ZYijIWhntebTBjq9hbdCBfv8PHxNehRHNuy7gNAy2,Keabetswe Mpharitlhe ,student,Grade 5,0,1,1,0,2026-03-11 06:23:52.412,2025-11-06 05:34:11.772009
+c86d5cd4-b67a-413b-a3f9-0c0dc605992d,Marta,$2b$10$ETSzMFXblPAMlACkEej88.xALyhMQhEUBtQ3r.HXwpcX09kaFa2I2,Marta Mabiala,student,8,15,0,1,15,,2025-11-10 07:44:43.907071
+4115d976-9b46-4dc0-bbd2-f8b430a95e65,Jayden ,$2b$10$lGG4vNNypXj.bNgvJ9fLn.F90738/rQ2Uj1ZuWDkq31rGPGzo7Uhm,Jayden Nyatsande ,student,Stage 4,60,1,1,60,2025-11-08 17:24:19.874,2025-11-08 12:00:50.423595
+6b83e28c-9275-41e0-a1b7-d6b882c8c232,Masa,$2b$10$EF1l02au5zGyqjAMpROkvusrXNiMy65hg9rPuyOsE.KqX5twkpDOW,Masa Lennwe,student,-,0,0,1,0,,2025-11-10 07:34:27.090888
+c1ec787d-38b9-43e7-92fa-717902cd68f0,NAYANGTEWMAAL_,$2b$10$va4oD.hNgvXg43L6JFJ1..LwrHw07NSXX.1o37tDNhDzORquYglOm,NAYANG MATLOTSE,student,GRADE 9,0,0,1,0,,2025-11-10 10:30:23.533621
+d07e546d-5b76-4037-8fbd-4af978426fee,BigRandy,$2b$10$gevlaQAveYCShDIQ3GXvy.9tnVk.V1t0qpXEHw6ww7DcbIItrHlDO,LefikaLaba,student,LS1B,53,0,1,53,,2025-11-10 07:35:31.31996
+356fc30a-093d-4fca-a702-11389f625ac7,shadow_wama2k,$2b$10$0V/mM770rNHbA3dajyjgwekuuQkHu1C5SMFCUwdvqWUSXCUAT1EYy,Phatsimo Phiri,student,8,0,1,1,0,2025-11-13 17:58:58.259,2025-11-10 07:59:20.598037
+33a8e3a7-2ac6-4666-9cc1-81dcf655c859,vmp1r,$2b$10$VWXmsOS2IQ6N9bl9KEYHyu1k2kZqxzk8B5MKH7oIwqZoNJRulZhOC,Thembekile Tjazeri,student,ls1b,80,1,1,80,2026-03-11 07:34:50.812,2025-11-10 07:33:52.989693
+c6991598-421a-4185-8c34-061f5252824e,drowninmyhaze,$2b$10$3v7uUStpmebL6j0HPLtt9.Bg75SafCuyBFT15p78qf.zxUYcNQkj.,Joy Mosarwa,student,grade 9 LS2B,200,1,3,200,2026-03-15 14:15:58.785,2025-11-10 10:27:58.973133
+102e4a95-090b-4344-826e-032cf3397744,Marlene,$2b$10$S94RaDKkaRQf8n8BQS/JHOBNpW/HhWdtPO7yfky/Y6g2SGkqoOjOG,Marta Mabiala,student,8,0,0,1,0,,2025-11-10 07:57:46.370765
+803c6bc1-d405-413c-863f-900f745fe5dc,too1swag4you,$2b$10$EzbqEPcu7SdeQhYP.ZehqOExl4NlJ6om6UGJfq3EsMbrmb/8oit0u,Uzumaki Kian Chatsama,student,8,10,0,1,10,,2025-11-10 07:36:30.282484
+47451ad5-3ccb-4c5d-a8f7-4a3f8b133b8b,ItsMe,$2b$10$t4p4wYAYZTquZdjuqHm4ousnrqwKliIxvNledwwcKb.JBYGz9S5cq,Nathan,student,grade 8,143,1,2,143,2026-03-12 06:24:35.051,2025-11-10 07:39:04.098325
+9aa73a72-823d-4626-86f4-91aeb5653f4e,Glockk2gon3,$2b$10$12yq4/J2dnSDN9lmAL8Gqu7V5PqabrBdd52qzampzk0DDUPHq5BaK,Mosa Mmipi,student,grade8,0,0,1,0,,2025-11-10 07:44:46.034628
+8819f08f-399e-492c-a63b-3c7111d09ac3,maduomox,$2b$10$XVpK5AFkDsiaLZ93egghz.4P9u9.b9v0kxkYVULdF2wP4LrJS.X6u,Maduo Isaac,student,Grade 8,533,1,6,533,2026-03-11 07:43:22.573,2025-11-10 07:36:01.966886
+0d1b2b53-9f3c-4ff9-adde-97a6f8d058c6,ThatOneGuy,$2b$10$K.A9Qx8oNe4WmLafzqxn3ul2049UslgvWYTjUbbU1actOdPfg1lBy,Peter Naingwendje,student,Grade 9,45,1,1,45,2025-11-10 10:42:41.503,2025-11-10 10:31:06.32117
+d9b86f8b-5eb9-43d6-a4c0-68261eaedf79,james=footballer,$2b$10$2Kh/BrmAl2yK7tMFiY8Fj.QZFuVISZZ3Pk.j7tljavDIZ8mLIYz0i,James Nshindano,student,8,10,1,1,10,2025-11-10 07:42:56.223,2025-11-10 07:40:22.547008
+0867083e-bd2c-4295-a484-394b6889cbf2,3than,$2b$10$MKaixOfRKUxWCerx.Wv7Ve5Q5dVIBG3GDf3/pGLnuMbuhYkP.oEa.,Ethan Nyatsande,student,grade 8,5,0,1,5,,2025-11-10 07:36:25.840489
+7ffd26ee-8e58-433f-aa7f-5d9cad95f2f4,Ti$i_$waggatr0n,$2b$10$zeMpizYw6AmJ6XJ/AUSe7OmwT8g4UbrAJmDx00HaOubJXJVeuWL0a,Mnetisi Magagula,student,grade8,0,0,1,0,,2025-11-10 07:47:38.273151
+2a55c263-ffcf-4e49-9ddb-97097a9bb1bb,ENTLE,$2b$10$SJ/Dd.53kiqX4.uEbJmcneh1W73KPdhy2g1CE/6KpZ7KefZdBcMKC,Masa Lennwe,student,GRADE 8,40,0,1,40,,2025-11-10 07:36:18.255722
+1674da2b-054a-4620-b639-b3014fddbd89,AZHANI,$2b$10$hZ4IsH3PdeDk2Xw9b8r/x.oJF9XoyR8DF.ukN8BV37o37cJHYQVXe,Azhani Malomo,student,Grade8,20,0,1,20,,2025-11-10 07:41:01.106608
+f99ffedd-e83f-4ae6-bd54-d1be16325a58,Maza23482,$2b$10$mo/G.QfrPiC.NB1nRPLHw.mu4TJ4RxnaKPPcXt7NvgSSScq6s0uzO,Azariah A. Tshikantwa,student,8,45,0,1,45,,2025-11-10 07:47:14.499965
+047a0390-cf51-4e8a-9333-57a234452238,Alpha sigma male,$2b$10$BCzT.xdgFXRDcLmqCwmvU.Rlq48cN47n.GuPPpxPhe7AGImTY1rYa,Noah Lohobo Buika mugabe,student,Grade 7,210,2,3,210,2025-11-11 17:49:09.438,2025-11-10 07:36:02.854087
+6f4b6b31-0a6e-4263-b0b3-c49b629c663c,Lovable_nale,$2b$10$PX7D5foQxW3FNhuEj.z9augvC2kxgioOhnd/cnB1a6awGUzVriHhe,Naledi Matlale,student,8,0,0,1,0,,2025-11-10 07:51:52.822499
+00ae670a-9bc3-45d5-80b5-a21ca24ca68d,laylani,$2b$10$zHaxRikjgpCrRMoqI8393.lZhuxxjhRydnImqTv21q3Epu/o1hvCS,bame layla gaolebogwe,student,LS2B,70,0,1,70,,2025-11-10 10:25:52.659022
+e3d571a4-6227-49ae-adec-f99c36b942e1,Spic3_ak,$2b$10$TRQdWocMUfW64O9qOJIKxOxInyJtpcMiikNlRswlhX7rtzmCdhZuu,Conrad Junior Wright,student,Ls2B,0,1,1,0,2025-11-10 10:30:37.096,2025-11-10 10:29:49.222616
+d54e1ee4-093f-4291-8897-b3fa9db42620,charlie,$2b$10$Po5HTCF7nA59QzohhQRthOOfRnLhSCII08VTHDkYwnxhWx6Cx6D22,Thabiso washe setume,student,grade 8,0,1,1,0,2025-11-10 10:31:05.829,2025-11-10 10:29:43.54894
+0d02103f-ac59-4e60-816d-31043b43851f,I DON'T WANT TO MAKE A USERNAME,$2b$10$sw9F/HdX22ZpmdwwMT93nOCeWdHs69.c8i0RtlyH7px4sJ0pJBQUC,Ashley,student,LS2B,20,0,1,20,,2025-11-10 10:41:18.559008
+86fa1956-30b6-431f-826f-a73f19635b15,Angel.ic_whispers,$2b$10$iqIEx96CmpZQdbIqWKEG..dhbCdYq4y2CzvnC5BKSS6f4zP3dWLfC,Angel Klaas,student,ls2b,0,0,1,0,,2025-11-10 10:40:15.154248
+8810db35-d05f-4f2b-b585-bfe2bfe5da96,Terry,$2b$10$d0D0pE4V/o/MAaJIrWd0juDwK7CkwwAEzsu3XAPRjxT0ic5yP8qIG,lefika tshikedi,student,grade 9,0,0,1,0,,2025-11-10 10:41:55.210737
+a3f861c1-835c-48a2-bb62-423cebf081a7,K1zi,$2b$10$mtkdB8Tn2l8St1Nv.nayI.ipo5QP0GMV.sFmiFsf8amJ5ZwngQZly,Aoki Khanya Chatsama,student,LS2B,30,0,1,30,,2025-11-10 10:25:52.435145
+2a0d8f96-4f89-4d95-b9c0-b41def6f2a69,Omaatla,$2b$10$TAiKT/7knngc9sjI4sOMR.JTs39tCMXAEZh3iYGei/sLKrroHZRQ6,Omaatla Lewa Motlogelwa,student,LS2B,20,0,1,20,,2025-11-10 10:31:54.977593
+2c58ace8-b4a5-4ea6-90eb-402bb25ef2cc,Luke2rizzy ,$2b$10$Bq7DGd9wcz2qhBQqMtC51etS1p/RjVvjUf4CMBPcqR44TMZF9WxNu,Mmilili Mosarwa ,student,Grade 11,0,0,1,0,,2025-11-10 15:39:26.88128
+8aaa31bd-cf82-432b-988c-e6b882d284eb,Stumbo,$2b$10$oHhif9pG1RYgP0pPO0FhluI/fBX.ig9owtt05QfoJ8Skd504qlcVi,Mothebo Stephan Mukokomani,student,grade 9,0,0,1,0,,2025-11-10 10:45:24.653692
+05903f07-aff8-4075-b4f4-d76422f33b3b,AmeMildred,$2b$10$udOW/JHTwiU7wxnTX09icu7nNNtj1DR1V9j77M187hEJYKpLsux7.,AmeMildredMakwati,student,Grade2B,50,1,1,50,2026-02-03 16:17:24.237,2025-11-10 10:21:42.216775
+f8ee6fb5-463f-48e4-ac3b-377c8685b5c1,God's love ,$2b$10$etHEreWgLX0bh1PwV7XSiOzu2YzlkgsP6tIsHMGuhGIn2FzcJ/gHW,Tiroyaone Shimane Tshikantwa ,student,8,0,0,1,0,,2025-11-10 14:19:27.561479
+4b3c6d3c-fd6a-4843-9b11-b462ee416148,n@yAng.mt,$2b$10$fL903h9j0aWI8utafqCjf.95qgUsfcR9B65EqK3SgqxesYbegcERe,Nayang Matlotse,student,Grade 9,10,1,1,10,2025-11-10 17:30:43.961,2025-11-10 17:28:46.02938
+b39e47ff-5745-470a-a06b-7138adc6e423,layla,$2b$10$K1iZ2IKvp1sTJLjRKd7P0eUgZohV3RwMsqnnKkOmqp4QMUulz2pse,Bame layla gaolebogwe,student,LS2B,10,0,1,10,,2025-11-10 18:16:20.021154
+52866cd3-cc36-424c-af12-ab8b5c178b48,yn_luvsu,$2b$10$0EnObMpYwcTZcn/1RyLBbOvDUEvUbMmqC.CZJtZT1SR8PECP948l.,Pasco Anotidashe Ruzvidzo ,student,Ls2B,0,1,1,0,2025-11-10 19:13:42.815,2025-11-10 10:38:10.577588
+5beb08d8-1639-4443-8075-b221c2709f5e,rees,$2b$10$egtveK5r9OapNO.EYnm8TOOCx4CYeM3AIlSjXnJ.0B8AMViZYPP1q,Robert Reboeleng,student,grade 3,0,0,1,0,,2025-11-11 05:45:52.762914
+38462218-51ad-478f-96ae-f92595db8a1e,yenasiba,$2b$10$SDdum1ZlDELYavBlAnSFL.pC1xDS7DRc6xG68BaFNEPGvNJhbBSgC,Sibahle Ngwenya,student,grade 3,0,0,1,0,,2025-11-11 05:49:41.263289
+76886ac2-49b3-4344-a05b-a743639783c5,amelia,$2b$10$mDDjVUdPOTlIHK.VlLyX1eZNi0aaL7Qde.O7NAbKDJk3lsG3Z83eC,katlego Sampeta,student,grade 3,0,0,1,0,,2025-11-11 05:51:54.225564
+eb3b1362-8269-4f6a-ade0-7605620eede6,rachel,$2b$10$hA9fivpc39iHVA20ySfbL.g8j6.l9dsksEQZQhI7WQLd.NJ2vlyaq,Omaatla Mafoko,student,grade 3,0,0,1,0,,2025-11-11 05:53:23.555166
+fb2b2f42-bbb5-4713-8b88-1b90233f6aee,enhle,$2b$10$68XBL5LaemcL7tioGZfCOuBXBHVMj0j7EK0qbUvL/BkNHuFR.Kl02,Enhle Seema,student,grade 3,0,0,1,0,,2025-11-11 05:56:27.663511
+f51cfb5f-3073-458d-a3b5-5e97b5f3de80,ata2016,$2b$10$RDX/zJXBIopz0GXOunBWneVLXasDdoHHpoJqaipNQd1uZpPvV6UC.,Ata Oganne,student,grade 3,30,0,1,30,,2025-11-11 05:58:05.757835
+5a43a3a7-5a4c-4eef-aae5-e7be85c347b0,lilymolly,$2b$10$D15KHjSK.ZpYk8/O02FImO1S8NB/P98p8U2vsFgfIxtuKeKBXbMhK,Molly Mhaladi,student,grade 3,0,0,1,0,,2025-11-11 06:03:32.407582
+18a03007-db36-4c59-b96a-c04ec39421ba,emma,$2b$10$iJPySInWmuuwBAEADENjyO5G1Ay2IHrp5KkyRfI/e9I8nL5P2CEGK,Cleopatra Amantle,student,grade 3,0,0,1,0,,2025-11-11 06:04:46.188077
+fdf8ec2a-7320-43c1-9179-071ebaef17e5,adiya,$2b$10$ERpO7PKdgWXBcoxLqB1W7ebS7z4H9iQ/ZeDkDs8Z5dc/RZmygba7y,Arona Tsetse,student,grade 3,0,0,1,0,,2025-11-11 06:06:43.961047
+ad1e8c53-c34e-456b-a067-036a58f5a910,katlegom,$2b$10$wUywL9en6epazP7JmvQttO9qXjWfUDuC05I1oFXYWf/Qi9wcofd8i,Katlego Marumo,student,grade 3,0,0,1,0,,2025-11-11 06:09:59.547568
+632f8936-01f4-4dd2-8c25-9e7e771dba8f,tinashe,$2b$10$Wxq89zyHFzH.HOvyjSPLYud1h1BD8Z3O/1Bm3H62NlfwIgvNIg5IO,Thoriso Kenalemang,student,grade 3,0,0,1,0,,2025-11-11 06:11:33.682941
+cc3eb17a-dc62-4b4b-be02-9fa5db3c8a50,Sethunya1,$2b$10$C1aRuiSJ4kL94R2hsGmm6OVy49ZTLPBS4s8q0kSEajHEC9PEOEg.q,Sethunya Lekoma,student,Grade10,0,0,1,0,,2025-11-11 07:09:57.995806
+5cc002fe-fac1-4d15-9a1e-474da492c43a,masa,$2b$10$gJQ7kkuhxis84WdW05c.Xu99t.o1uXkFQ9SOI5rYuTuRo0tSy4tV.,masa lennwe,student,grade 8,30,2,1,30,2025-11-11 14:58:11.457,2025-11-10 13:27:45.406651
+e58a57c5-9e8d-41e5-94dc-a58e2f523053,67Joyisgoated,$2b$10$bv6rRGUTAPVXecpqnk7gcuZemcE.fp.1U7ubmTr/RIJXN3KFh38Rm,Joy Mosarwa,student,grade 9,0,1,1,0,2025-11-11 17:36:55.807,2025-11-11 17:29:10.140045
+ede93cf4-a2f0-4138-a2e2-b9dffe4d07f6,Xlblackwhite,$2b$10$muaqu76xenGbd7PfCEz7WujXzBgzWxMH/W8XDB7lkFs43e1h.r/Lu,Oatile Keone Phelaphela,student,Grade 8,0,0,1,0,,2025-11-12 07:18:00.648506
+8b1c9143-0fb6-427b-824a-c166ad84a959,CERTIFIED_HAALALEATER,$2b$10$GWl3gxWEdjw.gXdwIPMz1OVV2BNkU5lI9oANdawZVOBvvxrqHEv3i,Samuel caler robert,student,LS1A,0,0,1,0,,2025-11-12 07:18:53.352023
+82368c35-3ed3-45c7-859a-96e0d6a87940,Thabs,$2b$10$aGbKYZ.RYqjYY4Q.zMrg8Ocj3kzWgdMNhrYY1B16sAWziHZ7NFR1S,Thabile Scarlett Letshelea,student,Grade 8,0,0,1,0,,2025-11-12 07:19:00.479451
+de713c81-d0a7-4b25-9920-af3125cb21ec,minimochi,$2b$10$fokqCcKNKkBxO/BPptF.fO1iU1YEfIz4gv59Cc0x.W4LkgqEqVmhm,Maatla molosiwa,student,form1,0,0,1,0,,2025-11-12 07:20:00.398671
+12e98eb9-9787-44fc-b0e1-a72e4605b1fc,Exclusivly._.Agape,$2b$10$ePUl7ILRPs2VZM0d5xMUC.U3CTqCyovhoEv7aayqy/jbRfIK52v0.,Ntswaki Agape Kealotswe,student,Grade 8,0,0,1,0,,2025-11-12 07:20:29.246805
+7d800962-e162-4125-be50-5a96f37c9e00,AmeliaHopeKeatlholetswe2012,$2b$10$NQGYLlHxSenyS83RJzPvp.mu/XwCUHo95kHLFQyFW1uwr/hzBwfgK,Refilwe Hope Keatlholetswe ,student,LowerSecondary1A,0,0,1,0,,2025-11-12 07:21:11.313082
+ee7b2400-807c-478b-8616-d8dbb591ba35,ALEXIS,$2b$10$FlSEk3XKe4MWi3s0kEHUkebizfOkV4VlzZb.pIiouZRIxyZVtG20K,LOBOPO MASA ALEXIS MAKGOBI,student,GRADE8,0,0,1,0,,2025-11-12 07:21:30.354631
+897884fc-173f-46d9-ae40-907c57a7c408,clown_65,$2b$10$QHOGH7c1khd5NqV5bTiEdOagTb4gMV7./IedMaiaSoMNaZAOMdDXW,Wamorena Mogotsi,student,GRADE 8,0,0,1,0,,2025-11-12 07:21:59.171756
+e8968997-1f31-4724-805c-12a8c958b48f,MR REBELION,$2b$10$MDrVOe06sk9G/q2IkSqEK.p/DfS4qrkWdaugP.MWOVEdcBBzrxoJS,RICHARD JOHN GARDEN,student,FORM 1A,0,1,1,0,2025-11-12 07:24:13.762,2025-11-12 07:19:00.55798
+2ab8ad6d-733e-4a10-b951-be6e62454716,GOAT,$2b$10$/7Rr8FNEvOGGVkEUyM2V4.PB9p7C.CLlzhEcO5p2BCJHdazXFwmY6,Leboko Ewetse Sebele,student,Grade 8,0,1,1,0,2026-02-06 19:29:15.53,2025-11-12 07:18:19.280988
+f7947bdc-a4cf-47e6-a66e-bd07b51189ee,AREFALORNA05,$2b$10$X8f8y7wh9Jjtqmz1BH2CIeFY/s8suQ8S7MtQbZJrmRaOs3cvOXBCC,Arefa Lorna Mogatle,student,Grade8,50,0,1,50,,2025-11-12 07:19:47.197727
+6d33e598-42e3-4d19-bf29-7e7e6b777ebb,meowl,$2b$10$QMegkUuouWtq35Ru7R4mtuOgaK4AbyXP8Bbz1R1N82xY5HUB8QM/i,Michelle Matlho,student,grade 8,0,1,1,0,2025-11-12 07:26:26.915,2025-11-12 07:18:06.004687
+b0bd11ca-6cfd-451a-bfc2-d8eb207921f4,P3LSED,$2b$10$pS878St.zzfWSW4plbzNXe2l6M496QDptWPvZ/zMqEDk/ZSTelSNK,lihle Ngwenya,student,8,0,0,1,0,,2025-11-12 07:17:48.593652
+3d658f72-72de-4207-a499-f775b41ed19f,MMEAKAMOITSE13,$2b$10$pDWpqP1B4khxAN57THqmQOyJUklR817ssn0bf6AClzGtfGZfsUiDy,Moitse Moradi Eden Kabelo,student,8,50,0,1,50,,2025-11-12 07:19:32.126355
+99f372de-3cd7-42f1-91d2-e0d9b89731f2,Tully_2006,$2b$10$MkibHNHG0o/klLtaDtJdNezeuI38UvwpArxO92R031yQjc7AqFyZG,Tulo Matildah Kgosisejo,student,grade 8,0,0,1,0,,2025-11-12 07:30:43.9951
+ae912863-1646-49fc-acf5-1741f1602f03,IDK_ADILAIDE,$2b$10$BXXDb3UjTWmuyworc.useOEjfjJdqX1nJP4p/L72KCHeaaCNXT4Ai,LELENTLE LIHLE ADILAIDE NTSHINGANE,student,GRADE8,0,0,1,0,,2025-11-12 07:31:24.042986
+a756766b-ee21-47a3-b952-06d6ba0a1cae,@urfavvEmily_,$2b$10$II5fnxpsk7H3rk3wr6uBg.GND5j2UKhuyknLE9va3pAh2p7klZcHa,Emily,student,Grade 8 ,0,0,1,0,,2025-11-12 15:21:07.397091
+5d60b848-9efc-4562-9ad7-a4080aa9d69e,Tim_chenford14,$2b$10$wrXxy.ZFlZhq/N91tTwN/.TR0W5z4l4FOmNPTHpnS3WcLV0CAmq7a,Lelentle Rasenyai Tepo,student,grade 6,0,0,1,0,,2025-11-13 09:11:27.515533
+818cbfda-5161-42a3-a9ba-3104b0734a2c,RORISANG ,$2b$10$ZlhVJ50TmbovPlp..XD5D.3uJjC96i6yiRUDckyi5DsBooIpBHcpO,RORISANG KGOSIDINTSI,student,GRADE 6,0,0,1,0,,2025-11-13 09:13:11.291344
+eee348e3-0898-4d9f-8d01-1350b25570cf,Musonda.k,$2b$10$cYLm.NSC2Qm6Zu6skGQq8uq2BDls5OwRNH7Hn5dwbwHVz.CXNqS1u,Musonda Kalengo,student,6,0,0,1,0,,2025-11-13 10:15:31.99877
+6ce9a895-7e62-4393-b1b8-947b4bc70bb6,tim_chenford14,$2b$10$qT2Op9EVvJN7C6iBenUlpOETLwGfYJcAN9V5oEo5VDWSbqCY8JS5q,lelentle rasenyai tepo,student,grade 6,28,0,1,28,,2025-11-13 10:01:34.775692
+83e6a8dd-d485-4b64-971a-2315284da720,Haniel2014,$2b$10$mwd6zHhs76T51oWaPJ1bBegMm828f./uFqc0LDwy0CP89jvr8HGf6,Haniel Randrianianiana,student,6,0,1,1,0,2025-11-13 10:12:14.494,2025-11-13 09:59:33.918815
+479878a2-807c-474d-bbb5-a14a38f72e36,Andrea ,$2b$10$JQhV.17WH/Sm4taf7dgW1uLTtg/FNY.AU.agBl14IJYEPMa0hoxYK,Reatlegile Molefe,student,GRADE 6,0,0,1,0,,2025-11-13 11:29:39.705671
+f7a91823-5a91-4858-87a1-964795980596,iL0ve_spacee,$2b$10$6J5VKaEzVpS5D5Jux5NH/uNbfkcA8LLNx5Sx3J4rQkFGBSeEyBO2G,Eden Magana,student,6A,0,0,1,0,,2025-11-13 11:31:09.806534
+c4dc0e04-a578-4ce6-8673-ef36ef113b66,SKOTANI_skotana6.7,$2b$10$YOds/NJp8GGjufMvzikVXuhH7uc0UvGcWo/IatMlYDlpIaRfkWc4y,Legakwa Maya Bhantle Ketshabile,student,grade 6,0,0,1,0,,2025-11-13 11:31:49.064865
+fc7ef036-7beb-4b3d-8b58-55751a31e18c,LOVE SARA,$2b$10$dko7SL5Y4UQ2K5d9y/POROyZr8uf2mtZwMkpjYuz9ndymRFPQ4q4W,Jessica Ndhlovu,student,Grade 5,0,0,1,0,,2025-11-14 05:53:44.087849
+45eae14d-b303-4262-9791-51563dd2232c,bigmike,$2b$10$A20Gzx862RVl2CyCKdWuSegIgCS4PN079DH1ftcxuHfbYngwKpX6G,Merrill,student,grade 6,0,0,1,0,,2025-11-14 08:01:39.39954
+cb3f5c29-c4b4-45cd-b998-6c3330bbe98c,Moyah .k 123,$2b$10$ZKHYNzYT5j0pJ8aWvMakeO.inVMgsdTSFCzkVHC41hQQqbzlKJTKC,Moyah Liyora Kalayamotho,student,5a,0,0,1,0,,2025-11-14 05:54:44.957626
+705dbd2a-65f0-4e6a-a840-e5287e6edb30,busheplayzfn,$2b$10$x.TZoebtbbr49N9rXvRe3OIq69zJJXMCdRd4Eqepp.1Xyl7ceeDce,bushe monyika,student,Grade 5,40,0,1,40,,2025-11-14 05:51:57.030707
+7c6e706d-49e8-495f-849b-177cbf5f8158,ANESU     SLAYS 67,$2b$10$x/0dbu/0HyhHDsp50vARdO2DmfIw.f2/RM/36sMoxB.l0pfM3NKOy,ANESUISHE   SHEKINA  NCUBE  ,student,GRADE 5,0,0,1,0,,2025-11-14 05:55:15.485488
+ab846143-07cd-433a-8f3b-559056fc4608,Iammaomao,$2b$10$Fcr0zDQegyOmTj6tmuI4iuRpkP2/IYDD9DZf7gYUfhqMF4X.R4olO,Moitse Moradi Eden Kabelo,student,8,190,1,2,190,2025-11-13 15:31:30.114,2025-11-13 15:11:37.855487
+9024006e-67b6-4dd8-ae1b-0e664f64c780,matthew67,$2b$10$M.kug9MqIU65zA.ck6yHredqZ6TSFBZwsvUjJaFFuY71lfUc2bdRO,Matthew Phuthego,student,6a,5,1,1,5,2025-11-15 07:37:53.446,2025-11-14 08:01:32.533701
+29130672-c7dc-473c-988e-79b073c65236,Riri,$2b$10$BdENWwU4wlwlAe4qVtgSku1vWtAMwPHkaiEAJybLCt9kRNK2UQkhK,Leruo molefe ,student,Grade6,0,0,1,0,,2025-11-13 17:05:24.312141
+32a97b6b-00bb-4a67-a687-5fb094fee9fa,Riri ,$2b$10$rifDI5qtN/iTWpTM7GyoSOngaewFBw301zV2IAsH38pYsx3PfiHU.,Leruo molefe ,student,Grade6,0,0,1,0,,2025-11-13 17:24:09.342542
+da812d7c-ba8f-47c8-b6c5-7b6458a7ec70,Teodoro 2025,$2b$10$UG5LRnraHVt2OAZg9RZisOfeo3eyBF4SB0ztxrL88qQ4ius4yM8jK,Teodoro T. desire,student,5,0,0,1,0,,2025-11-14 05:55:25.080574
+eb0479dc-9509-4cc1-9cd8-b456c7bb7f28,Skotani_skotana,$2b$10$qdWeCsJfx857AicjzYvGOewTIispQDMqwIQVlA3iIl7gjN4K5RcTW,Legakwa Maya Bhantle Ketshabile,student,grade 6,10,1,1,10,2025-11-13 17:49:44.717,2025-11-13 17:05:10.535934
+0008cf8d-eb05-4f01-adcf-02154939f8b6,G Mogomotsi,$2b$10$8IUW85YbRzvEck6sezw3HOFlNmuRYn7XtCnTN40YxDi0In90HISWm,Goemeone Emmanuel Lefika Mogomotsi Jr,student,Grade 5,0,1,1,0,2025-11-14 05:55:54.554,2025-11-14 05:45:15.721175
+a750dd2e-44fa-42f8-bc01-6dcd57cfce42,jadon2016,$2b$10$Yas6TIwKYq0vEuWxPZ.Xd.A3in1LdLl0kp4kL.u5tX3fv2tKUn8w.,jadon Randrianiaina,student,4,225,1,3,225,2026-02-10 16:08:06.515,2025-11-13 13:50:46.757587
+192d9737-8017-48ec-abf3-ff823bad0d7f,ICS,$2b$10$LXY0o2mY3jsw85SCiL3lXeAJiyxwR.tVLROCMvduNMTHqmX1H2Hcm,TAYO FUBISANI ,student,5A,326,1,4,326,2026-03-18 13:04:02.031,2025-11-14 05:48:06.965716
+1dacac1d-b57f-40c5-9ba5-96365e9d14db,Isabella .B 456,$2b$10$3OWioPE7e6lymTba/sc/yeqPVTE7cc1d27wOYwvCDLdtBa6GGxAtC,Isabella Zoe Babusi,student,Grade 5,0,0,1,0,,2025-11-14 05:56:06.149732
+d4d7399f-1e35-4d22-95a4-3936cad090c8,Lavinho,$2b$10$CKcdO8N1LAOD3v1HFJHebOusm//6zSvATU6MG8vNNI1BS4rs9t/46,otlhe chakalisa,student,grade 5,0,0,1,0,,2025-11-14 05:56:19.077202
+fe6e4ba5-64d7-4212-a80f-815fe5f0cd1f,TAYO SPACE,$2b$10$17clchffvfETXhqBTfhEteJUTdMInQR46QazXEjXoi.9Vk4DB8Ppy,ICS,student,5A,0,0,1,0,,2025-11-14 05:46:27.175549
+f97d2da9-0067-4a51-aedd-83b7689f4adb,max ,$2b$10$adLS0blunrUjErj9UVW9rearDuuF9GSbZD.28x2VkVxVx5C3HeH5i,Jake ,student,6B,0,0,1,0,,2025-11-14 08:01:54.579745
+efd47657-6bba-41ad-b8f0-73dbdc0ed2e5,TANAKASLAYS_123,$2b$10$s0DKp0Z1ewdhDU0p5NvQLO.s6BjF/KGNvFfDfQ5kmmFEPvErL3qwS,Tanaka Ndaba,student,6A,0,0,1,0,,2025-11-14 08:01:54.665865
+b85bf295-7dfe-40fe-9aa0-77a57bded970,teodoro 2025,$2b$10$dKWGm8j.IRrb7UjcUyblq.7aEiNjjiG.v3vyrMX4ZQ00baLGZdHGK,Teodoro T. desire,student,5,0,0,1,0,,2025-11-14 05:49:27.213284
+1f34c9e4-1d6d-49aa-b516-6d3a08b12df9,smart KID,$2b$10$3lLZgnfC/lhkZy8Ux8CXYuElQ6gXtMaiOWJrOzDGqfnI1NiZ/gHom,Aiden Stroh,student,Grade 5,0,0,1,0,,2025-11-14 05:50:05.031853
+89c4bde0-7f85-4abb-8cb3-b2737b9b0a36,Chloein_7,$2b$10$yP0VPq.e6TCAQmBrTi9RQuuDeAmDAHb3SQoDEc3ODDTR2jkJrFBwy,Oosi Lethabo Maselwa,student,Grade5,0,0,1,0,,2025-11-14 05:50:18.163507
+b69b6510-e780-4bb5-96af-bfe90c612f06,praisethelord,$2b$10$Cp.kRCmdA3yJ.RGDezTsWuLKpP5aG4dPO9hV/sDfcxYy9ReORi3y.,Otlhe Chakalisa,student,grade 5,0,0,1,0,,2025-11-14 05:50:45.602289
+d096c4e9-3f93-4351-982b-650c22b34824,Qiet kids grop,$2b$10$sZnUAAGpvxkW0GzsETsn9uPKzFLgRxoefAuq4H8lVFlXiBlH/oCMm,Edwin Modimowaitse,student,5A,0,0,1,0,,2025-11-14 05:51:13.432455
+d4828a0a-0ebd-4cf2-b2da-da74f9e8b852,0001,$2b$10$h31HQx0voL46Cg77gZTvy.imp/bsAzVs23C5kQvGphSOWs5x50y8K,Atang Babusi,student,STAGE 2A,0,0,1,0,,2025-11-14 08:49:03.552613
+85dad80b-c425-47a5-9d9d-5703d8510cfe,ANESU  -SLAYS 67 ,$2b$10$.aFo7i2GxRv8Jb/bXXHmtuzxDqWs8m3f6Ui25vPrEM68KYEEcBdUS,ANESUISHE SHEKINA  NCUBE,student,GRADE 5A,0,0,1,0,,2025-11-14 05:52:19.258861
+7c5357b1-2f16-4805-9ad0-33791be658f6,ELIAM EGO,$2b$10$tgOZeOp/9tTOZFZqmSscrOQjnliYmQ1Su/SKxwSqg37ZPAbOzN5Q6,ELIAM ESSOP,student,GRADE 5,145,1,2,145,2026-01-26 15:30:44.023,2025-11-14 05:40:03.497171
+b2e7dec0-f2ca-4ea9-8a3b-70886ffe63c7,AREFA -ROCKS,$2b$10$BDgdrCwrhsl2M8wfgA.Q2OzJURM71y3rceq22T1rIs3Tf.wIhDFCy,AREFA NESSA MATHAI MHLAULI,student,GRADE 5,0,0,1,0,,2025-11-14 05:59:32.25332
+b19077dc-e864-4c41-a95c-55e9c607e916,goslepp66,$2b$10$gzNqo1x3PKjIf2eW/EIm.O84ihxOxclZyGUI4y.4WR4xB4fyzQbz.,bushe monyika,student,grade 5,0,0,1,0,,2025-11-14 06:00:09.851084
+081f519a-9372-4507-8399-9fe589f32b1f,MARIA SANTOS ALWAYS WINS,$2b$10$waLx.It6HDcw0OQ5euOpmed1X1I0yV/9a8Soq89GWhecBG693U3jy,MARIA SANTOS ,student,5A,0,0,1,0,,2025-11-14 06:01:15.288911
+cc683d7d-49eb-4c82-b30a-00245565e362,AYAAN 2012,$2b$10$JT.dUe5.el8XPIeLPiNfT.kYTgSyG4.vaxYRyLJ1lfmBXivw.ZvtC,AYAAN ESSOP,student,6A,0,0,1,0,,2025-11-14 08:00:18.685649
+2a36e882-6242-421e-9544-9c72db798a9b,0002,$2b$10$LkalF14QYGH0H2LQ80KkDOmWW2iZhHm/8AzK/Lz0pkWF6bRic.dEe,Aiden Chiusiwa,student,STAGE 2A,0,0,1,0,,2025-11-14 08:50:19.498077
+a78895e8-90a2-4c22-90ee-094fdd9f98f4,0003,$2b$10$1svy.tBHtdV/s/xo4JxHcuhYHV.hXkgdw4wSWho..Zn.em24x2wUS,Elton Hirshfeld,student,STAGE 2A,0,0,1,0,,2025-11-14 08:51:22.331094
+366c5c1a-5c0a-4849-ac95-78d239c808c5,0004,$2b$10$DcuQX2LaqdES5L18MFW1dOUFuSi8jL1eGN5DIICaJQWC5I144gGTe,Noxolo Jacklas,student,STAGE 2A,0,0,1,0,,2025-11-14 08:52:36.686005
+5ad03d98-6437-49e1-81f2-c1323bb731e9,0005,$2b$10$J4PnE7JsWekaO8DJncRXJ.poCGMGGjZc64YGoKyYfhDDrua9EmcDS,Asa Kebatlhalefe,student,STAGE 2A,0,0,1,0,,2025-11-14 08:53:36.575503
+41418636-12c2-432c-a768-ec994f01fb29,0006,$2b$10$j6iXtPDyRfM9bsRLO6HPA.5uTNW/YzCoKF/B25sS6NUOj6hu0/bj6,Loapi Kelekwang,student,STAGE 2A,0,0,1,0,,2025-11-14 08:54:33.162027
+093968de-8c4a-4221-89a3-cd5726e89abc,0007,$2b$10$sXwpNmtsVkTVcNZQz6Nk3.6IbKwqWoaYQdCtMPL1MI9vO2aJKWd.6,Theodore Koitsiwe,student,STAGE 2A,0,0,1,0,,2025-11-14 08:55:33.530181
+9e272b18-e8fb-4e1b-a1f5-cd9207c050b5,Rorisang ,$2b$10$F31wEDHo/yJdbt1Pl5fgHuTjfM.GaixzY1JGeCWVvs8ukrCY7ahD6,RORISANG KGOSIDINTSI ,student,Grade 6,0,1,1,0,2025-11-30 16:46:03.027,2025-11-13 19:49:50.007744
+4df872e1-5b96-4c95-ab73-d8242d465c1d,0008,$2b$10$5OBXu7BpvV/OjvQ/uDPOO.Gnu0xRAbguiZpYQp7gP5lZ5ha5a5O/S,Anele Maphosa,student,STAGE 2A,0,1,1,0,2025-11-14 08:56:56.705,2025-11-14 08:56:18.76644
+bb98f8f2-9277-486d-9da2-6af008132c9c,0009,$2b$10$I5AfmkDSMj08cm9DF0YmoefkqYpb682XjEcgUSQ/c8Xs3YBWSQJMS,Chriselda Mathabathe,student,STAGE 2A,0,0,1,0,,2025-11-14 08:58:00.149351
+538ee7cf-5db3-4403-a054-a0898996e2c2,0010,$2b$10$sueXTHAkBeSp6I3megyIKu0vQMqclKG6FU6DRoaZ8XqjXERpw1NQy,Akeela Randrianianina,student,STAGE 2A,0,0,1,0,,2025-11-14 08:59:05.583756
+3b37f1bd-1255-4184-b11f-eed2e6a00c41,0011,$2b$10$4azujMfohbKngpoFSPNSZ.xWgKkovGR8xq9mq8RYIHpBkux846RMW,Ane-Naya Sitale,student,STAGE 2A,0,0,1,0,,2025-11-14 08:59:58.816672
+fa610ca3-64bb-4f8c-a3f4-3f00615fa473,0012,$2b$10$eVSOe9jj3k.BpspDq9PDeOGzDzkO.EQc4h7kdJoxeZPOIpAGw5vla,Annabelle Omotoye,student,STAGE 2A,0,0,1,0,,2025-11-14 09:01:19.818099
+f7c2132c-4fb3-44ca-be0f-dc2b322f601b,Lilacgaby,$2b$10$Z2hCS3.xGcUamDDj2MejDuGJbgZCo.gqkgmEHFBwesSUXrFB6AurS,Aisha Gabrielle Makhoha,student,grade 8,45,1,1,45,2025-11-14 09:23:18.626,2025-11-12 07:18:46.845872
+2df4dbee-cbaf-4896-83ac-ed25c2699d33,0013,$2b$10$kANyCochDGE86qUv9jLGpuywAHfwTyML.YCDc3RTuVoJ1SLdiFGPS,Anenyasha Ncube,student,stage 2B,0,0,1,0,,2025-11-14 09:29:52.343315
+75e63575-7e76-449a-8aa1-9d481ccef60e,0014,$2b$10$KDUrvIcazYKQ1mdEJmQtje/pqCHVydVfhSIftUKZtfs3CiH.xuxCO,Asele Ditlhase,student,stage 2B,0,0,1,0,,2025-11-14 09:30:45.50343
+36821f1e-f4af-4733-b2cf-bc0f1ef0610b,0016,$2b$10$PffcLfJIylrBGzWPQ4NNt.BXahzGaxj9MM649L9JPqQbz/uhDr5FG,Boipelo Nkitse,student,stage 2B,0,0,1,0,,2025-11-14 09:31:43.403222
+83f995c8-ae0e-4927-b4ff-67d953c3d7fe,0015,$2b$10$9OBJgC/aIwz8qj.fPkArhOyyQCeA82bMDEf8QAicu1.uaz5prG3e.,Boipelo Nkitse,student,stage 2B,0,0,1,0,,2025-11-14 09:33:47.867299
+3d52d906-496d-4a64-8f5e-74841a521098,0017,$2b$10$CrKbF4qHbpgb3rJ67vfuVOmNhWgAVEJ2pa4ktvsz4W5ZO58XbFwY.,Bonesang  Makhala,student,stage 2B,0,0,1,0,,2025-11-14 09:36:40.585713
+bc6f1415-5bb8-4a6b-8823-a27f86d28805,0024,$2b$10$ZxhwRrcKa/V8uHeWGYyESu.brgEJU/KeViXhYA16Tg5l52nQy5dwK,Kaosi Maselwa,student,stage 2B,0,0,1,0,,2025-11-14 09:37:36.699913
+9e91a170-f0ae-4124-8ca4-8d842a184252,0018,$2b$10$zWPUoeLe2NzxrFg.vF6wgeJu/sfqKenXLbm8PIZfmv9ECRvUJPAM2,Keisha Boalotswe,student,stage 2B,0,0,1,0,,2025-11-14 09:39:43.614292
+a2b148b0-e61b-4ee3-952d-84d3e66e877e,0019,$2b$10$2B8QK8Byd0NnF33BfSg7Fej8VXJ1Tlr8KOusbsKlyLH25vdM5TyuW,Lihasi Atalle Wedaralalage,student,stage 2B,0,0,1,0,,2025-11-14 09:42:33.618429
+9d8353bc-02c3-4630-9ccc-89c564b8932e,0020,$2b$10$vf4zDf20X0sdu8jf5ylLmuQKhmtA390entNqRV8osok26OhM3FwA2,Matilde Sousa Domingues,student,stage 2B,0,0,1,0,,2025-11-14 09:43:44.609243
+0261766a-4aef-43ed-8533-bd45cc9e6ede,0021,$2b$10$piazK48qNuv4itXZXCe9nuTwe/xWlGLPFcl8zoidF6QOIz3L1K3.G,Rayaan Kibria,student,stage 2B,0,0,1,0,,2025-11-14 09:44:53.455819
+b450519a-e41a-4196-88e3-21142e9523f9,0022,$2b$10$j7KeWTp7MjiZo6Vd8.wS1ewGbgCngTdZ9KdQskLjwx0GePl9M1VsC,Rethabile Leso,student,stage 2B,0,0,1,0,,2025-11-14 09:46:00.436233
+e15547ee-0379-49c8-ab5b-394f96d1d825,0023,$2b$10$AYLFYBlrDjPAy.yLfSMr0eGDZpRzyv6BDPj8m6zSBe/5SAtj/9zNi,Vanya Kaboyaone,student,stage 2B,0,0,1,0,,2025-11-14 09:46:58.040495
+4b70791e-6a69-4c88-a3ca-e32125386d20,Molefe,$2b$10$xOYGpvFNeyKRn2x0jxiRcu1gdNwM5AOXZw.Qp.UTsFpAyyn6uddw2,Molefe,student,Grade6,0,0,1,0,,2025-11-14 13:16:22.550356
+c988d30f-7593-4d32-afeb-efe41a2046a9,AREFA-ROCKS,$2b$10$0zGLNvOCCGpgLRsh8hYUXuAVExOmrGxiR23sfx7vRQ4xvt8hZNYQ2,Arefa Nessa Mathai Mhlauli ,student,5,0,0,1,0,,2025-11-14 14:28:52.701125
+3ddf1087-3f06-4560-88bb-ce6c67b4edd4,AREFA-RO,$2b$10$9XxZiuXxs3xZ5psAMuu99ub/JF6WYnyzfAewibdzKJo2FaQtw3rma,Arefa Nessa Mathai Mhlauli ,student,5,0,0,1,0,,2025-11-14 14:31:34.960927
+17a64f5b-d959-4c76-b20a-d3793db0e41e,AREFA-SLAYS,$2b$10$iTq9FWbFM7B4kUYPSAEy6OxkGNR4o931fV3p5br8UqvdlbJ7xPTbq,Arefa Nessa Mathai Mhlauli ,student,5,0,0,1,0,,2025-11-14 14:32:29.38547
+414fc8ec-d432-4e5d-b9cc-c13eb68d3bfa,Arefa -Cute,$2b$10$JgDHx7xe7Obk3ABBnL8n/eL8de/eE6AnkHCjrh1MGhg.bmN.Qx0dK,Arefa Nessa Mathai Mhlauli ,student,5,0,0,1,0,,2025-11-14 14:33:34.56201
+5b6c5f41-ff56-4cf3-a6d1-9021be79ee6a,Arefa-Cute ,$2b$10$/M4rF1bCepauEFpbr.rsn.KPMQbJCBxydp8rkOCT7Y7XpSGgl4Mae,Arefa Nessa Mathai Mhlauli ,student,5,0,0,1,0,,2025-11-14 14:41:32.820829
+3b6c8b80-0d2d-4c8a-8baf-8b86f8938da1,Anesuslays67,$2b$10$JbeyAq8beDMlOupkcw0nIeU756Mors7/L8RzU4XCRjtmiGEqHFShy,Anesuishe Shekinah Ncube,student,Grade5,10,0,1,10,,2025-11-14 14:46:27.15238
+d42a2e48-f81d-46ce-8436-489e47b50fac,Arefa -Kind,$2b$10$SCgOAh7bala2g2VA6qyex.gFxAfcpJjqVFpmu/knZ23Vl9Y1GZuI6,Arefa Nessa Mathai Mhlauli ,student,5,0,0,1,0,,2025-11-14 15:37:27.337327
+5bc34fa2-61ce-4d62-9340-f2ff7985216b,Chelsy,$2b$10$g9h05y0Df7MkGr7o6nCaMu6VWb7.fb7tqlrrd002H/ZwTjUYjsn..,Chelsy Mathabathe ,student,Grade 6,145,1,2,145,2026-02-09 15:37:14.853,2025-11-13 18:45:22.342936
+884cde6e-1ffd-462b-8503-e8ff82421ce1,Haniel_is_the_best..67,$2b$10$hAGhYsi.TRycjfbQQbRem.e0UcSoGnUxahgTcC9s49aXnpZbERY8i,Haniel Randrianiana,student,6,0,1,1,0,2025-11-14 16:02:34.729,2025-11-14 15:21:19.37601
+214155c6-3884-4a40-b33a-9c1139a8b8f4,j,$2b$10$83.3H9b605KDaFg7mE0GHOr7T3uFzdA4.f1FRj3GVUuAPkov8PbX.,h,student,1,0,0,1,0,,2025-11-14 16:07:32.204521
+bdb0cdef-4fc7-42ee-bf94-4af2d8d6d124,AkeelahNaomi,$2b$10$2rZzsq9r./puJeFRO1koh.Nj3J4/JFvTcXnPr74/nf64tV00XU4Sa,Akeelah Randraianianina,student,2,68,0,1,68,,2025-11-14 15:25:47.692711
+a3d1e8a6-ff5d-4c47-ba2d-f5bd21e4c856,Lara,$2b$10$zihBPK2H1K4K.HK6CNadHelrXzT5jTxsu/cZoDzyVaYQWhY6ik6Ou,Reneilwe Tapiwa Pusi,student,STAGE 4,0,0,1,0,,2025-11-14 19:57:57.817602
+683ec62f-a3d7-43e2-8709-8968da12fd5d,Anesu- slays 67,$2b$10$xF6x4TGiwooMm1pgKpSjiOExLb7HLIUe6XDxM8/Srwa3nratygE1e,Anesuishe Ncube,student,Grade 5,0,0,1,0,,2025-11-15 04:31:56.54285
+0ea7cc83-2df0-4305-9d2b-f2ed029ae064,Chriselda ,$2b$10$Yg3ZCQN4vJoYDkBLXt325OixlI/FGXfrf45zp5KeFGoA/6OYaCHWG,Chriselda Mathabthe,student,Grade 2,60,1,1,60,2025-11-15 05:40:01.121,2025-11-15 05:24:53.683764
+5f02535e-668b-49d8-a638-19cf89db155f,tim_chenford15,$2b$10$TeLbRGkq4AO4pU1V2RMo2ejS1s4JJ6G1Jsc1bXjaINpJ9/ycbaq1.,lelentle rasenyai tepo,student,6B,98,1,1,98,2025-11-15 05:48:46.846,2025-11-15 05:27:10.263676
+86fd8349-383d-40ff-9b5e-cbe6fb5bc463,Phuthego,$2b$10$wYQKuBVdg5P/kk6J8PsVzerRzE1DJumf9BV0hiOIFC1zEQmzURhU2,Hope,student,Grade 8,0,0,1,0,,2025-11-15 07:40:34.482742
+66566888-9c1b-4959-b11e-0bca20039bd1,Sethunya26,$2b$10$OL2iXSHFDx3BapJn4ZkQi.WqtfTHYtOBkEIgrDGulIyB9eqoglG3K,Sethunya Lekoma,student,Grade10,0,0,1,0,,2025-11-27 20:16:33.046595
+12a869cf-de20-488d-8fcc-69648439d363,sjlekoma,$2b$10$oi5TkPJEvWwH5l3gbCkzNOqKHYlngTcvfklVGrgMrY1U5RWHOqjxe,Sethunya Lekoma,teacher,,0,1,1,0,2025-12-01 04:52:42.583,2025-12-01 04:51:22.334325
+5124dde0-a185-457c-aea0-6278d0117844,jaydenn,$2b$10$jhe6IT3CYVJlfxGJdgDc0OPT.ZHZFqOCyKxoipTKpYLknILmfqUy.,Jayden Nyatsande,student,Grade 4,10,0,1,10,,2025-12-09 19:28:15.459044
+f9f3f4f9-0171-4e10-8e08-c85b9952c0f4,teacher,$2b$10$gpaCD0ulu/nzpqtTn0A3T.SKqA1ZUS0zSfNbdWQByAwdHxdQIJCsa,Demo Teacher,teacher,,0,1,1,0,2026-03-18 05:57:46.875,2025-11-30 19:27:06.811461
+6848500b-370e-4268-a69d-8fe1803dc0f8,KD DA KID,$2b$10$A0P/LZCsbrbm4IGylylOtupL6U1.jiSg/IdMbvMlT2bM3GjMgZqSO,Tsotlhe,student,,33,0,1,33,,2025-12-21 00:49:28.23759
+b283893c-d63a-4afd-9d66-80407ea81a5b,Yana2goated,$2b$10$hycPsAEqs9Rg7fi3nnXfx.jKqlwN4aqZ/mOCXsYpquYx/HHOVlEMe,Yana,student,,0,0,1,0,,2026-01-14 18:55:10.499769
+9b9e86ad-e186-4bc8-b28f-1666bda02787,miahighkcool,$2b$10$v9N08RDrgSG0FV99My98ZeMJ0JYgduN5kbLEDaal2m5hb0dJ3IdL6,Mia johannes,student,grade 10,0,0,1,0,,2026-02-03 05:32:17.117327
+628dc0e7-9629-4fce-98ce-038227a97e5a,K!z1,$2b$10$deOMJgIV.y1a6qUZclNkh.071KnwNCXzV5/KKhuxsVSQRAGUmlFLy,Aoki Khanya Chatsama,student,Grade 10,0,0,1,0,,2026-02-03 05:32:56.611918
+1f029ff2-8cf5-49ca-b4fe-ebfcc735d6e2,Ang3l.ic_whispers,$2b$10$Z49HoaLDbCCdta.bCpe7dOuE4qzfVRct3.tK77ph.A4DpLroFjN2W,Angel Klaas,student,grade 10,0,0,1,0,,2026-02-03 05:35:06.967135
+ff68d2b7-3466-42b0-ba0b-d94c5ba26023,charlie.smsk,$2b$10$0TVriSIaMmT4tlGRF.Nrde4miwJYbW8csJdtG.20G2xSZIm5Vlclq,Thabiso setume,student,,0,0,1,0,,2026-02-03 05:35:10.817364
+36557ace-da21-4210-9514-0f66339553c7,tsibix2.0,$2b$10$uFg0C1lkPdLPEGKn8OQ9f.eDuyiqT5L.Y/3sr6WJ1VDL.ZKshKzWi,shayne kgaogano,student,grade 10,0,0,1,0,,2026-02-03 05:35:54.246069
+6d93f263-286f-45d1-975a-04fd1ed99e75,Ame,$2b$10$i76m79BYbHXxH0BoQ.S1nOa29aNecUkXn1yY32YlD1j9yPL42pCWS,AmeMakwati,student,Grade10,0,0,1,0,,2026-02-03 05:38:39.956756
+5cd6d91e-e31e-426e-874c-497f7be744bc,leloba,$2b$10$EX4/5Rd3gJpTaOvTLqvAp..6vOHVzmdLbvpxB5eZzGV.GdE2RnhOq,Leloba Ntshabele,student,grade 10,0,0,1,0,,2026-02-03 05:39:34.409434
+4a02fd82-3adb-4ee5-9526-e081e6840749,LT,$2b$10$2NvDAT71RwMuHwHWoZhWSe8mgdB3CkDhb99f6iEVagay.hrQuM4aO,lefika terry tshikedi,student,grade 9,0,0,1,0,,2026-02-03 05:40:36.905957
+1620ab83-f2cd-4cef-9669-a032d1d3314f,3d3n Hazar6,$2b$10$saYJknWBqD.AojRniLEiI.QbgYvNLui9Ul5fD1c2GfWs.DJ.XlWv6,Ashley Maribeng,student,grade 10 ,40,0,1,40,,2026-02-03 05:31:41.654807
+d18679aa-ec65-4ff1-a29f-aa1afdd5e116,Akinrise27,$2b$10$O6TTLSM1ZMgWTrxvnbs91udeMfGMI3/xd7jpBfsM.4WaCFeT2k6Fm,Nzwadzi Sibanda ,student,grade 10,0,1,1,0,2026-02-03 05:44:59.621,2026-02-03 05:43:18.457221
+50590170-1a0e-4e3d-bd3c-dc62506ae12b,Lone Hope,$2b$10$nZ8XFEl5bbNnK0hSQf48wOwYP1YOoNIhwHWh5flIYam0P5ubluZwq,lone Hope,student,grade 10,0,1,1,0,2026-02-03 07:38:04.06,2026-02-03 05:35:07.68306
+0c7bc8fe-ee73-4009-84d9-0eaf8b8af2ff,Arefa Rocks,$2b$10$ya8h8j6.lFH1Es9kof1Ia.LYshi0BW49OoNszEykPsBNstGRNMa1K,Arefa Mhlauli,student,6,25,0,1,25,,2026-01-20 14:37:57.582357
+a1976679-96f1-4fd5-99ae-86f7e09fbc52,snowghost,$2b$10$VMLEJSWWTh9hPIaS4ZlA4.Qdj/kD.nPDkuvyKdT32LvyWrDlyH1Ga,setso mmutle ,student,stage 8,86,1,1,86,2026-03-12 06:20:14.576,2026-02-03 07:40:24.0741
+d19249a5-17a1-497b-9ea7-46677808f731,Chickencurrychickenballs ,$2b$10$sxjFYF.TxGX0VoT/0tPNCu5lXESzDFq.jvxkK0NkLqRwrIdaFoNne,Yana Mosarwa,student,Grade 10,0,1,1,0,2026-02-08 12:57:35.653,2026-01-19 19:27:30.342691
+115c62f9-c80a-456c-881a-915097b289ab,Ace,$2b$10$gi/VlDGOsIZzz3uqhRTCUOh/6ur8P9xNkNX/GF8jXfLkG5m/Yr1hG,Otlhe Chalisa,student,6,20,0,1,20,,2026-01-26 13:30:25.454349
+867946db-4e5b-48dd-b8b3-2f61290e503b,Topper,$2b$10$HMcpTZQDo45OVI5rM0VuGu2BgsOgwQYyt4mUPVbXPmB2BV5TrJdkO,Otlhe Chakalisa,student,,0,0,1,0,,2026-01-26 13:39:58.987167
+a8173a70-b56d-4fa4-9b1a-2acd4de341bf,KgosiandMotse67,$2b$10$zsSnKqvy9EWt5EWUE4opgedsStjex/EhazYYI76EMDb1/GDbYqSV2,Kgosi Motswagole ,student,Form 1 A,0,0,1,0,,2026-02-03 07:41:25.875608
+ba0966bd-3eae-497b-800f-908910de5397,Nicole,$2b$10$2IdlAeCpZtDYoH2aUUc91.tfIXaKm86knZaeri891FGuhUy2diq7y,Kena-Wabo Kayumvu ,teacher,,0,1,1,0,2026-03-18 15:06:42.202,2026-01-31 11:14:47.615877
+004b5515-5d20-41c1-aaaa-0d0f363bba56,Zvanyanya,$2b$10$tTsviUhTLJiel4131/xkEuFqKbs32wVahcrEpBK36aVNTpJVXJLDi,Tichaona,teacher,,0,0,1,0,,2026-01-31 11:14:08.880866
+a5ef24ce-6b23-4840-ad76-5c9d1ef36543,MrMan,$2b$10$Rg66iYn4YdAEr.NQSUCKWu7n7PJczW4FC7Ez5brwKihQPIolkQP0e,Patrick,student,Grade 10,0,0,1,0,,2026-02-03 05:31:30.44381
+da7b992c-7104-4391-b707-ed9a4d251eb9,Deshi,$2b$10$uP3K3baW5JEJYoiOFDdUAeGMdy.gJ3a/JlShfYQ/Rh5kiYMG98SN2,Deshi Delvin Matsheledi,student,Form 1A,0,0,1,0,,2026-02-03 07:41:55.023347
+9c659bc4-b3aa-4f25-9c94-39f62572c02b,learningcenter67,$2b$10$xZ3aHmYJdkaRlTKPkEzWl.v9A6k2n5e8miv5lx6JLsJnoOkae6Jq2,Mason and aone,student,Form 1 ,0,0,1,0,,2026-02-03 07:42:28.45836
+c775ee6c-04c3-4b5c-948a-0cdf0a79b2f6,LEARNINGTIME67,$2b$10$HYADB00LAuiDwi6QnyHHoeKsxbKdhmyfFDHdne5JL0aBdqK6JOHGm,Kaedi,student,Form 1,0,1,1,0,2026-02-03 07:44:07.553,2026-02-03 07:42:24.528327
+cd83ec22-941f-4407-a017-4c9d3d38177a,Izel,$2b$10$8h/zAcQWcjVQnPrWumcbVuL1T6W6lhi1K4chPGnSUBnOXvq8pqd2W,Izel de Wet,teacher,,0,0,1,0,,2026-02-03 07:44:10.87245
+a5863c04-dcb2-4f0e-984c-2a73ee9e33cf,abang77103,$2b$10$p1dsLXz9pScRsa1kVKCbrORFfaK7QxSMyXzgN6weAKaYWRG0aK5E6,abang otukile,student,Grade 8,0,0,1,0,,2026-02-03 07:44:43.575744
+9f1b2928-c540-4452-b916-ec046a3a69b4,BOOKMARKS ,$2b$10$ov62CbItQT.zf0.FZVSoYeiawfD0x2ENFNPNq0phN2sFeTc1MgXOm,ÀONE,student,Form 1 ,0,0,1,0,,2026-02-03 07:44:50.148208
+c06c34b8-da52-4c7c-a10e-605c55534c81,Lethabomolelekeng,$2b$10$Savpa46wQb4hDbW0iqB2t.Qz76IweyvbUVDCdkCghDQNZgTGGbRnG,Lethabo Molelekeng,student,FORM 1Ab,0,0,1,0,,2026-02-03 07:45:36.282954
+c5dbb6af-ef53-4e78-a46c-8a51795e1919,MrGhost,$2b$10$vg1YbalA/77ciyoslWhqgu5gjiGR/NhxugiYolRX35DBIasde/HvS,Abalen Pelaelo,student,Grade 8,150,1,2,150,2026-03-12 07:02:54.409,2026-02-03 07:39:59.123747
+7e8264ae-ef01-4386-8fd8-95dc8fbb28e5,zephyr,$2b$10$zWl1TloHYjKkAvzxsRS22eepBtt9LgVgEc0g0fj24Iarob5F.fzZq,Zyphyr,student,LS 1,0,0,1,0,,2026-02-03 07:40:39.02204
+a243f241-0bc9-4ac1-84d9-1eb6b9c40943,LEARNINGTIME69,$2b$10$7DOK69Ny3K1PUo2p1dbj7OZjFTx6/Ob1eORRxmEr8B4FyyVZ06PfC,Kaedi,student,Form 1,0,0,1,0,,2026-02-03 07:44:48.03947
+ccda7dad-d9b6-49a6-940c-f590944ad9a7,iplan18,$2b$10$ukn33eRYNikD6Kzvasggv.2jxMnJiABkhnYixa1.Hu5asaL.qUKmi,Yamikani,student,Form 1 A,5,0,1,5,,2026-02-03 07:44:25.931047
+3566b1de-3607-4759-aa95-75efdf6b52c5,TERRY,$2b$10$MSxp.7r0bRrpiy9L3LVBNO9aCp8KBAMgnSn4VHLNG.qfNOVdTYbX2,lefika terry tshikedi,student,,80,1,1,80,2026-02-06 11:11:14.908,2026-02-03 05:31:11.560309
+4fac5831-4d3e-492c-a3fb-bc9f59bb6f94,Casandra,$2b$10$OTZv90cwUdnI6LZo94oz9e2xZ1IvFDTeg/hKt5UabMDFHar9pwyMC,Maria Santos,student,6,88,1,1,88,2026-02-08 05:50:04.263,2026-01-20 14:32:15.895137
+92772ca5-4b2b-40df-af53-9fc98191b3ca,chelsy,$2b$10$WFA2hiWjCL1.Ky5Xqh4E1.iFlCUQfjLoLpB823Dma6WQUZCeGXPMm,Chelsy Mathabathe ,student,7,520,1,6,520,2026-02-11 17:32:19.083,2026-01-15 14:24:33.559778
+7533b1ad-6515-47e0-a8c6-d49d13fc840d,nayangtewmaal,$2b$10$NA9t7FUhloqX3KyeMhbPpu6nSZX0PJ331sEBIvMehsTHX3FGWup7i,nayang matlotse,student,grade 10,0,1,1,0,2026-03-05 09:22:27.284,2026-02-03 05:32:11.154952
+e43866cd-4d5d-400a-81ee-69fff884ea8a,otlhe,$2b$10$yxvrthNG4MR4jN1Yvrl/U.AUhrZkTFee3l.eryHZguc1soY7Ii1xe,Otlhe Chakalisa,student,5,273,1,3,273,2026-03-18 13:22:01.443,2026-01-26 13:42:36.852555
+31051279-2537-4ec3-8bb4-dabc93dca17f,y2k_loe,$2b$10$oVhmEXCmPm9Ojt750mJIEOjXoIEquUHCQDzio3o6FeW6/7QeUTkS2,eleanor,student,LS1,26,1,1,26,2026-03-12 07:19:29.813,2026-02-03 07:40:59.888007
+273fc59c-807b-40c5-b8a9-9774ff0f424f,Aoki,$2b$10$/r5SES.YJT8jqORNpjt0/OhrNnokHXyfwlZCQ7qN9do5Ei2fpnh8.,Aokileo moremedi ,student,form 1 ,0,0,1,0,,2026-02-03 07:46:15.822765
+ecec950b-6dda-443c-af7d-72092df8ed36,FROSTVO1D,$2b$10$LbigqDgRf6HbDzeKgnDNhOgzUi7l7TOEHmb.e8BywSd3sLOTlm.8K,Mason,student,FORM 1,0,0,1,0,,2026-02-03 07:46:42.679967
+31b98cff-3524-4a36-9662-1fc26cf584ac,3vil light skin,$2b$10$JHchZklzHnnRgzLXJlSRJeeYyLNIgxQpoesPFsip4SHUDHVelMFvq,Abaleng Gabriella  Semausu,student,form 1A,0,0,1,0,,2026-02-03 07:47:10.44991
+4961ee9c-3263-43b3-a734-abdc2cc8ca2e,Makizen,$2b$10$NVVVztE7La4zC4gr9Kid2ObqqTgjv7rleI0e1pCJG70OHoMocY7Qq,Sasha ,student,LS1,40,1,1,40,2026-02-03 07:47:45.436,2026-02-03 07:45:34.362564
+7baa6d1b-7dca-45d9-b708-22e913aa3f9e,BOOKMARKLOVER40,$2b$10$FVzPz0/9mfbMxT5voxbqhOAr5YpnuH2rNlzQLFDcIHVqNEe7ek56O,AONE,student,FORM 1,0,0,1,0,,2026-02-03 07:48:03.271619
+4d139fbc-bc9b-46ac-b4f0-19e9c0f3b246,SuperAnezz64,$2b$10$ezMS3685.InHq/wUXUTQU.wSyBJGZkgZXMc0idAJ/shmpBQ5wkFcq,Aneni Manhanga,student,grade 8,0,0,1,0,,2026-02-03 07:48:18.086383
+7e272c69-77df-403f-a206-82fa166759bf,ha!l3y,$2b$10$IpnijeBCpUPELew5zksUXeCAGNWYbumZNjzwAY6SrhdYc0.4b6HN2,Raletsa mafunga,student,form 1 ,0,0,1,0,,2026-02-03 07:49:48.712505
+e1e541bd-59ab-4a5d-a00f-a0599b1be97d,_.motsee,$2b$10$878Udys6KfHqyuaaapdoqebX4H3V467TWc5lqllXlx71kYweQeBt.,Motse Tumagole,student,Form 1A,143,1,2,143,2026-03-12 07:08:59.426,2026-02-03 07:47:19.010349
+0e9bafa4-815e-4cd5-ac02-7fba0bf14218,ZEPHYR,$2b$10$NsZ7ztBANXQRjBG7hQIjn.owRq64BHKtpYyteQ7VUZOQ3DdArk0ea,tadiwa,student,,0,0,1,0,,2026-02-03 08:27:36.722669
+7c09660a-f7d3-47dc-9c9f-ae65a239b57a,flippy,$2b$10$yaB2byIFpCEfEPI5rGCjy.E00wF2q3Wl02yoGMusWpdUcznZmBzj2,ThabisoTapela,student,Grade 10,30,0,1,30,,2026-02-06 11:07:52.68421
+2ff3e601-8968-4153-93b0-64385502de94,BOGOLOTUMAGOLE,$2b$10$lR9V29aGR2D3gAEZBKi/wuKx9N7T3li057cqAwdjCP/D4NZ8AqN7i,BOGOLO TUMAGOLE,student,STAGE 4A,0,1,1,0,2026-02-08 07:57:57.849,2026-02-03 18:29:35.12847
+578fe8af-8576-422c-b2de-4ea3d55d5294,ABCDEFG,$2b$10$B1YVKJIfoY7S1tqn8LH7POWtxh3WCVLhTidIX1WjVNJgIVG7UOJfy,Patrick,student,grade 10,70,1,1,70,2026-02-06 11:19:23.252,2026-02-06 11:09:12.207938
+6bccde15-6fd5-4467-8fa9-757aa362b677,ANG3LIC,$2b$10$f6aPVh07HENTxwOFRj1QcON/swRTMiEwUDwraG61jRQ7QyZl8WEJy,Zanele Kelekwang ,student,form 1 ,0,1,1,0,2026-03-12 06:24:57.536,2026-02-03 07:47:20.535674
+9e86bcc0-ec8b-43d4-8b57-0f8268475110,Abdul.qadir,$2b$10$Vk/TwOxcNJUOgiHHWFwI6.F/1nBquRoTWzdLx4YpIdivWjn8fmKGu,Mbakile,student,9,150,1,2,150,2026-02-03 09:51:56.992,2026-02-03 09:42:17.282293
+5a3f23e3-425b-40a7-bda3-6fd43f8e331e,Ame Makwati,$2b$10$JrrdxsyhbsVGM3PYz.sk8ujcqjf87drbDr4H.p8mOWEC2sm9YMinC,Ame Mildred Makwati ,student,Grade10,25,0,1,25,,2026-02-03 15:01:29.273111
+9b6febd7-a114-402e-8eb0-b9c76b21900b,Rimi,$2b$10$CPORiIExzWjiFsA20tPvQu0gNZHlwDM8h7PmHbH0eniZRg.goAdSq,Riri,student,Grade 4,0,0,1,0,,2026-02-08 17:33:02.107015
+c93301d7-e7c1-4d75-b72d-bff21e1a1b3f,Sekao,$2b$10$GTfvmSgLthy2uiybArPIwepjQ7cKt6wrD5IW10I7d0JwmA96WyGza,Jorim Sekao Reatile Moloko,student,Grade 4,0,0,1,0,,2026-02-08 19:25:10.055179
+97b2f3da-267a-42e7-a13e-a5f7660376cd,Brocky,$2b$10$V0Q/vkfF6pJXGFhZF1ibOOOErSfgat9lMN/5AH7I0AOjm5WkuWbde,Brock Keti ,student,4,10,2,1,10,2026-02-09 04:58:09.289,2026-02-06 13:40:41.768843
+1194fc07-997a-42cd-ba4a-ce5bc3ea7ccc,Flame Frags,$2b$10$oLFUCoa3.357FQcsCFhJYe9ZyliKsmGPhp88se1wpkj3k2MsTxJlW,Arthur,student,LS 1,460,1,5,460,2026-03-03 16:49:00.004,2026-02-09 15:24:50.494265
+2f385e50-9848-47b3-9b1c-353d794b5445,JDoe,$2b$10$X15.trHsLHbxW/mfAD5DuecN7cSV0CPaxt8FDyDOl5sYONf91i6SC,John Doe,student,Form 1,0,0,1,0,,2026-02-05 18:45:53.171455
+2698cd5e-715f-494a-bfd7-0eda6a1ad356,Woods,$2b$10$yOuIsxTZbXqGYiFM3/Z2oeHOoaeurdswScKR877iW2I8RKYn1Ah5u,Lebogang Woods,student,Grade 4,0,0,1,0,,2026-02-09 10:24:59.996312
+0da75627-ffad-4d3d-96a6-f8f5ecf8515e,Oratile Makoba,$2b$10$BBCLD1TsXBefyV0FkEzmGe1nOFEDwlTHABQV3Cxd6D1OWEdLG.XBq,Oratile,student,Grade 11,0,0,1,0,,2026-02-08 12:57:16.241449
+6ad74962-0e92-4ecc-96ff-79af677db21d,kp149,$2b$10$.FGPILV0iZy7IB2XWtbGD./1fHZQ5379K23dJFle8XJLYkJVbGcV2,KIAAN PATEL,student,4,0,0,1,0,,2026-02-06 14:16:00.340336
+96d919fb-474f-4515-a031-90b28b95a87b,Reneilweschool,$2b$10$YTGKN1Q2i2q1NikSV.IzxOU3rdBW13tEFA3Wg7hRHiuVhQi8/2mV6,Reneiwe,student,Grade 4,0,0,1,0,,2026-02-08 15:23:33.334988
+e0ea7685-9a5c-4eca-9f64-27c5528aa5a3,Spagerman123,$2b$10$feov2K9q2ju6knARloUAie3mBWXj4wnx9L8k3jzpkhGef78ZYuvX6,Seetsele Puseletso April German,student,Grade 4,0,0,1,0,,2026-02-06 17:03:38.949099
+de10ec79-68ca-4d27-a213-fa08d0126cad,Reneilwe_school,$2b$10$JeBX4t9H87MdQ.SyLoPsYOTk08znL/98hAAcKebcwzCw7RP2dDed.,Reneilwe mogae ,student,Grade 4A,0,0,1,0,,2026-02-06 17:22:32.500767
+36ba77d5-7428-4d1d-a070-a79948d1744c,Reneilwe_learning,$2b$10$TJ0unlvWy9Ag4Qiy9XiYdOO6QVduZ/YezWOeApSykp/cM9aEBhsgS,Reneilwe kai,student,Grade 4,0,0,1,0,,2026-02-06 17:26:22.572238
+fc5b8649-ef94-40a7-b793-2e7c065abce9,Lerang Pule ,$2b$10$AxhyALM89PiLco/dNY1TOuxicbYQgqX5rLElk3KjDWA3AzloMe4mO,Lerang Risa Pule ,student,4,0,1,1,0,2026-02-06 19:47:03.804,2026-02-06 14:58:41.07884
+b88315bc-b21a-4843-94ef-3d596f111814,Chelsymathabathe,$2b$10$yCeRiwGhPDSimxeQTDtSmuXfRVJ9Pf7pbgEpzM3eRkWZlZuYC15Pu,Chelsey ,student,7,30,0,1,30,,2026-02-09 15:43:16.963276
+a4fce0d5-4f56-4bab-a5d8-b312929e467a,Jmoloko,$2b$10$7fDwxZ9a43f1A5My2uBdgO0Fk.uqRiiEiA/Cx.5yulVEsDIBd05CC,Jorim Sekao Reatile Moloko,student,Passw0rd,0,0,1,0,,2026-02-07 11:38:44.619516
+3f2e5acf-db07-45d4-822b-456a76ebbba9,Reneilwe..,$2b$10$Q/Ij3YLIZYYsudRKL6lYTekMIfqJlxmSX0ZzRmdS8HiC9upxZYgJK,Reneiwe,student,Grade 4,0,0,1,0,,2026-02-08 15:25:13.411423
+35808bd3-6ed2-4d5b-8a6a-5dc2ad9824b9,Chelsystage7,$2b$10$/bQrFNma1C6jNwSOolxOb.qpZvjlQfbdUJ7hKidfnIcYrWhtQJ9zO,Chelsy ,student,7,270,1,3,270,2026-02-10 15:44:37.098,2026-02-09 15:55:14.740049
+69257e0f-68d8-4fec-8991-75829ca320c0,Fenge,$2b$10$6AEsPelzv2KxZS0HnccoVesLeg5Nn8x8hbvurG/jzvoPcpRc1TByK,Oosi Lethabo Maselwa ,student,Stage 6,285,1,3,285,2026-02-08 15:55:05.766,2026-02-08 15:13:38.104914
+f01819a1-02ae-4c5b-b324-e5ab89669584,Chelsymathabathe ,$2b$10$UCQPUC..HrcCShaK4SfDPedeMMrU/XKUkpRktKznePjQEzw0U7jTq, Chelsy,student,7,0,0,1,0,,2026-02-09 15:54:12.274077
+bc5894e7-b809-4057-9e30-cc0322b62334,conradbrink,$2b$10$MWXVKeJJeD4i8vyZOTM6yONItW5QlDtn1iX/tj5SpVOlbdpIkiCxq,Conrad Brink,student,Grade Test,40,1,1,40,2026-03-17 07:19:05.374,2026-02-06 07:58:26.078274
+3a6b9f5b-908e-4016-a978-6265fb110d20,Kalaote,$2b$10$om18zk0KDFsmBpFpoQjbQevo1CNp9TtUIR4ycmRnmUatt0nrEfetO,Kago Kalaote ,student,Grade 1,0,1,1,0,2026-02-09 20:06:40.057,2026-02-09 19:52:29.075475
+bc51b33c-2d25-4884-b39b-b25e8a12cf31,Lone hope,$2b$10$BMl3OdtbHz7pWyuKXWntx.ZWGquxhOAZupcgBaQ3ztLLh/n5oGJue,Lone hope,student,Form 3,8,1,1,8,2026-02-10 19:38:27.191,2026-02-03 20:07:48.852003
+98ab05b8-e229-4f9c-b4ef-e9273aa17d9e,Cleo17,$2b$10$wRT/3bjQkiA0vqq2zg1qL.sz.4H8aF39mm87KO/Sdf1KVpLB6S7H6,Cleopatra Amantle ,student,Grade 4,0,0,1,0,,2026-02-10 14:31:01.826896
+ac2c39a1-139b-4776-b6e9-c6f02f05bdd5,Leno,$2b$10$voH2Ocz7at6l5AosKERK.eq/EI7dZYfU3nu3LrOBJNolHjTj36YY2,Kaosi Leno Maselwa ,student,Stage 3,80,1,1,80,2026-02-11 16:45:05.34,2026-02-10 14:09:17.204704
+8594506d-1e82-4461-ac4c-f6418d0e53bb,Ayocecilia,$2b$10$fiO50.AmejETTxPUTQFAOeQN9u2IMKeBf4QoBwXTk4f/aiOVJK3Ji,Ayo Tsheboagae ,student,4,0,0,1,0,,2026-02-10 15:02:20.916949
+a457ad32-0855-4806-9db5-6beb17121662,BLUE SKY,$2b$10$2Js7KFNzD0XE8v3E0CVsfuQVLu6uLQGwG4CkwhyefkbkH5xh76HNm,LUBA LENYATSO,student,5,70,1,1,70,2026-03-05 09:49:13.033,2026-03-05 09:31:39.755523
+e8587b3f-1817-4c77-8dcd-95f88ff81948,Akeelah 2018,$2b$10$/xgTKaRbMgXNoiPxpxoXWeraYoJ6uCejjfYfO/nqTczUKWOZvG3QS,Akeelah Randrianiaina,student,,0,0,1,0,,2026-02-10 16:47:10.265878
+1d8989db-4bde-4cc9-aa08-f4f996ec2c23,Rofhiwa ,$2b$10$c/KFQq05hZDRA6K4DsVEvOKcHpp5vjXwzhqzabk58OTgE0..InASq,Rofhiwa Isaac,student,5,20,0,1,20,,2026-03-05 09:28:08.437998
+45ba34eb-b028-42e8-a35b-bf0432604125,LEO P,$2b$10$Gz.QGhq3OVr9StfWcZL8UOdSLQkE1BH9oqo5PotxBcrLJoIsDTcoe,LEO THABO BAGOPI,student,std 5,0,1,1,0,2026-03-05 09:40:45.839,2026-03-05 09:29:40.342678
+ae18d83d-749c-4733-b5ef-0811a50dc58a,Yezo,$2b$10$iFyxfwOAFideI6L3NMC2EOHVJwHVWcKWzL7rcBJs7cUAL.1ZpIspm,Luba Yezo ,student,Science grade 4,0,0,1,0,,2026-02-11 15:34:08.645122
+c49bc2c0-a181-47f4-b27e-de620f591748,Leno07,$2b$10$mZC0cM.Pf5FAMePG5SyGmutygq7gNQLZJalNSh65.x1Un45832/wm,Kaosi Leno Maselwa ,student,Stage 3,25,0,1,25,,2026-02-11 17:31:17.753912
+175b70ce-be5d-4c58-9657-9d37b45f4e2a,Xavier mainas,$2b$10$O71t07zGb5SaKwmIkp3s4ObT/ng9Vvp.wU9WEwsFdNt0TIDRAjC4u,Xavier Waigwa,student,Stage 5,0,0,1,0,,2026-03-05 10:06:15.543817
+0a954735-5aa9-4a4e-8660-832b568156a3,wemmbu,$2b$10$iFvS3ZwZGQN2wiGRonASL.a0eWw65RHR/6aYssfcju/KrtMFqQ2vq,zephyr,student,,25,0,1,25,,2026-03-03 16:49:38.620495
+6d4fec84-a568-4114-b932-66fee4d15d30,YADAH,$2b$10$RfVuNgW0cWoHHNKmwLJH5OysRaIaBbpSQtiIChRQFQNa3sdfj0kRu,yadah mmolawa,student,5,13,1,1,13,2026-03-07 19:57:26.884,2026-03-05 18:00:20.001617
+e2452e71-1a7e-4573-a3f4-5bec5441410b,Xavier ,$2b$10$QLxey.czssYZF9JG9i6PbuGgyBwAfU2Mpwjd74ZFXgsKu4ZI.9I7y,Xavier Waigwa,student,Stage 5,0,0,1,0,,2026-03-05 09:23:34.897799
+131391b1-fd8f-4fe1-8757-bd0331e8f946,ali,$2b$10$PHrHqs1bImh.O6MtV1.oqOC19UJvWTIngBG88cZnfDuwWSMsuI8ie,alibongwe,student,,0,0,1,0,,2026-03-05 09:23:40.791481
+4e84c48b-022b-4025-b010-4b70a2abd73b,LEO,$2b$10$CaGqgp.EIWsB9boxbOJ3UeWhpuc6rktmbGNnrRB/6dfRcDx4IGJ7a,LEO THABO BAGOPI,student,std 5,0,0,1,0,,2026-03-05 09:25:33.911638
+92014c39-2d9d-45fc-974f-aecce55cae1f,Xavier maina,$2b$10$jyIHj1umUUQoGJdq5C7kt.7rzG3lBlgW4uFwUn0O20kceiwrt6BhC,Xavier Waigwa,student,Stage 5,0,0,1,0,,2026-03-05 09:26:40.108891
+3ad51cd0-b0e2-49ad-9dc5-5ac31ab029ee,KAESI,$2b$10$hluQoTaHSC6T6s9tiY5TquFlj3AGOxlz1AOZ.4idVtpGD7w8AGe1e,KAESI GAORUTWE,student,GRADE 5,0,0,1,0,,2026-03-05 09:26:41.760704
+75f4172a-f254-4c6e-9c8a-76ab35d73f7e,LERUZA,$2b$10$xaF51LXOovgrn.ALHGVTAeNL438OqSUe8dp0eg3IbTAXe6j7OgpK6,Leruo Mokotedi Tolo,student,STAGE5,0,0,1,0,,2026-03-05 09:27:02.513263
+7ebac1d2-9408-4ca6-86fd-52be8fc24b08,Aneela,$2b$10$eVRVA3k.oCKp86D3GvGdZ.bMNGtWL.rRuKfvc2xpysCw30vbn0Tb.,Aneela Kagiso,student,GRADE  5,0,0,1,0,,2026-03-05 09:27:12.151163
+fb202835-8d89-481d-bd02-4376f89bedff,SKY BLUE,$2b$10$cgsupSpdHkRuSWM7gIYOeuOJxxBTwzdoQz9WBQA7Etr6mIiESdrOa,LUBA LENYATSO,student,5,20,0,1,20,,2026-03-05 09:23:38.004551
+f30fdb5f-8d9e-45fb-b2b1-990575897d6e,TSOTLHE,$2b$10$ByAjomhfWJEiFKHp5RogPueqzTunwRnyhpt87QeomfG2tc.fpbJnK,Tsotlhe magola,student,5,0,0,1,0,,2026-03-05 09:29:12.890222
+da4807c9-9111-4934-b09d-5ebf0ecf54e8,REMOTSE,$2b$10$Z0RZWCYP166Ocbc/A4MRTuD4oUrkvbnMeqdySBbBCXuVZw..B8iCa,REMOTSE MASIKE ,student,,0,0,1,0,,2026-03-05 09:30:39.419088
+af5af7d1-2e07-4576-9115-b45b9a4c74ac,ICTteacher,$2b$10$0FMxbYY5NuUprknXzLNg/.oqxC6WNdauMezRJQr6PWW8.OsO3L8Xy,Lebogang Motswakgakala,teacher,,0,0,1,0,,2026-03-05 09:31:15.405347
+6e3f17a8-c6a6-4244-bac4-1687c820a140,ST4R,$2b$10$CmXW8caZEtfrDCjBMCdZke1dgKKaFX8wB/oI9b1VvBSpAOEV9jyyC,Teto Eliana Mmono,student,stage 5,0,0,1,0,,2026-03-05 09:23:06.894572
+19ee0f46-61cd-4ad6-b384-263522918037,jlekoma,$2b$10$k0WFYO5OMOWbUA6J7IOYb.gzytNanXH0d4ptZKYwpw4QpeKPvVbOS,Sethunya Lekoma,teacher,,0,0,1,0,,2026-03-09 11:10:18.00297
+8d0ada81-372d-497a-b097-29dbd328933e,Xavier MAINA,$2b$10$RZWD/v1uslvRZmNtfEDnxukzL5FUFBGXfzBH3L4xy3RVjTPbYKfSW,Xavier Waigwa,student,Stage 5,0,0,1,0,,2026-03-05 09:36:44.009385
+398ec56a-3f60-4a02-aaf8-dfccf0760ded,Aliyah,$2b$10$IoVvPdgXLNoWirjmxf1WkOIt.JAUTD/vSI3gdka7sR6iPwBfMlsfq,Aliyah Mmutle,student,grade 5,25,0,1,25,,2026-03-05 09:30:03.274109
+45d97028-692c-4360-859f-9a30421b6db5,Holy ,$2b$10$XHcB0Gi4yrgn4XP4oBC5CeYIwkdK3UEoitFZ5yFvKpfAn3Q8hcN5G,Holy Basaakane,student,5,0,1,1,0,2026-03-05 09:36:57.116,2026-03-05 09:32:02.809793
+2d3b9109-7c7d-4042-99ed-b2734a682dd4,SASA,$2b$10$pLkXQAvIUbndqhS9g5A1NuVPtvfhXw.0Ql6YOBFg4pcCuHMNFfqMu,ISABELLE MOSA DUBE,student,Grade 5,5,0,1,5,,2026-03-05 09:30:01.98527
+d7b5f9b3-4892-4549-9b8b-ea87b495889d,FAITH,$2b$10$jbErrmUs04a.KpAZXqvuged8UT857cvzsKeemxyyZpAMXYdFa.aay,RENEILWE TAPIWA PUSI,student,grade 5,0,0,1,0,,2026-03-05 09:35:45.036011
+6de7c3e9-3d33-4c44-b889-febd0f8f58e3,Yadah,$2b$10$IwSiesZuJEX6.1yFiKmW0uNMCBVolP0OXbQE/aMlGgBAWfgH7MFlC,yadah mmolawa,student,5,18,0,1,18,,2026-03-05 09:27:15.084268
+f88fcb05-8321-433d-8068-5bde317fad1c,Thuo,$2b$10$FRan08rAUoKD5JQWmWDG4.eErMWrGkKLvfI6e7iHdHVyfgUZi8YUG,Thuo zenzo MABUTHO,student,5,40,1,1,40,2026-03-05 09:46:30.023,2026-03-05 09:31:59.832521
+70dfaa3a-aca7-4c13-9d84-8bdf076f012b,Cosmic ,$2b$10$HX70TGV6fAllf9TMQNOCn.f5MF1YcNIF2ejsnxG9yU7sFQ.nj20mq,Jayden Nyatsande,student,Grade 5 ,145,2,2,145,2026-03-15 11:39:36.051,2026-03-09 14:11:50.11257
+c46c2c13-34b3-4129-9003-a7648bc1d93b,Laone ,$2b$10$HHExRvhrqjnHZESGgwKwP.0QQw6drO9YT28WvROaTyiToUFu6fwBO,Laone Moatshe,student,5,31,1,1,31,2026-03-09 18:26:05.326,2026-03-05 09:27:45.307133
+b3678f4e-b103-4b3c-a9eb-e6264628488a,Sanet,$2b$10$4zacRcGpuIFSp31N/QplDuJDogMmW9bOJTtFAkzGs2Gkr5u9pLCxe,Sanet,teacher,,0,0,1,0,,2026-03-10 08:29:52.059535
+bf25eae1-e017-41c6-b3a0-7f03d4fb24e5,Keneilwe,$2b$10$dMj0x6dNUBxSg6Gb7hNDb.T0Z4yVa7s556g0xvTG.TRC7dfuJBLB2,Keneilwe Koontse,teacher,,0,2,1,0,2026-03-19 08:49:32.763,2026-03-10 07:35:39.560526
+258764d5-9b9c-4159-b109-a245f042ad13,Ashley,$2b$10$Jl6DC02E0OPhrgBAAbUyb.itWU70OIdLXyvqWRTfpgp3jNzBXVnYu,Ashley Maribeng,student,Grade 11,191,2,2,191,2026-03-05 15:57:08.993,2026-02-03 17:06:24.478295
+b07dd672-9b0c-49f0-8bcb-46e9c3bd1d77,Wandipa Bateti,$2b$10$VXdXINm/m.QdMaLF2.eKlOfRG2zjPGmP0lOMbajki1SsLsYxdK1R6,Wandipa Bateti,teacher,,0,1,1,0,2026-03-10 11:47:38.958,2026-03-10 09:19:07.715866
+15087fda-df21-4b78-83d4-e690b1bd209b,Boi,$2b$10$ls3hkssD4IShMsfz5M.EGexG87CIWBBUTSN5YvB7dqNVIx5s7UZZC,Boifang,teacher,,0,1,1,0,2026-03-10 12:15:43.876,2026-03-10 07:09:04.706834
+593cfaae-1f88-4f6a-a8c0-d190a722f853,Kutlwano,$2b$10$hodKbF/XmMwF8.g41d3y2eIq/pM2pytDsNe.Y4.2dqnePRoZkfv5G,Kutlwano Simon,teacher,,0,1,1,0,2026-03-17 07:13:56.661,2026-03-10 08:21:00.721047
+0d3f8e3c-24cb-493b-b504-9df6b8e3a75d,Dorie,$2b$10$ivZ5IlSlmtt4AvXcl.ALZe6S3tvrCAqYXqBK/LgHzCGarYeHBY0u2,Dorie fourie,teacher,,0,1,1,0,2026-03-19 09:16:20.325,2026-03-10 08:21:36.732478
+21097d65-1da3-491d-b38d-78860d4132c3,katsoo,$2b$10$cA8XBYZ1yuMkUeIULvA5fe7nM7E2EaHVJbGTFj44qS3.GBwFP.yZ2,Katso motsumi,student,7,0,0,1,0,,2026-03-10 09:40:14.616816
+90782220-8dfb-4dab-a881-dd669c704580,Sebina,$2b$10$6dsAyUpmrlvWkljNpxIWJuA4C4t9P7j73OBYBmOYPjBW/6qVEaeum,Yelllicia sebin,student,7,0,0,1,0,,2026-03-10 09:41:48.826817
+3adeef2d-0fc7-4de9-bd85-77cfa1845caa,Lame26 ,$2b$10$p2CW/2HNpa6xs49NXQkc6uwQNENbZzayFOUFvOxajJFsfp.iDAF6i,Lame ,teacher,,0,0,1,0,,2026-03-10 12:40:52.031342
+a8344b10-df92-4556-9a90-42f44ff84109,LEBOICT,$2b$10$VQK5yWBOaqoLdDE9YiZRKeEB9.ycF0gIfokEs1Snwzrwvzi7eP/bC,Lebogang Motswakgakala,teacher,,0,0,1,0,,2026-03-10 09:51:14.101519
+48a21df0-d2d1-4f18-a024-1b6b505571d2,-LERUO-,$2b$10$dp8u6yX7RFw7XPKZmx4gGOfVrXU9a2PenTH1lfRUnkDBcZHd4LOK2,Leruo bayani,student,7,119,1,2,119,2026-03-10 09:43:08.168,2026-03-10 09:42:27.258018
+1f265e22-f44c-409c-9ee1-e3f7d5fee365,Pako - The Black Ninja,$2b$10$zowg84CTicSGewG25dR69OyoChktwDhmubwLNxX.MMKnhTP0F0IhK,Pako Kanokang,student,7,34,1,1,34,2026-03-10 10:05:01.907,2026-03-10 09:41:56.56383
+e8952aad-5d28-4710-9ae9-a9db9b8bf3fc,Letsatsi,$2b$10$HaNIq5v5X2VFAusQBU8YZu88aWoV9LAIIJWhIqGOD6zc4pRHg5SZm,Letsatsi Moonwa,student,Grade 7,20,1,1,20,2026-03-10 09:44:01.925,2026-03-10 09:39:29.228487
+0c399b77-51e5-4254-9452-c1894b1e9512,Fifi,$2b$10$xvjlqG9S6siHdbGLje5nZ.Z5g1lQt.Dn/J6bVXr71r6dEOO/oH.3m,Refilwe Phatshwana,teacher,,0,1,1,0,2026-03-18 13:47:44.029,2026-03-10 10:19:22.499647
+958b7f25-10e6-4b7e-a63f-1d9b15bd98d6,MESSI,$2b$10$FfOqvFwNE4sj6Iuitiqv9uGN/GCH8Abkw60.d0pN5tK6XNcUjs4m2,ALLEN CHEGE,student,,65,1,1,65,2026-03-10 10:35:39.933,2026-03-10 10:13:42.020191
+b7e3fc9d-4421-4cb7-a39f-36231b279fd7,Seth_THE_DIDDLER_67,$2b$10$S2moIcPKH33jxH6x0K5GquQ0Fmnoe9yy9yXXLJe2cA/AWIWV6yAlu,Seth Mabotho,student,Stage 7,175,1,2,175,2026-03-10 10:39:37.664,2026-03-10 09:41:14.273266
+03f212fc-7a6e-469f-8384-0a259a1d6f99,MKB 2025,$2b$10$jqw0pXlU8IwQHM0z0cMWk./cmzb9puzfJqIEB99HpQuJA26gW740y,Bosele Pinkie Makhiwa,teacher,,0,1,1,0,2026-03-10 14:26:42.625,2026-03-10 14:24:54.791851
+fddc9bae-9c44-4c94-89c0-de66510bf2e8,Zozo123,$2b$10$kMQb3K5uhk9SFpzTD1xBTeGVUOZ52/g1E/MQEQ4MriLlMxyWE8rpm,Zenith Sediba Masase,student,7,0,1,1,0,2026-03-10 09:46:52.977,2026-03-10 09:41:11.095331
+0d2b9160-ad5a-499c-a0dd-12eb95f50df6,=MOEPENG=,$2b$10$cHvsU0FECw0vEqmOtT8BdOeYx5621DtW2eOhmNS63v6FxkCK36JD.,MOJABOSWA MOEPENG,student,grade 7,70,1,1,70,2026-03-10 10:32:42.166,2026-03-10 09:44:06.923348
+7564f2ce-9594-4389-86e8-4578b09a780c,Balze7,$2b$10$vhvuaNKB0xPZjlRjM1N8jOVAsSi8Hu5sVrgP7zv0QnGFv0VaU.Jcu,Nasi Mmolawa,student,7,115,1,2,115,2026-03-10 09:45:47.013,2026-03-10 09:38:25.548889
+a778467f-8a32-41c8-b715-ffba16a6a303,KATOOOO,$2b$10$1SUP6XG3qWn5lWleXEcx1.4NfDmp/AOOzbXekyhgK1UAa3RBwTpDm,Katso Motsumi,student,7,5,0,1,5,,2026-03-10 09:46:26.129667
+bbd695cb-171e-4257-9d95-5ba89d719f3d,himmothy,$2b$10$uboCWt8riSi5JZbf0yH4IeXGYEn4zR1rTytBuI75c3FSafy..7WOa,loago theo sebele ,student,Grade 7,30,1,1,30,2026-03-10 10:32:42.928,2026-03-10 09:43:53.374487
+38f37e3b-8bfa-4b7e-a326-422933bbe3ac,Pearl,$2b$10$przSFydQC3oYYx5e/FrJCexe8V7FYoL23bMuT4dIB/UYSyy0P2yea,Pearl  Boasa,teacher,,0,0,1,0,,2026-03-10 11:54:41.425208
+e9d4beb8-8228-4b06-8373-87018dd4f04a,BEST IN ROBLOX,$2b$10$D90TnHf8zKknZF.qWPFne.l8leTcDP5sJyrubE9.7t5PtUjDWebty,ALLEN CHEGE,student,7,32,1,1,32,2026-03-10 10:02:48.508,2026-03-10 09:59:21.271795
+9be249d0-299a-4eec-b8fc-5e54c9d9cc41,Teacher Pearl,$2b$10$11aVZlgZti1SzNQTGcDnrOcLQhYNuwN1KuRxMLN/t7WdvoIv54qE2,PONALO PEARL NKANE,teacher,,0,0,1,0,,2026-03-10 11:59:02.921576
+7e698902-e727-495c-b871-e96032432b2a,paige_plaatjie,$2b$10$ymRDjSPiJGuy9FddAMUvGuw8QwtkGwzy9Zhqgf8YqaoyHKbUtv/SG,Gorata Plaatjie,student,grade 7,122,1,2,122,2026-03-10 10:25:59.09,2026-03-10 09:42:19.756591
+7fad3515-b33c-46ad-aee2-e289b60c7a04,Swjjw,$2b$10$6lsGZQbZw7O18tjwyNph8O7K.GfL2vEPN7hGvXFKgTH5MRg6dSfUe,Bobrossbillybob,student,7,41,0,1,41,,2026-03-10 16:58:02.446872
+6eaf41b0-6e5d-4441-b8e9-274bdcfa5d19,JNshindano,$2b$10$ljIDvoENLxbqWoXF0WtDwuvF/T1bN/9aiWrSB.0bqBMNTW0sENbOK,Jameson Nshindano ,teacher,,0,1,1,0,2026-03-10 13:33:37.724,2026-03-10 13:25:58.110672
+60f1f153-17f4-4ee3-9eeb-a72475e72ac5,CharityMothate,$2b$10$mLvGcMLuvT3e1kGnb3WtGearf8RC9SVwYSKMTX/fQElDwtytEfgce,Keneilwe Charity Mothate ,student,Grade 10,103,1,2,103,2026-03-18 13:14:06.627,2025-11-05 12:30:33.763067
+c30dbbf4-edd4-460f-9a7f-38e4fd0274df,Icelord,$2b$10$p3PAJdbykN89Gq39S2WEGuqTG62RjcLd/1M67tPtNQ6WpIAS.NpUi,Aiden Conrad,student,7,120,1,2,120,2026-03-12 06:19:00.149,2026-03-10 09:42:05.312394
+526acea4-9ff2-46a5-bd6e-5166eb8dff71,Camilia,$2b$10$Lpn2ArHwRedGiOLPimO0hO30U8gHpvYlqDtVwKsnnKS/gu3LF6fAi,Kristy Koko,student,,57,1,1,57,2026-03-10 10:36:44.336,2026-03-10 09:41:37.567313
+997fdd7b-4ba8-4146-9c82-ac6e517ef18b,Poelo@,$2b$10$JP9DfhOwKh/mX1r0cxLaWudbHohf8oTqOllN3KE4Z2jDm/4n8PYo.,Poelo Kolobe,teacher,,0,1,1,0,2026-03-18 13:36:34.844,2026-03-10 11:49:14.231718
+a4b6eec4-2bab-4d1c-987c-d4efa4df9a71,awemoonwa,$2b$10$HZpuQ9BiZSLTDjwK.MKAeuO92Dtpm0aVJ9TbsUfMlaq50Okt1ZDqi,Loapi Moonwa,student,7,150,1,2,150,2026-03-10 10:37:14.498,2026-03-10 09:42:26.957532
+296136c7-bb48-4a34-8a16-be12d925baa0,Mag Columbus,$2b$10$bjdjIG6BbosJoXsYlCL48elyTVXbA3VwrFuQh6hY/f8MmeaPS4e8q,Magdeline,teacher,,0,1,1,0,2026-03-10 13:47:59.046,2026-03-10 09:07:34.876549
+ac5d32db-8d48-40b1-b0a4-2dfb13dc34dd,S.b,$2b$10$h14JamsJEtVeQ22QXPBGburd4/JnYdDkHT/HYq4q55kVKN4iGz/ce,Sebaga Thibelang ,student,Grade 7,175,1,2,175,2026-03-12 17:55:52.738,2026-03-10 17:21:10.708541
+097c34ff-70f5-49de-81bd-048020a540b4,chococat,$2b$10$RB4x..sx3Jc7w4M4Y6rvFuaiAuYSIIxrNP/DLH9aSHR2DTXI7y7PC,realeboga lenyatso,student,grade 7,100,1,2,100,2026-03-16 04:18:57.826,2026-03-10 09:39:43.744467
+f48a054b-9065-4bb4-b3f8-7a1e207a03bb,Dube#1,$2b$10$hW/m2KjURFARloq9lM7H0.qgBFQH1tz9eGY/thZon94SANNqi6EVW,Similo Dube,teacher,,0,1,1,0,2026-03-17 07:29:27.823,2026-03-10 14:46:14.117148
+8c1e096f-087c-43b4-886d-7272b06423e5,EmmaR,$2b$10$L6JlKNETd897ZxkdBgMzHedKYRoi/pd1jIzR9FoCAK4Rx5o5andya,Emma ,teacher,,0,0,1,0,,2026-03-11 05:04:14.552706
+ad53c2cd-94ec-4c50-8dfa-aa708ef60d92,KEDI,$2b$10$hMZ6XAsS8jm0Sz.5NvbHfukdLI9w60k7qU0qwgCRG35J5NB.l4ltq,Kedibonye Moyo,teacher,,0,0,1,0,,2026-03-11 05:11:53.731343
+dbb26fc4-c754-461b-b8ad-96560f4fffcf,GosegoK,$2b$10$uja53PaEYRCO3U3HFLLv9eBo/RB.0emBKIcC6dYu20cagrUsh2Cvy,Gosego,teacher,,0,0,1,0,,2026-03-11 05:17:24.594275
+85ffb41a-e533-4fa2-b038-0829932fdce7,KEDIBONYE,$2b$10$P7vQOF9/Dn1s98Vn6mua6uMkXoFophvhmSV9/Cze7K4j.eGjhDSc.,Kedibonye Moyo,teacher,,0,0,1,0,,2026-03-11 05:20:28.16909
+9074f6de-0db6-40d8-a806-48963ebdaec9,WinnieSenosi,$2b$10$TQnIJMRfKa32njOvEb766OGwhglt7RWVgqYi5BfxqYeS43w3h4rRi,Winnie ,teacher,,0,1,1,0,2026-03-11 05:22:50.697,2026-03-11 05:05:35.973492
+5e571138-9732-4370-b525-7b1b634ff829,Sibanda,$2b$10$zV8g4PGR/BXw/JrgXpxzpO0oERU/C6/9LiE4HlSjb2u8iI/zazRNe,Dinha Sibanda,teacher,,40,1,1,40,2026-03-17 18:50:56.084,2026-03-10 13:27:38.621849
+fac4ba22-93f5-4d0f-8a22-4dd473cd2fb2,sbee in the town,$2b$10$oRMSifNC.dTZtfc2LAH9KuDxgODJqq1UH6ZiOZvpAERniIn4G0wBO,Sebaga Thibelang,student,grade 7,445,1,5,445,2026-03-15 08:20:00.103,2026-03-10 09:42:16.393254
+50bd16e3-b7ad-4274-a20f-d5d89b5600f2,Emmanuel ,$2b$10$PHII52cVdB7Q2v2qJIokF.w76UjOIl2AjWKACvMgebTypB8XylRg2,Nathaniel Emmanuel ,teacher,,0,1,1,0,2026-03-19 07:27:36.471,2026-03-10 14:21:33.368474
+cca19d35-e30c-446d-93be-130679a96596,Chaloba ,$2b$10$ZIXzgOsxq7uaV5hbm/zdrOV.7XWGSsx4CRcjwiralFYnrMuCNR6xe,Refilwe chaloba,teacher,,0,0,1,0,,2026-03-11 05:29:42.514658
+ed0a4447-2d2d-4576-83ef-3e0218d46bb9,Mercy ,$2b$10$f2.bYGPZeHw5srQbR7tS9.7mHkey.wRYb0OfPh93ATyMeEDhY8TLe,Mercy Bakang Manganukira ,teacher,,0,1,1,0,2026-03-18 05:14:57.6,2026-03-11 05:30:32.135083
+8c249f3f-1a4d-48a8-ae31-059b947f40a2,gosego,$2b$10$xtv1kvHteE.5tPCLbNgNkOHoENKk/ZHOGb3GKfu6L8BBChiQuVKOS,Gosego,teacher,,0,0,1,0,,2026-03-11 05:37:32.636497
+06c612b5-7422-473b-8c51-76ffd3904493,Keabetswe Mpharitlhe ,$2b$10$dr3GzD4ApZtj0NcN19vc8.2Ltzwe99UHERhj29C2xezpIoqPfmsIC,Keabetswe ,teacher,,0,1,1,0,2026-03-11 06:46:47.259,2026-03-11 06:26:41.124266
+7a21857f-7f36-42f6-82b7-1f2e5bba7592,ALLEY,$2b$10$iaZoQWAHdUe/ZmJVs0VKkus.P1DSmk4VgibWkvjHMYrt8k7bm7ugW,Alleta Nkomo ,teacher,,0,0,1,0,,2026-03-11 06:49:38.600899
+6e9708f5-9912-4734-b267-d41ec837a114,zuzx,$2b$10$lBte6I6VOz/xawFCFQJDLe2d/eX48sIDW2yrqJJiyuXHTNShb3/6m,Uzumaki Kian EncoreJr Chatsama,student,GRADE9,60,0,1,60,,2026-03-11 07:38:21.244227
+76658ecb-e65f-4aa0-bec6-93130cce091d,kyliee,$2b$10$oQyEGgUC9fW16wrhLBzSC.991YopUyh1flzzli1bIJ.m5UPzwkmgy,Kyle Basuti,student,Form2B,0,0,1,0,,2026-03-11 07:38:09.175047
+b65eb3ee-27fd-4f5a-9a43-bea38530b769,janed,$2b$10$1AQyUg34O80UD6jsK4.Rhu2MmeFTS95aRM.PhkiEPRiiEQqAe0hf.,Jane Doe,student,Form 2,5,0,1,5,,2026-03-11 07:34:33.201448
+4b160cdd-dc54-479d-8dac-5e1946c809e8,Nathan Woods,$2b$10$6yKbRpdU7YFKasgDUfMSfOAMgabBcK0Tn3yGn93b/.vXJ5snbDOLS,Nathan Woods,student,Grade 4,6,1,1,6,2026-03-11 20:43:17.317,2026-03-11 16:48:09.676617
+874b7da4-5e0f-4b6c-85b6-b7c2b7e457d8,LOVABLE NALE,$2b$10$oxspj6DmSBt77/qYb3Ot7O3R7QiTRT4xOAU0bFmnj4FJcjd/GubXa,Naledi Matlale,student,form 2b,0,0,1,0,,2026-03-11 07:39:22.415363
+31df0303-6dd0-4103-aeff-4901c7942ae8,JAMES.PROFOOTBALLER,$2b$10$AdGrGzPKeCsQNiAV1u0ZGee5Ebc8MVe9VBBP3RVarl225NsC.xHx6,JAMES JR NSHINDANO,student,GRADE 9,75,1,1,75,2026-03-12 07:42:18.959,2026-03-11 07:36:25.878565
+e569980e-64d3-4193-9e80-d0bfec44e007,Kyleii,$2b$10$Eem4KK8zyukNhvAVK/8GpOTtyepWbKjNmDix00LaCRUk1Fgd1V9Ze,Kyle Basuti,student,Form2B,0,0,1,0,,2026-03-11 07:40:36.957208
+bc9f118a-d64e-48db-96e7-0e735770767d,TSTARY🎸,$2b$10$eUj6PameDwD2zTPbn5Cd2erMhPUVFgEDEEgs4hevXJADpYR2fcha.,Mnetisi Magagula,student,Grade 9,0,0,1,0,,2026-03-11 07:40:43.990428
+e92ee040-8849-4f8d-82f5-4682d2f495fa,vmpr1r,$2b$10$3QLAZaAryu8hE1q.JqkxROD0.j9GHIZFq7vo6gLXXqWFzR1l9lDYa,vmpr1r,student,,25,1,1,25,2026-03-11 07:48:09.003,2026-03-11 07:35:14.80899
+878cc321-ebe3-4b15-bad1-61fc18785ced,peogaetz@gmail.com,$2b$10$cwIcD8ms7xIJKUJb4uQ/7OQlxf5bmb8wJBQ9KibBofsuHjMEWqCc6,Masego Peo Gaetsholwe,teacher,,0,1,1,0,2026-03-12 08:09:53.773,2026-03-11 06:24:47.322221
+8c5a68ff-9e6a-487f-9522-4641a1a4ade0,TisiStary101,$2b$10$/tCsYHvPeVkFYEYkld2kvOba4CnTu4dAVKjmEuXuAZX9kCjTovK7m,Mnetisi Magagula,student,Grade 9,0,0,1,0,,2026-03-11 07:41:52.784637
+c56596c8-09d9-4940-bb36-6cb74dc30e45,BELLA,$2b$10$lbphHFVPocK.ALkH5c2E0OqcaiAK0G/mtNfJUL7RiE.Vh7SaTZEDa,BELLA TUMELO,student,grade 5,0,0,1,0,,2026-03-11 13:01:03.717176
+506b5d20-bba0-40cf-ac19-0c9a2c953cac,Noaski,$2b$10$xJ9JIYFb1/nytAb88DzriegQHnPleEeT2UB8xjHRZZvAS19knm97C,Noah Lohobo Buika mugabe,student,Grade 8,39,0,1,39,,2026-03-11 07:34:57.336466
+412d115b-7d6b-4417-be2a-12b8de03a8e3,Maza,$2b$10$mUdqdI8xmr7h9vYG6aSnI.XMASLXV5bLoZRFj6WHuncSaieWwF/X2,Azariah A. Tshikantwa,student,9,45,1,1,45,2026-03-12 18:18:04.922,2026-03-11 07:40:07.021522
+acfbd3c8-0f4c-4d25-9fa7-16e3d1964a4f,Sebinauiio,$2b$10$FxV0TSXoWoYcmkdF1rDqHuV7bcrjWHeOlhDNs1MI7aKbiSj7qb14G,Yellicia ,student,7,0,0,1,0,,2026-03-11 18:13:43.57428
+2a31abfc-d994-4da0-9bb7-ad35d3757a94,AZ,$2b$10$9arwCGK0IdQeQYguPOLEneQbP8Ar5rGx7pXT5uDeQ5vXzvO3bjSNq,Azhani Malomo,student,Form 2B,124,3,2,124,2026-03-14 10:08:14.721,2026-03-11 07:37:11.449989
+cca9f93c-e6ad-4c60-b4ad-d257858cd178,Buster,$2b$10$McwcDxo3LA9ZAwMKXSCoweBDRsA3uTo00bpfqUaGp8.OvWfGQHMqq,Berry Shaba,teacher,,0,0,1,0,,2026-03-11 08:03:23.896407
+ad2ea596-c9b7-413c-ab8e-ca76d9bf02f5,mmxbiala,$2b$10$Dh4oxlYv4OU/XQ7eCfhZIOnwm90IK2b0aSaKP7vu0DcZY918BU0w6,Marta Mabiala,student,grade 9,47,1,1,47,2026-03-11 08:00:39.466,2026-03-11 07:36:17.954407
+db4e04a8-eb24-4ce3-b6d2-4295803a70c3,glockk2gon3,$2b$10$i3.Rov7HKb9Q/WzB3BKhh.6xO/6qNoZVhmjFphSzy8JXsfnP91db.,mosa mmipi,student,2b,20,1,1,20,2026-03-11 08:08:07.922,2026-03-11 07:58:12.425864
+ccc51f5c-76c6-40ab-9904-58b03079c40f,Sebinauiio ,$2b$10$4DbGa5ylGYLUIX7JhqWGOuUxR33pSiA.ywfJTwhtUofb3p0sbWK4K,Yellicia lala,student,7,10,1,1,10,2026-03-11 18:20:52.923,2026-03-11 18:20:23.631114
+70b40dd0-c616-4fbc-9c90-000f2a2afcaa,deshi,$2b$10$2BYn4p8NJkXf8aKamTdvdeLIDQgy.zjrFZybrlkBh7U9vxZ8RJ0K2,Deshi,student,,0,0,1,0,,2026-03-12 06:20:04.19872
+cf28fb0c-c782-4f3d-8f98-f89e737660ba,oleratololo@gmail.com,$2b$10$Rt0rYvN8tFxG8gIhlpKXFO.mG9u35hTTK18JDLMZQ8vv9SkXqoXWW,Olerato Bogatsu ,teacher,,0,1,1,0,2026-03-18 13:43:57.334,2026-03-11 05:20:41.836483
+000f4827-0173-46b8-bbaa-d2bcc14044c7,Olerile ,$2b$10$MmteuerqyXDWWB5V0kFZmOxt5jE83fAURp42X.W4oEWwhA4LPM8lK,Kemo Khumo ,teacher,,0,1,1,0,2026-03-17 17:43:49.652,2026-03-11 04:51:43.250611
+2189731e-a13a-4b0c-8816-e408df262cb1,i like hambuger,$2b$10$i.EOId0hTH0dIkGhPitYxuvNFH6/TFTzmOMd/5dvri.lRWnqhpiai,i like hambuger,student,,0,0,1,0,,2026-03-12 06:20:31.541366
+17240be6-6505-4625-821b-66396e3710b2,i dont like hamburger,$2b$10$VVuPM3TWJshHCOWcIlPHp..IJC6lRm1FaXq9DEBMb8QmBLrk0Vzxq,i dont like hamburger,student,,0,0,1,0,,2026-03-12 06:20:34.349353
+b4866212-d5df-44d7-b87d-5fd71053ecc3,aone,$2b$10$X4pobyvXYiDA/2aBncQGxucMAn2cK9OJqepctegsGKALgd4dyXcmi,Aone kgerethwa catalia,student,Form 1,30,0,1,30,,2026-03-12 06:20:10.849536
+ec78ccb2-2e47-4c1c-8e73-2fb53315bbca,kem,$2b$10$T93if/wtj3KyXeCSJeoMlu6/K.gkYZZAZuRJ8Y1AkLsAyosI26cvK,Kganya Lennwe,student,Grade 9,115,3,2,115,2026-03-18 15:46:00.957,2026-03-11 07:35:12.024636
+a5a7bba2-d129-4f0a-8cc4-8113b54791ae,epsteinfiles,$2b$10$vpHeBAdIU824zEltP6po9OKtXlvB21i4oY3zsegRpdFUZpsVcRPFK,Mason ,student,Form 1 ,30,0,1,30,,2026-03-12 06:19:48.489735
+11310cd6-79d3-4cc0-b679-41ffa10d9087,Hail3y_hope,$2b$10$GGrFFoYy1kI.A6j5OGqSgebnCoBKRwevWOKkUdjHD5.Xa6SB/15GC,Raletsa hopoe mafunga,student,grade 8,0,1,1,0,2026-03-12 06:25:56.952,2026-03-12 06:25:40.262083
+fe9183d2-ea8e-4008-9480-526b8272da0a,ABANG77103,$2b$10$RCdr.eOMQgbnSZvfup/oB.oFmdFRVVNDKeQZmXwgQ9sgGkJ73ezXe,ABANG OTUKILE,student,Grade 8,40,0,1,40,,2026-03-12 06:21:31.284804
+130a4c5a-7728-4630-9608-d1704477d69a,Timtithy,$2b$10$p9d4IaMF9mdhYCtJUMyU9.7kjP.0Q0.tfQR/cHt4uTZw7lE8W3Gdm,Yamikani Motsumi,student,Form 1,40,0,1,40,,2026-03-12 06:22:59.872311
+da517ea7-f1a0-45d3-8b04-be878264735b,Athena,$2b$10$YgmSxM0w9BTKlZLptq9cuuz.d6tJSfXtWEpXh52CnCAN0GKanIDcK,Sasha,student,form1,35,1,1,35,2026-03-12 06:27:47.655,2026-03-12 06:20:35.92852
+7becca75-ab6e-4964-ab16-cb1e42c71789,Trice,$2b$10$.Pfhgq.bsSUzI9D8CD3nj.TM/0w9Nq3HX4G0h/0g2CEL0p0dQA0mW,Beatrice Nshindano ,teacher,,0,1,1,0,2026-03-17 08:18:21.663,2026-03-11 18:12:19.55159
+74d0d3ca-7e39-442f-b93d-e5b2f31efa5c,dfw_ur_lulu,$2b$10$a4qfjWmiuumqkwEphCZHou1uJT/7uMUW5nmI5.chEI7ZqzsCZhaEG,Phatsimo Phiri,student,form 2b,345,1,4,345,2026-03-18 16:13:16.712,2026-03-11 07:44:19.334502
+5f29407d-4b6f-4068-b720-fe45f028d3fc,andrew,$2b$10$VLmjsKtbm98IL56EOyFn0ejPUXKnNEa8TfGTsarRBDkxpfnqDbFF6,"Lethabo,molelekeng",student,form1,0,0,1,0,,2026-03-12 06:27:04.027058
+6beb8d60-3c13-4444-bf1d-0edd29805355,EvilLightskin,$2b$10$BfEJCU1qeNqojXJsNeZUm.4ixluYFw7aVHwhfc4ozNTmejEakNdvi,Abaleng,student,grade 8,0,0,1,0,,2026-03-12 06:29:02.039812
+bf7c83ea-c7e8-454a-9081-da01af5e72f4,VOID_S89,$2b$10$bXP4/aOgNzITIw6N7RnTNeo/CLy8NZv.ZFCeDpwSC7anHwW8Q4iK.,Samuel Caler Robert,student,GRADE 9,0,0,1,0,,2026-03-13 05:40:38.104865
+fd64b19f-5ac6-42fc-bf09-3418f2dcd3a7,chicks,$2b$10$XRVSA.afqc4m8De4UMc6JuAIhzyZ0dTGmAgEytcK6N26.vJ66iGHu,Elias,student,grade6,20,0,1,20,,2026-03-16 13:00:34.213064
+af57336e-bc73-42f3-8722-5710e933513e,Yamikani ,$2b$10$gX7w1wqwYHl1k7CUYMx36uR2w8J8Xg58jkDPm8PRTdcyy7ZtNpVTS,Yamikani Motsumi ,student,Form 1,80,1,1,80,2026-03-15 10:58:38.775,2026-03-14 07:37:50.434851
+d4ca7169-098e-4f3f-b6f9-1f90e9c5a732,thuo10,$2b$10$ZTcfhbvXFFgaDSstL2tan..GMD.IvmRGVXImvnDKN5cVy5LieA8DC,Thuo Mabutho,student,grade 5,68,1,1,68,2026-03-14 11:01:27.659,2026-03-14 10:35:02.34608
+362a732f-3231-4ec0-92d8-505792c95da0,Massgogaetz,$2b$10$PgSFEMtaPLVywxlpc3INQOI2Jlsi8XcBS0c9c80kh8KuqzPkC7ICG,Masego Gaetsholwe,teacher,,0,0,1,0,,2026-03-17 10:03:10.559131
+4a150ee2-97c1-4846-a815-136c0200b62a,Exclusively_Agape,$2b$10$79eJKnPP7bKdIPW0uOZr/.r7rRvDdMs9q323uboujrOX7rQQdPD4K,Ntswaki Agape Kealotswe,student,form 2,20,0,1,20,,2026-03-13 05:40:43.713121
+f2fa48b7-079a-4301-b549-bda6918f8c0e,VOIDED,$2b$10$kh75FvF/cTWzgj6Bgk7oSe/kR704QH89gtdgNhTBIA7PZiW3ARHl6,VOID,student,GRADE9,0,0,1,0,,2026-03-13 05:48:02.064787
+0ceb9aef-ea43-4845-a565-13fe577c48d5,Anez198,$2b$10$dwyy8tOuIpn4yFoUVBCBdel.j2TfT3Fwkpcq9CIMSfg2mrVZz/bpe,Aneni Manhanga,student,form 1 ,0,0,1,0,,2026-03-12 07:18:00.198374
+3388a1e4-88f6-476c-9ed6-bd2d147662f5,Hail3y_lalah,$2b$10$ICqPYF4Aag/kl3MHiM2swusxkrQDX8i6/apshs5dQQhWigvRR3OcK,Hope,student,grade 8,10,1,1,10,2026-03-12 07:12:52.341,2026-03-12 06:29:13.786443
+25fa2206-75fb-45a0-bff0-9d814ef1f64e,Oatilee!?,$2b$10$cPGaKAtf9Kk0zI6A2onO4.ycCi7FbTuLwyxL9OIu5m6ho/dKMr6R2,oatile keone phelaphela,student,form 2,110,0,2,110,,2026-03-13 05:39:13.876999
+4926bfb3-3e42-4c38-a537-2ee4c82b80ae,3sainte,$2b$10$37hMw7sLiMVzEoKXX1QmfutF3jwRkDSNJErMpL4xT1wz8BudEItmq,Joseph Karabo Metsing,student,LS2A,50,1,1,50,2026-03-13 05:43:13.962,2026-03-13 05:39:38.642367
+d05da554-3b46-475c-94f0-8684a1db9e10,mason,$2b$10$R8qk7g3o4n8PgN6uLuk/YOQkKOz57FrnWJd2BhxfOl8qFCWyxDmIS,67,student,Form 1,0,0,1,0,,2026-03-12 07:19:46.075259
+25f162cb-1813-47f2-8d6d-736203dc3939,Aokiloves ,$2b$10$bo/207oR6WK.Q6BIjAXmBuAZwaulkc7itedO3YE54fsJxQnB3y7u2,Aokileo,student,grade 8,0,1,1,0,2026-03-12 07:21:13.944,2026-03-12 06:25:57.043385
+d7bad11d-5bab-46cc-abf0-3c519302699a,POW[PW,$2b$10$M9bSn4rEjaM21YAz9oNZXuS/qEUnadmz8qjKdApWtH/KGejhdWwJe,VOIDSAM,student,GRADE 9,0,0,1,0,,2026-03-13 05:50:47.917978
+d3528f0b-9483-4d3b-8428-b9c444216879,Krupa ,$2b$10$Bi6ktlRWFOjlCRQTMGDqveUc6OSGuCd6Eo8hRQwRbZkACJSj0Ddnu,Diva Krupa Karri ,teacher,,0,0,1,0,,2026-03-13 07:54:44.749977
+b3f39e25-989b-40fa-8d2e-49a4298b7b33,DivaK,$2b$10$9J2Xq1iSgopeU.7Abnv7pup/Ra8NNwhuTb9ahWig0.AwNKkCfHgIm,Diva Krupa Karri ,teacher,,0,0,1,0,,2026-03-13 08:00:19.02433
+658f7801-9c93-40ea-82bc-d8d85bffed8f,Dash,$2b$10$oUgMxbhz0srbe0RxeSiMZOmin7QEhuE3ycHRwVjTkY4GaJPWEGsGm,Deshi Matsheledi,student,form 1 ,120,1,2,120,2026-03-12 07:25:01.742,2026-03-12 07:04:23.429729
+17c8f523-8c2e-46bb-9690-fb423ca385e5,FROISTVO1D,$2b$10$Va0CJ.J69hzJUVSG0nztjuNDB3Wyyck3syTRg8EN62/kvXrrfB9Ta,Mason opelo,student,Form 1 ,8,1,1,8,2026-03-12 07:14:24.321,2026-03-12 06:27:55.303357
+0c2e1e22-492a-464f-9cb8-ce197c7293d8,kgosi2tuff,$2b$10$FWh2OiWqWUTpDvW6BB3j1uVwyQ4drSBl4L0Ak7wlVKbeUOuAult0S,Kgosi Motswagole ,student,Form 1A,24,0,1,24,,2026-03-12 07:16:38.77246
+8bfe71a8-1d1c-45a6-8b04-4cd64cc45730,kyleii,$2b$10$qFRqT9i3ugTMbHmJUi.Dm.jEQJDxgObw8yC3wlGvCcadlBvunHEii,Kyle Basuti,student,Form2B,0,0,1,0,,2026-03-12 07:31:43.584879
+a0f96ce7-f890-4594-a604-d4195bca2447,Noaski1x,$2b$10$BhLdVM4qJade01iJIsWmcuQ2ayDDF0iAugns7V3FNojPhUDxkK4m2,Noah Lohobo Buika mugabe,student,Grade 7,0,0,1,0,,2026-03-12 07:34:00.076205
+fe493f8a-ca9c-4a40-b303-adc275bb2efb,ITADORI YUJI,$2b$10$xS0WLbgPuXhPJ5NpEIT/3e0uJEwpvpi8r7OOaTCT2u7TPVo3tx3ka,Mason Opelo,student,Form 1,0,0,1,0,,2026-03-12 16:14:43.97319
+93aaba46-092f-4144-b0fa-96c6af5ae594,Kgosi Motswagole,$2b$10$lWU9V.ly4vbbtItIY50LTe6LO0/4NE35aLri.V5hGaSmO.8qX4HNy,Kgosi ,student,Grade 8,35,0,1,35,,2026-03-12 19:33:43.237472
+b5bbd517-8367-41a7-a381-67f7fcfbc88d,KT,$2b$10$5A6d//FG38gUAPPqdDDQlumtcuHhdV7achyeVXNkoCaLQBcuzk8Fu,Katlo Pilane,student,5,0,0,1,0,,2026-03-13 05:37:05.032081
+61d63dcc-8f6b-495a-b914-813393305c1d,Divak,$2b$10$cW.VXHoQ2EaiExv61XxLYOrMnGFsdC0bvKcUVJRSFLCtxtWGh2tCC,Diva Krupa Karri,teacher,,0,0,1,0,,2026-03-13 08:05:43.098188
+ef83a705-5cb1-48ef-a4c8-343d918ad6d8,takudzwanyatsande,$2b$10$zT9viPo0z4uTgRjreMgQ2O9Ugq9cTcRGAgOFHh4jq/nUNyybzNwgi,Takudzwa Nyatsande,student,Form 5,85,0,1,85,,2026-03-13 05:36:56.77387
+30d0ade2-dad5-47f7-aeab-2f5af94e0a7e,PHOEBE STAR,$2b$10$YUseAB3KNswVDwNZHimfceTF8mN72ZQYKfcQMpKMCMx1wIHmPMu2q,Phoebe Kegorogile,student,FORM5,0,1,1,0,2026-03-15 09:01:39.111,2026-03-13 05:36:37.699096
+9e331521-3817-4db7-816f-0f99b76b8eef,lol,$2b$10$zPpagh720dwxXeLagO2c9OkJX2PsYVwXsKxl5QT.aCqbZqMubcQvK,lol,teacher,,0,0,1,0,,2026-03-16 18:15:40.446859
+1cc9d54a-1a70-487c-8c10-627dc63d5029,lemmestudy,$2b$10$HT87Whst.CeM7gPAiw46jeY93QhdrBDVT0bth6GD5yYHg4IS.aaNG,oatile phelaphela,student,9,110,0,2,110,,2026-03-15 05:24:05.70861
+1653b2ae-4b89-4b9a-b6d6-229f4c51affc,Jaden A.,$2b$10$Fi1P3bL4VgGMg.n6JGAF.ubsjy2CGI0kpi8VDlvxae0I85l4y5SgS,Jaden Aviwe ,teacher,,0,1,1,0,2026-03-17 17:44:02.668,2026-03-13 15:53:50.211714
+e9d1472d-e202-4c86-ad6c-85b0d7407ea7,locked in,$2b$10$3gcbtTML94Uw2gNOYsWHne5fVzYXTPQ08cyKT3GWM9HMgOFgQCc4m,Lwazi,student,grade6,225,1,3,225,2026-03-17 18:04:23.045,2026-03-16 17:03:46.103429
+22e2c37b-cc04-4f22-833f-91862a990be6,Nash,$2b$10$lTZlq7SV9cgqq8z6e77vNO2q9wfcz8M39e2v9NjemwKwKIT6lPA6W,Otlhe Chakalisa,student,,110,1,2,110,2026-03-18 12:40:27.006,2026-03-17 12:35:28.682117
+b22e6d4a-e9df-45f2-a423-18c2b24d7842,conrad.brink,$2b$10$643xHpQB2wTsN1TxjfGmqOhN7vG/c17XKDGGr.WI/cwR1x6INvuKm,Conrad Brink,teacher,,0,0,1,0,,2026-03-17 07:25:18.945622
+0e824e61-4d56-4252-8c43-00f6c734f95a,Lily,$2b$10$sacgkU0W1gxbnM5Z.8HCq.6x6NDY9jtrF8f9WTt736gbkl5g8YRXG,Kaosi Leno Maselwa ,student,Stage 3,30,0,1,30,,2026-03-17 14:10:23.457685
+49a3fc2d-933d-47c5-9be9-6585830f146e,KrupaK,$2b$10$i84mytGLBhWUjvnLJOKLjO6lFbJyUawJPkPaT4HX.z9bNJSgWLpty,Diva Krupa Karri ,teacher,,45,1,1,45,2026-03-19 06:07:37.432,2026-03-13 07:56:58.517286
+ab81d198-7d0b-40d7-aad9-bf2da113c33f,B.t/Bella tumelo,$2b$10$08pjvJEB8XZFycC32.rCeu8lfFHsLrqwrLwyyyVVmYIX2tKtAEsOO,BELLA TUMELO,student,stage  5,195,3,2,195,2026-03-18 17:09:44.33,2026-03-13 15:41:55.524194
+49d5d25f-5243-4ede-92df-2bc031b57803,Evillightskin,$2b$10$9QQJvtlnJgD8A8E/1K7uD.YGfyPAvBCQVL1Zd4z2d6xWlNGzSTK4C,abaleng,student,grade 8,30,0,1,30,,2026-03-17 15:33:43.052525
+dae66086-05af-4c53-9bb0-b68d82239fe1,KMB,$2b$10$ROgwLcEoX3zdVUgU3iL3tePvIXqFN8vGEqG9PtlwH00QxLyupoCtG,Kyle Basuti,student,Form2B,60,1,1,60,2026-03-18 14:20:40.56,2026-03-18 14:06:07.422146
+b79142f9-cc9d-4363-85b0-1c22f94d217c,majang97boitshepo@gmail.com,$2b$10$rlQEHRx3Q24Bv66pqyBOYut13aT86J4u3eg75.Sz9ltff.iv3Qg0O,Boitshepo Mosala,teacher,,0,0,1,0,,2026-03-18 15:02:44.723637
+0e3f2000-7feb-4520-910f-51aec42b56ba,Teacher Rosemary,$2b$10$5J7.p0LDBa17EzYc8swzjOfe9ADu2a4EXEk2xVsLSxtX8.NrXK7ou,Rosemary Lebogang,teacher,,0,1,1,0,2026-03-18 15:13:54.926,2026-03-18 15:05:39.900352
+65e9e406-7908-4286-88e8-e9fb63a86d69,Vmpr1r ,$2b$10$jFhQIP4LVP.hiRcQmhAJLOS9UmF0Z8ptcTl3ECRKXzUj46jwa7Nqe,Thembe,student,,0,0,1,0,,2026-03-18 16:20:52.761544
+3aa05d01-04b5-444c-bdf5-86844c47448b,sdfghj,$2b$10$47c/IZ6l69erRAtyGWI/vOifHgXB1o4d4oBf2XZv7to3XWaHJ77bC,lol,teacher,,0,0,1,0,,2026-03-17 17:45:24.785364
+ce7f8f87-92f0-4299-9234-04ed1391dba8,csatiyi,$2b$10$PhRTBZKE1fOmDHIpfRrMJu5hDvKvDJ7CV/6Cy/LjIbdWWUtCm6iO6,Choice satiyi,teacher,,0,0,1,0,,2026-03-17 17:46:30.48539
+eeaa9195-7291-4f6e-ae46-2212dc66071f,Bsentsima,$2b$10$rAA6/gaURcPt0mr1dEhGBOvGf1fXjJwnhRlB3qszRybhP9gYjPRpW,Boipelo ,student,Grade 2,0,1,1,0,2026-03-18 16:36:37.54,2026-03-18 16:34:10.294074
+331cbd05-b072-44b4-afe2-2f9593c0408c,Thato,$2b$10$a0KNl3IcuZ1YrOQ0dfJa6OnmwHNpqCf0x92pngfRWiupN74EOb0gS,Magdeline Columbus,teacher,,40,0,1,40,,2026-03-18 06:26:08.561993
+e5bb9250-4b36-4e43-a508-dfc88f67f97f,LyN24,$2b$10$RxJE5g/GpzAuHY3JymhEvOPUrxOm/g5TkibQXFx4XA4b5Sglr6eQ.,Lynne,teacher,,0,1,1,0,2026-03-18 17:25:11.355,2026-03-18 17:04:01.957637
+694bf5ac-a336-4d3b-9bfb-122692d83f86,losbrosstudy,$2b$10$wZgAwi6wr40QL00rg7umkOel6NW4PzaOp5A8Mv5umrcojqEHUtUiG,Tayo Fubisani,student,Grade 6,1170,1,12,1170,2026-03-18 12:34:42.558,2026-03-16 13:03:59.450858
+07074092-20e7-4a05-be83-036bb6a87999,"Avghtgbhsd.a.,z…",$2b$10$sbJKG3yjgIMaTaqz3VAuReyWn3cBk9X73AhtYxYso1bzV0DM9UzFW,Sibanda ,teacher,,0,0,1,0,,2026-03-18 12:54:02.085217
+977d0a6d-b441-4d36-939a-a6af1ce65c84,Maano37,$2b$10$rfJ06msDx5JMvn/O1tGHLOzJjaYJS6t1/ej1K54dyqoGqF2eDsntS,Maano Motsumi,student,Grad9,20,0,1,20,,2026-03-18 17:49:20.749923
+499a3225-0935-424f-8f21-49fe6d334af7,Rethabile,$2b$10$EfrItbJdV/HU6rqwxY.1fetZnfd9RLqp4VR5DqghsqAWvaNafmzKO,Rethabile Ritah,student,Grade 3,0,0,1,0,,2026-03-18 19:07:05.607685
+c1cab746-281b-4233-b7b0-f1969321a6a8,Tich,$2b$10$nilpzvQAWA1V296Z5Jk.yugaNPHzC99bVfY6YdMGl9DOezcq4Gkj.,Tichaona Zvanyanya,teacher,,0,0,1,0,,2026-03-19 06:14:12.037396
+0c2f9062-c661-4059-b3c7-fe5f6bb4e9bd,Kcmothate,$2b$10$xHrcal1aC579UQ7h459VHuJZI94Ym3oXGR/Vpueq7qTcwpRijA.H2,Keneilwe Charity,teacher,,0,1,1,0,2026-03-18 13:32:19.353,2026-03-18 13:15:16.698321
+38ee6b3e-f34e-46f4-b336-425f0a00f7e0,Matilde,$2b$10$0kzV5.BOXMupKLVrxK8V2OcqZhYiRKG6NRrHPf/oUiklpuRcNhmye,Matilde Sousa S Domingues,student,Stage 3B,0,0,1,0,,2026-03-18 13:38:11.633306
+d34c9ea3-9d5b-469c-9162-aec1cc19b03a,Emmaque,$2b$10$HxnQskdrHcTcotBUEusgC.qX0dhFc4jsIDROs0C/u8fSPP9J2Yg9.,Emma Kwamboka Osumo,teacher,,0,1,1,0,2026-03-18 13:40:06.842,2026-03-18 13:39:31.718371
+af671e0c-534f-4cae-ace2-ed45be503aac,Kyliee,$2b$10$y.tyzU1OiwVMTYHgri6W0OGoYJlelLZ12P7OBRBEWUdd4aWsSL1Yq,Kyle Basuti,student,Form2B,17,0,1,17,,2026-03-18 13:59:34.870982
+bbe44739-dbf7-449f-b6fb-f61d6804798c,R.Hawa4B,$2b$10$i64U4IKxFTdK5PHlgoEone/jprGH0oyosnOypH.hOLm4n/PE55FQ.,Ramiza Hawa,teacher,,0,0,1,0,,2026-03-19 06:37:27.834941
+d7c14ed2-6cc0-419a-bd3e-bc8393dee8a8,zahraallie,$2b$10$FnYSMGkLo5pQp7Es11lovOyAIKdw01IUVmtJtZkmJCx9g64F7BYee,Zahra Allie,teacher,,0,1,1,0,2026-03-19 07:20:11.009,2026-03-18 11:25:11.573066
+98f0ff14-6b1b-4848-b067-3212a8592304,Nomalanga,$2b$10$qDCmu7O9nCiDWCrxRJKY0OiO1iFZq/i8IYzd8tw8LgmfHwN1mPMwK,Nomalanga Mdlongwa,teacher,,0,0,1,0,,2026-03-19 08:41:39.586266
+08fc2df4-fa87-42c3-ad75-d8119e90dd9b,Bernitta ,$2b$10$nKoUmng2BvnWdH8ITp/aA.eCwV1mNB1cFFAMZczypUu/n20QA2LVy,Bernitta Leburu,teacher,,0,0,1,0,,2026-03-19 09:11:35.03671
+bc2c1cd1-0faf-4e29-8e1f-312b86e37e02,Zamony,$2b$10$y0B6P8gxy6louapeFjbFSubRxC1dcU0pSk..CV2wqITOKjPTeAzQK,Zamony,teacher,,0,1,1,0,2026-03-19 09:15:20.185,2026-03-18 13:05:36.571956
+fca0cb80-88cf-49b0-9b49-86c486ba8a96,Teacher P,$2b$10$luOqD.2Jl4FfPJZBFiE83OswhraBm5Exg60sQCrCzpqrjKDXn5heu,Phatsimo Moatlhodi,teacher,,0,0,1,0,,2026-03-19 09:19:33.96005
+6f64432a-d7f3-46a5-a6f9-a49218f0a9c0,Hector Godwin Kawareware ,$2b$10$9fCLdUGB9nB.NaXUN4oR7.iN312ZQxGe/7Spepi5cApi2QK17Dcya,Hector Godwin Kawareware ,teacher,,0,0,1,0,,2026-03-19 09:23:23.208942
+b3c58492-a191-4c9e-8714-0b00ce0c15cc,GAJP,$2b$10$5TpcQgy1fkc2wfGXKhNsF.XbkCat.G86MJ0NKNkT/oa1UKtzEICQK,Pengedi Chirac Gajama,teacher,,0,1,1,0,2026-03-19 09:23:23.793,2026-03-19 09:19:31.937155
