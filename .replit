@@ -9,7 +9,7 @@ packages = ["chromium", "glib", "nspr", "nss", "xorg.libX11", "xorg.libXcomposit
 [deployment]
 deploymentTarget = "autoscale"
 build = ["npm", "run", "build"]
-run = ["node", "./dist/index.cjs"]
+run = ["bash", "-c", "NODE_ENV=production node ./dist/index.cjs"]
 
 [[ports]]
 localPort = 5000
