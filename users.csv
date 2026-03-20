@@ -1,0 +1,31 @@
+id,username,password,name,role,grade,points,streak,level,xp,last_login_date,created_at
+e248a5bd-4299-407c-a02e-981315d9ebcf,teacher_ll4lNy,$2b$10$uKjlAQLiHEfsEPfwMSYiA.25gWE6.mKW9UAs5RbAGK3NniqyfwPXa,Test Teacher mPDsmL,teacher,,0,0,1,0,,2025-11-30 18:00:12.160406
+c526f479-9c86-4c3c-a813-8c05b11da8d8,test_Z1X9vX,$2b$10$Ed99hPFRUDyAX5vmckpd8OrdfwiEutxosFb4kn9kQXUPiEbSjPJcW,Test Student test_Z1X9vX,student,Grade 11,0,1,1,0,2025-11-04 17:35:17.537,2025-11-04 17:31:36.159769
+eacfbc92-4089-4c34-9e12-63fa5be07036,test_k_vYi_TO,$2b$10$dt..b2xXZNPXw2rcqMD5AeysF7lPEVmV5R5QvTYE19a2jgxAABZs2,Test Student test_k_vYi_TO,student,Grade 11,0,0,1,0,,2025-11-04 17:40:44.318997
+4b615de3-007a-4c89-a437-f1a23b4fb70a,quiztestk_zik1,$2b$10$vjW065e537AjPoBjAS28bONYdXBBW1muLJN9Yyo7Dr8kSngYLNydq,Quiz Test User,student,10,0,0,1,0,,2025-11-04 20:05:30.486314
+9503da73-a397-4550-9eff-bdc8a83c8828,finalquizwmeeh7,$2b$10$Y/0rx8b1HXGVcY7lcz8Dc.5hhgfyyxFd2mO7peRfDzGQ/tsIrMnrG,Final Quiz Tester,student,12A,0,0,1,0,,2025-11-04 20:08:50.274062
+782db9e0-0a4b-430e-81d8-f2f5f80d6475,fulltestX_NtpH,$2b$10$/WuvMWeFnFMA5QHG9jmIGetzS0ZLPf6KFwVK6Ty.CX0J6WpQNbOom,Full Test User,student,10A,0,0,1,0,,2025-11-04 20:12:56.485815
+b877ed07-995e-482c-9824-5aa75890864b,success4iyYZA,$2b$10$.Azx9kC3J31toML911dyo.I9exu3.eS2t6wqzVRR7jtwPJgsRc0/6,Success User,student,10,0,0,1,0,,2025-11-04 20:17:01.608246
+855409dc-5242-4690-b218-9eb714270eb9,teacher_TRVWka,$2b$10$n9NW9/aM18.ZkgoK/ZdRz.efGv1EVrg1LjgBTc9IMI98ImbsC8thq,Test Teacher SXbw7-,teacher,,0,0,1,0,,2025-11-30 18:04:31.883864
+320d5dae-e0b3-4850-a634-21e626a86eca,chatbot-test-fMKc_U,$2b$10$wA1A3dFdTeasifRy4XNjBOQm3SLXivPqFtqfPyYdBnF4RaUgDvu12,Chatbot Tester,student,10,0,0,1,0,,2025-11-04 18:08:00.1752
+aa5f49fa-4c32-4097-86ad-4780aaf2937d,teacher_tRfKW_,$2b$10$EsDNv6uA8GsLcO2F0GYev.Z0Ebel20RGy4nyox/8r3NR2USUC2bQG,Test Teacher PvZ2QK,teacher,,0,0,1,0,,2025-11-30 18:08:32.965147
+2444116a-be14-4701-a8bd-aaccd99744c3,teachvSi9,$2b$10$uQYubCEdvI.z/tVGIuVl9.UwNtHMVMDq4jxDOclYLawpXM0PtFV.q,TestTeacher6C0s,teacher,,0,0,1,0,,2025-11-30 18:22:30.444953
+4a152f5d-c3da-48ac-8465-162e9be13e0d,studsqcB,$2b$10$BWquBWn9lyfn.zH8qhMfbe3TCCKNpEdwy2xj4Zgo9OLwxa4IuPnr2,Student7nEb,student,,0,0,1,0,,2025-11-30 18:28:08.854478
+9bc1962f-1f12-4b88-b13d-09d27c3c70c8,test-student-Lk2Zpa,$2b$10$0T5CRLCStqdW9vBjzNzJv./phCl3VvjSl9P6yklm6e7sk5.0HdZsi,Test Student,student,10,0,0,1,0,,2025-11-04 18:40:12.400643
+8a5a53b7-a496-42ec-a023-6a3bde9e8207,Sethunya,$2b$10$qTMIsNwRGlU0MSquQ17SBuIq1tcBi3GSzK0Gn2rgr3IutSOu1RHZ6,Sethunya Dema,student,Grade 10,0,1,1,0,2025-11-05 06:48:14.51,2025-11-04 17:50:12.022643
+9c0cb334-28f6-443c-bd2a-b98a96c51038,fastbot-test-CqrgdA,$2b$10$ZQ0CajbyGN25/tCWHVUK1edWx58SGcMNWoDJUhFnGqGk91uRac28W,FastBot Tester,student,10,0,0,1,0,,2025-11-04 18:50:25.277853
+741590b2-7cc4-434e-b087-ff5fa4891606,teacher@test.com,$2b$10$x20ruHXe41mViZxczf0AHe9KczM3j1mNczkugXqgjM6utlU1DQW4C,Teacher Test,teacher,,0,1,1,0,2025-11-30 19:59:48.296,2025-11-30 19:53:50.187096
+eea623d5-4569-4c22-96c2-bdfe66d0dc37,bottest--ICFYJ,$2b$10$ygsgWNCd5qLkV3056CO/AOnfjBeE/xC16247cEYCjkHBsUNLYoaaK,Bot Tester,student,10,0,0,1,0,,2025-11-04 18:57:14.68705
+b7121fb1-0d33-4c5c-a69b-2278c4f622d6,teacher_-bXmh2,$2b$10$QIw4bJTXk2UB0WW3knMBBeI2SdpbRvEDmuRhh6FilnwfZTk9QmxHi,Test Teacher -bXmh2,teacher,,0,0,1,0,,2025-12-06 15:07:20.193222
+42770508-1793-48e0-baf6-75c6ef64d653,iframe2mmd8e,$2b$10$D9/Ad0KQQkUwIt1R6Cg7tOpnKswLVQZvA3NE8HcGi.8lW/yVagQdC,Test User,student,10,0,0,1,0,,2025-11-04 19:32:43.565229
+9976e7d1-3246-46ec-bd4d-b31ec7a7ed03,quizteacher_5qZ2NN,$2b$10$Mlzv5zgOqF9iNmF.RTKPE.IGChOZxyqLDcuyc.RkrBnG4nVrO7LxO,Quiz Teacher pQkmen,teacher,,0,0,1,0,,2025-12-06 15:11:09.544059
+496aad69-496d-4af6-8211-6bc0b4f96454,controls8xuhlG,$2b$10$RxB.MlbewkIgkz/4M4jLU.RwzHyg7I1MfP85b1gU6DBewMSIEwqwm,Control Tester,student,10A,0,0,1,0,,2025-11-04 19:38:03.322928
+c7129cee-987a-4c13-8372-0df9817e06fc,teststudent_bCJOEB,$2b$10$BjgpvoHfm2i5saie.wiVD.tEwDje/W2amZZQi4exVIfQU0KPCiOXS,Test Student eACir_,student,,0,0,1,0,,2025-12-06 15:14:24.151963
+ceed69be-f30f-4dbf-aa37-040e233029f1,tutordq9CMx,$2b$10$2drFmHiJfvwsEFho50KnIepJx3/CTFRYDL.ALoRA2ZdwMSv7tIZne,Tutor Tester,student,10,0,0,1,0,,2025-11-04 19:44:14.984898
+ae790e99-50c9-4cb0-8c98-efd32525610e,quizJoFzfh,$2b$10$seoZNqfEHEseXtOsqi/qZ.XLogVKVgO0cqK0xTs3J/VcID8WGwX86,Quiz Tester,student,Grade 10,0,0,1,0,,2025-11-04 19:52:36.73691
+58b42472-7219-4c1e-a645-815a924ba777,Sethunyaj,$2b$10$ZGfi8bQiCqlr4A2cZMzAE.vS/AfhJHSJS8PUgLwUY0waSeqOmDo1m,Sethunya Dema,student,Grade 10,0,1,1,0,2025-11-07 05:32:34.775,2025-11-07 05:32:07.531562
+f4a3bc53-45f9-406c-b0a4-c27e3bf10c61,support_test_student_01,$2b$10$miZjDoph.Kimlk0xeEjuMOH/mkKMXL7q6Wz1WgFCSF/ySUMnoz3pO,Support Tester,student,,0,1,1,0,2026-03-11 08:01:55.999,2026-03-11 08:01:44.045246
+1c2c9228-bcf5-46e9-9076-9dd12720e236,admin,$2b$10$7SWuU27TRZurYqt6.7ZzXewfbSF1FecGDqwIzRJA4nXKW.JOLLih.,Administrator,admin,,0,2,1,0,2026-03-11 08:16:05.982,2025-11-04 17:27:27.533884
+e8b79414-8713-4f70-8aec-e9cbdf7d4ec0,teacher_1773043331785@test.com,$2b$10$zuF7bDP4Wc6/9y8sHruLaeJhr1E1apwC9dt3UPfZScXHKSquEaNpq,TestTeacher_1773043331785,teacher,,0,0,1,0,,2026-03-09 08:02:50.239315
+d215c89c-04e5-4133-ba1b-7b4e5357c3f9,teacher,$2b$10$u9lYbye8YkOW1gxKi6nm7ObT17PkH0FgoGyBU.IHsSj2XJnZTmule,Demo Teacher,teacher,,0,1,1,0,2026-03-17 07:39:26.804,2025-11-30 18:35:58.776434
+79991994-983b-4ae3-a9b2-4d165805e751,demo,$2b$10$OQC2lKPkHR5xWQ0OfOJAQu9Jd4C.pnlDID8lRayFZXGrDubTXe.Pm,Demo Student,student,Grade 10,0,1,1,0,2026-03-19 08:32:40.589,2025-11-04 20:22:24.070705

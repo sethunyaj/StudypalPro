@@ -1,0 +1,72 @@
+id,name,description,subject,teacher_id,code,color,created_at
+96507fe8-6726-4633-9a6c-1d4d1362c960,Stage 6,"",ICT,f9f3f4f9-0171-4e10-8e08-c85b9952c0f4,M246N2,bg-blue-500,2025-11-30 19:32:47.29889
+6ba3ba3d-1fb6-409e-a4b5-34b951363e17,AI Class,"",Stage 1,12a869cf-de20-488d-8fcc-69648439d363,L4Q9DP,bg-primary,2025-12-01 04:52:58.368059
+4cc823ab-56d2-4ac4-a581-dd50c10dde68,Stage 5B,"",French ,ba0966bd-3eae-497b-800f-908910de5397,27Q4PF,bg-primary,2026-01-31 11:16:00.922535
+6782fa57-fb13-4057-b52b-29c4785391ce,Test run,For management to try out our AI techonoly,Management,cd83ec22-941f-4407-a017-4c9d3d38177a,NRR3EQ,bg-purple-500,2026-02-03 07:45:11.310864
+32bfb8cf-a6f1-4c93-832b-7d54c76bcaaf,STAGE 5,ATTENDING ICT AND CODING LESSONS,ICT,af5af7d1-2e07-4576-9115-b45b9a4c74ac,FGXD0V,bg-chart-2,2026-03-05 09:32:07.260156
+e2ebea9d-7b03-4c37-a1fe-c39e890c02fa,STAGE 6,ICT AND CODING,ICT,af5af7d1-2e07-4576-9115-b45b9a4c74ac,0N2MGK,bg-purple-500,2026-03-05 09:33:32.133557
+ee4bf616-7798-42b1-a25b-35aa440af3e7,STAGE 7,"",ICT,af5af7d1-2e07-4576-9115-b45b9a4c74ac,MYMKDT,bg-blue-500,2026-03-05 09:33:50.160702
+72ab7b9c-fc67-4894-99d5-febef60833fa,English,"",Gramma,f9f3f4f9-0171-4e10-8e08-c85b9952c0f4,19POO3,bg-primary,2026-03-09 07:22:19.813966
+fc4e9046-057c-476f-9921-af897b25c7bc,STG 5,ICT LESSONS,ICT,a8344b10-df92-4556-9a90-42f44ff84109,K6LSOS,bg-chart-3,2026-03-10 09:56:25.905802
+622d8f12-9267-4e4f-acfb-d128b330b393,STG 7,ICT LESSONS,ICT,a8344b10-df92-4556-9a90-42f44ff84109,SJLU8M,bg-purple-500,2026-03-10 09:56:44.312466
+abafcb7f-ec9a-4464-a5a5-9e8c04e91b27,STG 4,ICT LESSONS,ICT ,a8344b10-df92-4556-9a90-42f44ff84109,KXPGC6,bg-chart-3,2026-03-10 09:57:02.480764
+6288618a-70aa-4e78-8389-575abe88c1c7,STG 6,ICT LESSONS,ICT,a8344b10-df92-4556-9a90-42f44ff84109,N1JBEP,bg-chart-2,2026-03-10 09:57:30.196686
+def785e2-47aa-4c7f-bde0-daad640a67a5,RECEPTION,4-5 year olds,English,0c399b77-51e5-4254-9452-c1894b1e9512,Q5Y6P7,bg-primary,2026-03-10 12:18:39.71849
+67592ceb-bce3-45c3-a57b-48efbc33a3ad,Setswana AF,They are trying hard get there,Setwana,03f212fc-7a6e-469f-8384-0a259a1d6f99,OO4LQN,bg-purple-500,2026-03-10 14:32:43.32266
+92cbefd4-3e99-4ab2-a177-ac6c7d469d32,AI Training for Students,"",ICT,f9f3f4f9-0171-4e10-8e08-c85b9952c0f4,T0DZ3J,bg-primary,2026-03-11 07:45:14.678458
+7fdd0f7c-8570-4b38-af66-8edbe17f6058,Stage 3B,"",All ,7becca75-ab6e-4964-ab16-cb1e42c71789,BIBFJC,bg-primary,2026-03-11 18:13:14.32026
+fdc4125c-cce0-47e3-9366-a0d168b5110d,Stage 3B HLA,"",Mathematics ,61d63dcc-8f6b-495a-b914-813393305c1d,VCT7F4,bg-chart-3,2026-03-13 08:19:59.965474
+74d2d095-b74b-4a72-8b37-1dff1c5c4b4e,6,idk,English,9e331521-3817-4db7-816f-0f99b76b8eef,C05WXV,bg-primary,2026-03-16 18:16:08.094323
+3243790b-b66c-42ad-bece-eb1dd5b50276,P,P,P,3aa05d01-04b5-444c-bdf5-86844c47448b,QMCR9E,bg-primary,2026-03-17 17:46:26.551407
+570bed1e-bd5b-45c6-8ea2-63c5a3d40fb8,Stage 7,"",ICT,f9f3f4f9-0171-4e10-8e08-c85b9952c0f4,EUPUXF,bg-chart-2,2026-03-18 05:58:21.667879
+42412b83-ee98-463d-b7cd-d809d1fffd96,Reception Village,Identifying letters and sound,English,0d3f8e3c-24cb-493b-b504-9df6b8e3a75d,S9AZQI,bg-blue-500,2026-03-18 09:21:16.925103
+7556f0c9-70cf-492a-ad56-753cd7479a92,My class ,"We will be learning about metamorphic rocks
+",Science,07074092-20e7-4a05-be83-036bb6a87999,8LSBYZ,bg-primary,2026-03-18 12:54:56.170993
+664e9444-8371-4e81-82fb-46fde64eedb5,Stage 3B,"Stage 3B HLA Branch, ","Mathematics, English and science ",49a3fc2d-933d-47c5-9be9-6585830f146e,LCXNIE,bg-purple-500,2026-03-18 13:15:45.953102
+52c49127-35d2-4288-828f-58447c46fc7c,Stage 6,"",Mathematics ,bc2c1cd1-0faf-4e29-8e1f-312b86e37e02,Y21N03,bg-blue-500,2026-03-18 13:20:06.918482
+11afd812-78f8-41d2-b045-e1ddeeba2faa,Stage 5 ,HPS block 7,Mathematics ,bc2c1cd1-0faf-4e29-8e1f-312b86e37e02,NZP2QL,bg-purple-500,2026-03-18 13:34:35.885535
+eac13fb2-9606-4df6-8541-ff153e6f6a87,Stage 7,HPS block 7 ,Mathematics ,bc2c1cd1-0faf-4e29-8e1f-312b86e37e02,A9A1HL,bg-chart-2,2026-03-18 13:35:02.074324
+069ca822-a917-42da-b799-c31287079346,FORM 2A,"",ICT and COMPUTER SCIENCE ,d34c9ea3-9d5b-469c-9162-aec1cc19b03a,Z8WF09,bg-purple-500,2026-03-18 13:41:23.868246
+27903f47-255b-4cd5-ad45-f756a0bdb742,RECEPTION,Introduction of Symmetry,Mathematics,0c399b77-51e5-4254-9452-c1894b1e9512,ITYBFD,bg-blue-500,2026-03-18 13:49:26.463144
+1efd431c-1917-4c3a-ab78-0ffb87ec7351,Stage 3A,"",Mathematics,0e3f2000-7feb-4520-910f-51aec42b56ba,PH9FHL,bg-purple-500,2026-03-18 15:07:07.033112
+b01406db-17b8-4df3-937b-555bfd3d75fb,Stage 3A,"",English,0e3f2000-7feb-4520-910f-51aec42b56ba,CVBKWC,bg-chart-3,2026-03-18 15:07:34.866179
+a0b0dd6a-3140-4428-8389-3cf1e562d3c2,Stage 3A,"",Science,0e3f2000-7feb-4520-910f-51aec42b56ba,7X7KV9,bg-primary,2026-03-18 15:07:52.959304
+a05d240c-7387-44dc-8a2a-4228696faace,Stage 1,"",French,ba0966bd-3eae-497b-800f-908910de5397,41KD9Y,bg-primary,2026-03-18 15:09:25.720489
+e2bf4bfc-3208-4743-a408-31ec2673313e,Stage 2,"",French,ba0966bd-3eae-497b-800f-908910de5397,QIF8TR,bg-primary,2026-03-18 15:09:39.189161
+730ec9b6-914f-4c8c-9557-c41c0ca697eb,Stage 2B,"",French,ba0966bd-3eae-497b-800f-908910de5397,HY4TUI,bg-primary,2026-03-18 15:11:34.364505
+d20f11e7-a21e-41f1-8e70-98e12d61fcf0,Stage 3A,"",French,ba0966bd-3eae-497b-800f-908910de5397,DFT1PS,bg-blue-500,2026-03-18 15:11:52.592737
+975027db-9410-405c-865c-30645356eb2d,Stage 3B,"",French,ba0966bd-3eae-497b-800f-908910de5397,YNXNIC,bg-chart-2,2026-03-18 15:12:08.663511
+cd3f5034-86f4-49b6-b669-b8df3c239e46,Stage 4A,"",French,ba0966bd-3eae-497b-800f-908910de5397,3PQM8B,bg-blue-500,2026-03-18 15:14:08.121875
+d22c29fc-f9a1-4cec-8be3-8071b2e92682,Stage 4B,"",French,ba0966bd-3eae-497b-800f-908910de5397,5NPNXD,bg-chart-3,2026-03-18 15:14:22.225045
+b195cb89-57ac-4e04-bbb6-6f2f555f66ef,Stage 5A,"",French,ba0966bd-3eae-497b-800f-908910de5397,ECL0RR,bg-purple-500,2026-03-18 15:14:45.741687
+3ad0bd5d-8b56-4894-88e6-074812080b84,Stage 6A,"",French,ba0966bd-3eae-497b-800f-908910de5397,2K2N9A,bg-chart-3,2026-03-18 15:15:06.076997
+7404968b-5cb7-48f8-b6f4-c4988c5c3d9b,Stage 6B,"",French,ba0966bd-3eae-497b-800f-908910de5397,7TZPUJ,bg-chart-2,2026-03-18 15:15:23.092898
+66e58589-b2c7-45ab-bf4b-65aebba61d0c,Stage 7,"",French,ba0966bd-3eae-497b-800f-908910de5397,RCT9IC,bg-primary,2026-03-18 15:15:43.123148
+5c55a79b-fa44-4ecf-9624-25ad81756b04,Stage 5A,"",ICT,ba0966bd-3eae-497b-800f-908910de5397,2RZGJ4,bg-blue-500,2026-03-18 15:16:28.815014
+6f1bfc6c-7d7d-4b33-83f1-6cbe09204a33,Stage 5B,"",ICT,ba0966bd-3eae-497b-800f-908910de5397,X75DTY,bg-purple-500,2026-03-18 15:16:43.062145
+f95515f8-66a8-4ebb-b76c-b2f3164ab318,Stage 6,"",ICT,ba0966bd-3eae-497b-800f-908910de5397,8TYNQ4,bg-chart-3,2026-03-18 15:17:07.262476
+61d364f5-b3e7-40a0-a8c6-50deab8cd82d,Stage 7,"",ICT,ba0966bd-3eae-497b-800f-908910de5397,2BB5XF,bg-chart-2,2026-03-18 15:17:20.437791
+65c15dcb-327b-47df-a55c-545537c706c0,Kindergarten phase 2,"A messy play classroom is a vibrant, sensory-rich environment where exploration is encouraged. ",Messy play ,e5bb9250-4b36-4e43-a508-dfc88f67f97f,UFNWBJ,bg-purple-500,2026-03-18 17:18:12.355095
+ecbcf595-5d70-4153-bd5d-9a938519be2f,STAGE 4A ,"","English , Mathematics and Science ",c1cab746-281b-4233-b7b0-f1969321a6a8,1T4J30,bg-blue-500,2026-03-19 06:15:13.205822
+55f21548-233f-42da-a388-baf1e46705e9,Stage 4B,"","Mathematics, English, Science ",bbe44739-dbf7-449f-b6fb-f61d6804798c,5FSXK1,bg-primary,2026-03-19 06:38:46.038329
+a724ba51-07a5-4e4f-89e0-31ab592a752b,Stage 5,"",English,d7c14ed2-6cc0-419a-bd3e-bc8393dee8a8,KXR0EJ,bg-chart-3,2026-03-19 07:26:18.203059
+c8fa2e72-4074-4e5d-a689-f82d4b585550,Stage 6,"",English ,d7c14ed2-6cc0-419a-bd3e-bc8393dee8a8,376FAD,bg-blue-500,2026-03-19 07:26:33.550631
+246b485a-2983-4b49-966c-fc5f5a797b26,Stage 7,"",English,d7c14ed2-6cc0-419a-bd3e-bc8393dee8a8,GIQW5G,bg-purple-500,2026-03-19 07:26:52.380987
+b06e4780-758f-408e-808f-2a7bfdca0b09,"Stage 5,6&7 Science ",Short questions ,Biology,50bd16e3-b7ad-4274-a20f-d5d89b5600f2,RB3HQW,bg-primary,2026-03-19 07:29:06.520088
+a48990db-81ec-4c7a-8914-c0f8cea4be75,"5A,5B,6,7","",Maths,98f0ff14-6b1b-4848-b067-3212a8592304,VNSAU8,bg-purple-500,2026-03-19 08:42:35.600355
+674f1634-ca69-4dfb-8618-c2d80c35cd69,Addition and Subtraction ,"",Mathematics ,bf25eae1-e017-41c6-b3a0-7f03d4fb24e5,189BDG,bg-purple-500,2026-03-19 08:48:13.792522
+4881636f-f748-490d-b0b9-344f206f2cdf,Stage 2B ,Addition and Subtraction ,Mathematics ,bf25eae1-e017-41c6-b3a0-7f03d4fb24e5,P57UGC,bg-purple-500,2026-03-19 08:50:05.891577
+f2e1823c-db09-4753-b35d-45ccf814bec9,Stage 2A,"","Mathematics, English and Science",08fc2df4-fa87-42c3-ad75-d8119e90dd9b,ZTBRHZ,bg-purple-500,2026-03-19 09:12:11.454851
+2bd7dd4f-b575-40a8-a39a-28a2ac49b046,HPS,I am the French Teacher for primary and Secondary at Hibiscus Block 7,French ,b3c58492-a191-4c9e-8714-0b00ce0c15cc,SZ7RST,bg-primary,2026-03-19 09:21:38.570367
+2d8852a4-e22b-4b1f-b83f-2ab53d613935,Reception phase 4,"",English,fca0cb80-88cf-49b0-9b49-86c486ba8a96,CWV8LE,bg-purple-500,2026-03-19 09:21:50.082985
+734fa61e-8793-4db6-8499-621b98e5e6ab,"Stage 7, Science ","Stage 7 Science class is composed of 11 students, 4 boys and 7 girls.",Cambridge Science ,6f64432a-d7f3-46a5-a6f9-a49218f0a9c0,KPDVK1,bg-primary,2026-03-19 09:26:30.603204
+21309159-9c50-441b-8edd-08d930b88aef,FORM 1 ,Form 1 Math,MATHEMATICS ,175a6847-f4c1-4d27-9635-ac48657bf461,S24UYD,bg-purple-500,2026-03-19 09:34:55.470306
+cdfeefbf-27e6-479f-8535-03728ef1e0d4,FORM 2,Form 2 Mathematics ,MATHEMATICS ,175a6847-f4c1-4d27-9635-ac48657bf461,4NHJWV,bg-primary,2026-03-19 09:35:33.194099
+74ca6fd8-c119-4528-ad32-308fc366ba32,Stage 7 ,A class of 14 students composed of 4boys and 7girls.,Science ,6f64432a-d7f3-46a5-a6f9-a49218f0a9c0,QI66ES,bg-primary,2026-03-19 09:35:38.523534
+4f7a4eea-fdf0-41dd-aaf1-19c7187f065f,FORM 3,Form 3 Mathematics ,MATHEMATICS ,175a6847-f4c1-4d27-9635-ac48657bf461,Q4A3GO,bg-chart-2,2026-03-19 09:35:58.358375
+f8df3ec5-06ac-41db-9d68-a5a75e939c33,FORM 4 ,Form 4 Mathematics ,MATHEMATICS ,175a6847-f4c1-4d27-9635-ac48657bf461,US5NSR,bg-chart-3,2026-03-19 09:36:24.465046
+10a6a836-fa92-4cd4-8f51-c80a1dfb6846,FORM 5 ,IGCSE CLASS OF 2026,MATHEMATICS ,175a6847-f4c1-4d27-9635-ac48657bf461,KX7K6J,bg-blue-500,2026-03-19 09:36:55.95032
+ee307d0b-02e6-41f8-91c2-897593d9aa0c,Stage 5,"",Setswana,07cbec8f-a76c-446f-ab14-ae3732f60f89,DC4S8J,bg-purple-500,2026-03-19 09:41:42.557499
+951cb6e5-cce7-472d-990b-c2d27bdd0b23,"stage 5 , 6 and 7","",English,fddd57c4-df0d-48c0-99ad-11037a9ff77f,4ELF6T,bg-purple-500,2026-03-19 09:48:39.811521
+b540f2da-3e84-4218-8dff-e53d9f63bd52,All Stages ,"",Setswana ,07cbec8f-a76c-446f-ab14-ae3732f60f89,8UAXRU,bg-primary,2026-03-19 09:52:15.074936
+a103c5da-e8f6-4aed-9056-7cc940d648a4,"Stage 7, 6 and 5","",Science ,def7d6d6-3025-49fb-aad6-89e30b155004,GQ6Y3Z,bg-blue-500,2026-03-19 10:00:03.940177
